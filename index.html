@@ -518,7 +518,10 @@
     border-radius:0 !important;
     background:transparent !important;
   }
-  body.design-cyber .hero-stat .stat-num{color:var(--accent-strong);}
+  body.design-cyber .hero-stat .stat-num,
+  body.design-cyber .hero-stat .stat-label{
+    color:var(--primary-foreground);
+  }
   body.design-cyber .bg-code-bar{
     background:#111827 !important;
     border-color:#22d3ee !important;
@@ -658,9 +661,15 @@
     pointer-events:none;
     z-index:0;
   }
-  #heartGrad .hg-a{ stop-color: var(--accent-strong); }
-  #heartGrad .hg-b{ stop-color: var(--primary); }
-  #heartGrad .hg-c{ stop-color: color-mix(in srgb, var(--primary) 72%, #000); }
+  #heartGrad .hg-a,
+  #heartGradMiniA .hg-a,
+  #heartGradMiniB .hg-a{ stop-color: var(--accent-strong); }
+  #heartGrad .hg-b,
+  #heartGradMiniA .hg-b,
+  #heartGradMiniB .hg-b{ stop-color: var(--primary); }
+  #heartGrad .hg-c,
+  #heartGradMiniA .hg-c,
+  #heartGradMiniB .hg-c{ stop-color: color-mix(in srgb, var(--primary) 72%, #000); }
   .hero-visual.hero-heart::before{display:none !important; content:none !important;}
   .hero-visual-inner{
     position:relative;
@@ -670,57 +679,105 @@
     align-items:center;
     justify-content:center;
     text-align:center;
-    width:62%;
-    max-width:200px;
-    margin-top:4%;
+    width:56%;
+    max-width:168px;
+    margin-top:2%;
+    gap:0;
     color:var(--primary-foreground);
     pointer-events:none;
   }
-  .hero-visual-inner strong{
-    font-size:clamp(0.95rem, 2.4vw, 1.15rem);
-    font-weight:700;
-    line-height:1.45;
-    max-width:16ch;
+  .hero-visual-inner .heart-line{
+    display:block;
+    width:100%;
     color:var(--primary-foreground);
-    text-shadow:0 1px 8px rgba(0,0,0,.18);
+    text-shadow:0 1px 10px rgba(0,0,0,.2);
   }
-  .hero-visual-inner > span{
-    margin-top:8px;
-    font-size:11px;
-    line-height:1.45;
-    color:color-mix(in srgb, var(--primary-foreground) 90%, transparent);
+  .hero-visual-inner .heart-line-1{
+    font-size:clamp(0.78rem, 2vw, 0.92rem);
     font-weight:600;
+    letter-spacing:.02em;
+    line-height:1.25;
+    opacity:.95;
+  }
+  .hero-visual-inner .heart-line-2{
+    margin-top:4px;
+    font-size:clamp(0.95rem, 2.5vw, 1.12rem);
+    font-weight:700;
+    line-height:1.35;
+    letter-spacing:-.01em;
+  }
+  .hero-visual-inner .heart-line-3{
+    margin-top:10px;
+    font-size:clamp(0.62rem, 1.6vw, 0.72rem);
+    font-weight:600;
+    line-height:1.4;
+    letter-spacing:.01em;
+    opacity:.9;
+    max-width:18ch;
   }
   .hero-stats{
     position:relative;
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:8px;
-    width:min(100%, 300px);
-    margin-top:0;
+    gap:14px;
+    width:min(100%, 260px);
+    margin-top:2px;
     background:transparent;
+    justify-items:center;
   }
   .hero-stat{
-    border:1px solid color-mix(in srgb, var(--primary) 22%, var(--border));
-    background:color-mix(in srgb, var(--surface) 90%, var(--accent-soft));
-    border-radius:12px;
-    padding:10px;
+    position:relative;
+    width:112px;
+    aspect-ratio:1 / 0.92;
+    border:none !important;
+    background:transparent !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    padding:0 !important;
+    display:grid;
+    place-items:center;
+    overflow:visible;
+  }
+  .hero-stat-svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+    pointer-events:none;
+    z-index:0;
+    filter: drop-shadow(0 8px 16px color-mix(in srgb, var(--primary) 28%, transparent));
+  }
+  .hero-stat-inner{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
     text-align:center;
+    width:54%;
+    margin-top:4%;
+    gap:2px;
+    pointer-events:none;
   }
   .hero-stat .stat-num{
     display:block;
     font-family:'JetBrains Mono',ui-monospace,monospace;
-    font-size:1.15rem;
-    font-weight:700;
-    color:var(--primary);
-    line-height:1.2;
+    font-size:1.2rem;
+    font-weight:800;
+    color:var(--primary-foreground);
+    line-height:1.05;
+    text-shadow:0 1px 6px rgba(0,0,0,.18);
   }
   .hero-stat .stat-label{
     display:block;
-    margin-top:4px;
-    font-size:12px;
-    color:var(--muted-foreground);
-    font-weight:600;
+    margin-top:0;
+    font-size:10px;
+    color:color-mix(in srgb, var(--primary-foreground) 92%, transparent);
+    font-weight:700;
+    line-height:1.2;
+    max-width:7ch;
   }
 
   @keyframes heartBeat{
@@ -1338,12 +1395,14 @@
       width:min(88vw, 280px);
       animation:none;
     }
-    .hero-visual-inner{width:64%; margin-top:6%;}
-    .hero-visual-inner strong{font-size:1rem; max-width:14ch;}
-    .hero-visual-inner > span{font-size:10.5px;}
-    .hero-stats{width:min(100%, 280px); margin-top:0;}
-    .hero-stat{padding:10px;}
-    .hero-stat .stat-num{font-size:1.15rem;}
+    .hero-visual-inner{width:58%; margin-top:3%; max-width:150px;}
+    .hero-visual-inner .heart-line-1{font-size:0.8rem;}
+    .hero-visual-inner .heart-line-2{font-size:1rem; margin-top:3px;}
+    .hero-visual-inner .heart-line-3{font-size:0.62rem; margin-top:8px; max-width:16ch;}
+    .hero-stats{width:min(100%, 240px); gap:10px; margin-top:0;}
+    .hero-stat{width:104px;}
+    .hero-stat .stat-num{font-size:1.1rem;}
+    .hero-stat .stat-label{font-size:9.5px;}
     .section-head{margin:6px 0 12px;}
     .section-head h2{font-size:22px;}
     .booking-layout{grid-template-columns:1fr; gap:12px;}
@@ -1519,18 +1578,43 @@
           <path fill="url(#heartGrad)" d="M50 84 C 18 58 4 40 4 24 C 4 11 14 2 26 2 C 35 2 42 7 50 16 C 58 7 65 2 74 2 C 86 2 96 11 96 24 C 96 40 82 58 50 84 Z"/>
         </svg>
         <div class="hero-visual-inner">
-          <strong>هنا مساحة للتحدث… بلا أحكام</strong>
-          <span>خصوصية · لطف · جلسات مريحة عبر Zoom</span>
+          <span class="heart-line heart-line-1">هنا مساحة</span>
+          <span class="heart-line heart-line-2">للتحدّث… بلا أحكام</span>
+          <span class="heart-line heart-line-3">خصوصية · لطف · جلسات عبر Zoom</span>
         </div>
       </div>
       <div class="hero-stats">
-        <div class="hero-stat">
-          <span class="stat-num">٦٠</span>
-          <span class="stat-label">دقيقة لك</span>
+        <div class="hero-stat" aria-label="ستون دقيقة لك">
+          <svg class="hero-stat-svg" viewBox="0 0 100 90" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <linearGradient id="heartGradMiniA" x1="20%" y1="10%" x2="80%" y2="90%">
+                <stop class="hg-a" offset="0%"/>
+                <stop class="hg-b" offset="45%"/>
+                <stop class="hg-c" offset="100%"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#heartGradMiniA)" d="M50 84 C 18 58 4 40 4 24 C 4 11 14 2 26 2 C 35 2 42 7 50 16 C 58 7 65 2 74 2 C 86 2 96 11 96 24 C 96 40 82 58 50 84 Z"/>
+          </svg>
+          <div class="hero-stat-inner">
+            <span class="stat-num">٦٠</span>
+            <span class="stat-label">دقيقة لك</span>
+          </div>
         </div>
-        <div class="hero-stat">
-          <span class="stat-num">١٠٠٪</span>
-          <span class="stat-label">سرّية تامة</span>
+        <div class="hero-stat" aria-label="مائة بالمئة سرية تامة">
+          <svg class="hero-stat-svg" viewBox="0 0 100 90" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <linearGradient id="heartGradMiniB" x1="20%" y1="10%" x2="80%" y2="90%">
+                <stop class="hg-a" offset="0%"/>
+                <stop class="hg-b" offset="45%"/>
+                <stop class="hg-c" offset="100%"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#heartGradMiniB)" d="M50 84 C 18 58 4 40 4 24 C 4 11 14 2 26 2 C 35 2 42 7 50 16 C 58 7 65 2 74 2 C 86 2 96 11 96 24 C 96 40 82 58 50 84 Z"/>
+          </svg>
+          <div class="hero-stat-inner">
+            <span class="stat-num">١٠٠٪</span>
+            <span class="stat-label">سرّية تامة</span>
+          </div>
         </div>
       </div>
     </div>
