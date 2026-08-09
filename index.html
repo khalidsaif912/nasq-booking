@@ -378,10 +378,9 @@
   body.design-glass .date-chip,
   body.design-glass .time-slot,
   body.design-glass .type-option,
-  body.design-glass input,
+  body.design-glass input:not(.digital-num),
   body.design-glass textarea,
   body.design-glass .phone-row,
-  body.design-glass .digital-below,
   body.design-glass .merged-clock{
     background:rgba(255,255,255,.35);
     border-color:rgba(255,255,255,.55);
@@ -559,12 +558,26 @@
   body.design-cyber textarea,
   body.design-cyber select,
   body.design-cyber .phone-row,
-  body.design-cyber .digital-num,
-  body.design-cyber .digital-below,
   body.design-cyber .merged-clock{
     background:rgba(7,11,20,.85);
     border-color:rgba(34,211,238,.25);
     color:#e2e8f0;
+  }
+  body.design-cyber .digital-below{
+    background:
+      linear-gradient(155deg, #070b14 0%, #0f172a 48%, #0b1220 100%) !important;
+    border-color:rgba(34,211,238,.4) !important;
+    color:inherit;
+  }
+  body.design-cyber .digital-num{
+    background:linear-gradient(180deg, #05080f, #101827) !important;
+    border-color:rgba(34,211,238,.45) !important;
+    color:#f8fafc !important;
+  }
+  body.design-cyber .ampm-select{
+    background:#0b1220 !important;
+    border-color:rgba(34,211,238,.35) !important;
+    color:#e2e8f0 !important;
   }
   body.design-cyber .summary{
     background:rgba(34,211,238,.08);
@@ -1233,25 +1246,147 @@
   .hand-grip:hover{opacity:.18;}
 
   .digital-below{
-    display:flex; align-items:center; justify-content:center; gap:6px;
+    display:flex;
+    align-items:stretch;
+    justify-content:center;
+    gap:10px;
     width:100%;
     direction:ltr;
     unicode-bidi:isolate;
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:10px 12px;
+    padding:14px 16px;
+    border-radius:18px;
+    border:1px solid color-mix(in srgb, var(--primary) 28%, transparent);
+    background:
+      linear-gradient(155deg,
+        color-mix(in srgb, var(--ink) 92%, var(--primary)) 0%,
+        color-mix(in srgb, var(--ink) 86%, #1a1024) 48%,
+        color-mix(in srgb, var(--ink) 90%, var(--primary)) 100%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 18%, transparent),
+      inset 0 -12px 28px color-mix(in srgb, #000 35%, transparent),
+      0 12px 28px color-mix(in srgb, var(--primary) 18%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--accent-strong) 22%, transparent);
+    position:relative;
+    overflow:hidden;
+  }
+  .digital-below::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(120% 80% at 20% 0%, color-mix(in srgb, var(--accent-strong) 22%, transparent), transparent 55%),
+      linear-gradient(180deg, color-mix(in srgb, white 8%, transparent), transparent 40%);
+    pointer-events:none;
+  }
+  .digital-unit{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    min-width:0;
+  }
+  .digital-unit-label{
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:color-mix(in srgb, var(--accent-strong) 75%, white);
+    opacity:.9;
+    font-family:'IBM Plex Sans Arabic',sans-serif;
   }
   .digital-num{
-    width:52px; text-align:center; background:var(--bg); border:1px solid var(--line);
-    border-radius:10px; padding:10px 4px; font-family:'JetBrains Mono',monospace;
-    font-size:22px; font-weight:700; color:var(--accent);
+    -moz-appearance:textfield;
+    appearance:textfield;
+    width:64px;
+    min-height:58px;
+    text-align:center;
+    background:
+      linear-gradient(180deg,
+        color-mix(in srgb, #0a0f14 88%, var(--primary)),
+        color-mix(in srgb, #121820 92%, var(--primary)));
+    border:1px solid color-mix(in srgb, var(--accent-strong) 45%, transparent);
+    border-radius:12px;
+    padding:12px 4px 10px;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:1.65rem;
+    font-weight:700;
+    letter-spacing:.04em;
+    color:#f8f5ef;
+    line-height:1;
+    box-shadow:
+      inset 0 2px 6px color-mix(in srgb, #000 55%, transparent),
+      inset 0 -1px 0 color-mix(in srgb, white 10%, transparent),
+      0 0 18px color-mix(in srgb, var(--primary) 25%, transparent);
+    text-shadow:
+      0 0 12px color-mix(in srgb, var(--accent-strong) 55%, transparent),
+      0 1px 0 color-mix(in srgb, #000 40%, transparent);
+    transition: border-color .2s ease, box-shadow .2s ease, transform .15s ease, color .2s ease;
   }
-  .digital-num:focus{outline:none; border-color:var(--accent);}
-  .digital-colon{font-size:22px; font-weight:700; color:var(--muted); line-height:1;}
+  .digital-num::-webkit-outer-spin-button,
+  .digital-num::-webkit-inner-spin-button{
+    -webkit-appearance:none;
+    margin:0;
+  }
+  .digital-num:hover{
+    border-color:color-mix(in srgb, var(--accent-strong) 70%, white);
+    box-shadow:
+      inset 0 2px 6px color-mix(in srgb, #000 50%, transparent),
+      0 0 22px color-mix(in srgb, var(--accent-strong) 40%, transparent);
+  }
+  .digital-num:focus{
+    outline:none;
+    border-color:var(--accent-strong);
+    color:#fffef8;
+    box-shadow:
+      inset 0 2px 6px color-mix(in srgb, #000 45%, transparent),
+      0 0 0 2px color-mix(in srgb, var(--primary) 40%, transparent),
+      0 0 28px color-mix(in srgb, var(--accent-strong) 48%, transparent);
+  }
+  .digital-colon{
+    position:relative;
+    z-index:1;
+    align-self:center;
+    margin-top:10px;
+    font-size:1.55rem;
+    font-weight:700;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    color:color-mix(in srgb, var(--accent-strong) 85%, white);
+    line-height:1;
+    text-shadow:0 0 14px color-mix(in srgb, var(--accent-strong) 60%, transparent);
+    animation: digitalColonPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes digitalColonPulse{
+    0%,100%{ opacity:.45; }
+    50%{ opacity:1; }
+  }
   .ampm-select{
-    background:var(--bg); border:1px solid var(--line); border-radius:10px;
-    padding:10px 8px; font-family:inherit; font-size:13px; font-weight:600; color:var(--ink);
+    position:relative;
+    z-index:1;
+    align-self:center;
+    margin-top:14px;
+    min-height:42px;
+    background:color-mix(in srgb, #0c1218 90%, var(--primary));
+    border:1px solid color-mix(in srgb, var(--accent-strong) 40%, transparent);
+    border-radius:11px;
+    padding:10px 12px;
+    font-family:'IBM Plex Sans Arabic',sans-serif;
+    font-size:13px;
+    font-weight:700;
+    color:#f5f0e8;
+    box-shadow:inset 0 1px 4px color-mix(in srgb, #000 40%, transparent);
+  }
+  .ampm-select:focus{
+    outline:none;
+    border-color:var(--accent-strong);
+  }
+  body.design-cyber .digital-below{
+    border-color:rgba(34,211,238,.35);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.1),
+      0 0 24px rgba(34,211,238,.18),
+      0 0 0 1px rgba(168,85,247,.2);
   }
 
   .clock-controls{
@@ -1653,7 +1788,9 @@
     .summary{font-size:14px; padding:12px;}
     .merged-clock{padding:12px 10px;}
     .clock-stage{width:min(200px, 78vw);}
-    .digital-num{width:48px; font-size:18px;}
+    .digital-num{width:58px; min-height:52px; font-size:1.4rem;}
+    .digital-below{padding:12px 12px; gap:8px;}
+    .digital-unit-label{letter-spacing:.12em; font-size:8px;}
     .clock-modal{padding:12px; align-items:flex-end;}
     .clock-modal-dialog{
       width:100%;
@@ -1963,10 +2100,16 @@
           <circle id="minuteGrip" class="hand-grip" cx="100" cy="40" r="14"></circle>
         </svg>
       </div>
-      <div class="digital-below">
-        <input type="number" id="hourInput" class="digital-num" min="0" max="23" value="9" aria-label="الساعة">
-        <span class="digital-colon">:</span>
-        <input type="number" id="minuteInput" class="digital-num" min="0" max="59" step="5" value="0" aria-label="الدقيقة">
+      <div class="digital-below" aria-label="الوقت الرقمي">
+        <div class="digital-unit">
+          <span class="digital-unit-label">HOUR</span>
+          <input type="number" id="hourInput" class="digital-num" min="0" max="23" value="9" aria-label="الساعة" inputmode="numeric">
+        </div>
+        <span class="digital-colon" aria-hidden="true">:</span>
+        <div class="digital-unit">
+          <span class="digital-unit-label">MIN</span>
+          <input type="number" id="minuteInput" class="digital-num" min="0" max="59" step="5" value="0" aria-label="الدقيقة" inputmode="numeric">
+        </div>
         <select id="ampmSelect" class="ampm-select hidden" aria-label="صباحاً أو مساءً">
           <option value="ص">ص</option>
           <option value="م">م</option>
