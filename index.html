@@ -2,9 +2,23 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>نَسْق — استشارة نفسية واجتماعية</title>
 <meta name="description" content="نَسْق: مساحة آمنة ولطيفة للاستشارة النفسية والاجتماعية، مع حجز جلسة عبر Zoom.">
+<meta name="theme-color" content="#0f766e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="نَسْق">
+<meta name="application-name" content="نَسْق">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+<meta property="og:title" content="نَسْق — استشارة نفسية واجتماعية">
+<meta property="og:description" content="مساحة آمنة ولطيفة للاستشارة النفسية والاجتماعية.">
+<meta property="og:image" content="assets/icon-nasq.png">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -1631,6 +1645,136 @@
     animation: rise .7s .2s ease both;
   }
 
+  /* ===== تنبيه تثبيت التطبيق (PWA) ===== */
+  .pwa-install{
+    position:fixed;
+    inset-inline:12px;
+    bottom:max(14px, env(safe-area-inset-bottom));
+    z-index:10050;
+    display:none;
+    align-items:center;
+    gap:14px;
+    max-width:440px;
+    width:calc(100% - 24px);
+    margin-inline:auto;
+    left:12px;
+    right:12px;
+    padding:16px 16px 16px 14px;
+    border-radius:22px;
+    border:1px solid color-mix(in srgb, var(--primary) 28%, transparent);
+    background:
+      linear-gradient(145deg,
+        color-mix(in srgb, var(--surface) 92%, white),
+        color-mix(in srgb, var(--accent-soft) 55%, white));
+    box-shadow:
+      0 18px 48px color-mix(in srgb, var(--ink) 22%, transparent),
+      0 0 0 1px color-mix(in srgb, white 50%, transparent) inset;
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    animation: pwaSlideUp .45s cubic-bezier(.22,1,.36,1) both;
+  }
+  .pwa-install.is-visible{display:flex;}
+  .pwa-install-icon-wrap{
+    flex:0 0 auto;
+    width:88px;
+    height:88px;
+    border-radius:24px;
+    background:#121212;
+    border:2px solid color-mix(in srgb, var(--primary) 35%, white);
+    box-shadow:0 10px 24px color-mix(in srgb, var(--primary) 22%, transparent);
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+  }
+  .pwa-install-icon{
+    width:92%;
+    height:92%;
+    object-fit:contain;
+    display:block;
+  }
+  .pwa-install-body{flex:1 1 auto; min-width:0; text-align:right;}
+  .pwa-install-title{
+    margin:0 0 4px;
+    font-size:1.05rem;
+    font-weight:800;
+    color:var(--ink);
+    letter-spacing:-.02em;
+  }
+  .pwa-install-text{
+    margin:0 0 12px;
+    font-size:12.5px;
+    line-height:1.55;
+    color:var(--muted-foreground);
+    font-weight:600;
+  }
+  .pwa-install-actions{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+  .pwa-install-btn{
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+    font-weight:800;
+    font-size:13px;
+    border-radius:999px;
+    padding:10px 16px;
+    background:var(--gradient-accent);
+    color:var(--primary-foreground);
+    box-shadow:0 8px 18px color-mix(in srgb, var(--primary) 25%, transparent);
+  }
+  .pwa-install-btn:active{transform:scale(.97);}
+  .pwa-install-later{
+    border:1px solid var(--border);
+    cursor:pointer;
+    font-family:inherit;
+    font-weight:700;
+    font-size:13px;
+    border-radius:999px;
+    padding:9px 14px;
+    background:color-mix(in srgb, var(--surface) 80%, transparent);
+    color:var(--ink);
+  }
+  .pwa-install-close{
+    position:absolute;
+    top:8px;
+    inset-inline-start:8px;
+    width:28px;
+    height:28px;
+    border:none;
+    border-radius:50%;
+    background:color-mix(in srgb, var(--accent-soft) 80%, white);
+    color:var(--muted-foreground);
+    font-size:16px;
+    line-height:1;
+    cursor:pointer;
+    display:grid;
+    place-items:center;
+  }
+  .pwa-install-ios{
+    margin-top:6px;
+    font-size:11.5px;
+    line-height:1.5;
+    color:var(--muted-foreground);
+    font-weight:600;
+  }
+  .pwa-install-ios.hidden{display:none;}
+  @keyframes pwaSlideUp{
+    from{opacity:0; transform:translateY(22px);}
+    to{opacity:1; transform:none;}
+  }
+  @media (min-width: 720px){
+    .pwa-install{
+      inset-inline-end:20px;
+      inset-inline-start:auto;
+      left:auto;
+      right:20px;
+      width:min(420px, calc(100% - 40px));
+      margin-inline:0;
+    }
+  }
+  @media (max-width: 420px){
+    .pwa-install{align-items:flex-start; gap:12px;}
+    .pwa-install-icon-wrap{width:76px; height:76px; border-radius:20px;}
+  }
+
   @keyframes rise{
     from{opacity:0; transform:translateY(14px);}
     to{opacity:1; transform:none;}
@@ -2108,6 +2252,23 @@
   </div>
 
   <footer>نَسْق · مساحة آمنة للاستشارة النفسية والاجتماعية · 2026</footer>
+</div>
+
+<!-- رسالة تثبيت التطبيق -->
+<div class="pwa-install" id="pwaInstallBanner" role="dialog" aria-labelledby="pwaInstallTitle" aria-live="polite" hidden>
+  <button type="button" class="pwa-install-close" id="pwaInstallDismiss" aria-label="إغلاق">×</button>
+  <div class="pwa-install-icon-wrap">
+    <img class="pwa-install-icon" src="assets/icon-nasq.png" width="96" height="96" alt="أيقونة نَسْق" decoding="async">
+  </div>
+  <div class="pwa-install-body">
+    <h3 class="pwa-install-title" id="pwaInstallTitle">ثبّت نَسْق كتطبيق</h3>
+    <p class="pwa-install-text">افتحه كتطبيق من الشاشة الرئيسية — سريع وواضح وبمكان واحد دائماً.</p>
+    <div class="pwa-install-actions">
+      <button type="button" class="pwa-install-btn" id="pwaInstallBtn">تثبيت الآن</button>
+      <button type="button" class="pwa-install-later" id="pwaInstallLater">لاحقاً</button>
+    </div>
+    <p class="pwa-install-ios hidden" id="pwaIosHint">على iPhone: اضغط مشاركة <strong>⎙</strong> ثم «إضافة إلى الشاشة الرئيسية».</p>
+  </div>
 </div>
 
 <!-- نافذة اختيار الوقت اليدوي -->
@@ -3232,7 +3393,7 @@ document.getElementById('confirmBtn').addEventListener('click', () => {
     date: selectedDate,
     time: selectedTime,
     name,
-    phone: `+965 ${phone}`,
+    phone: formatFullPhone(phone),
     email,
     notes,
     createdAt: new Date().toISOString()
@@ -3240,7 +3401,8 @@ document.getElementById('confirmBtn').addEventListener('click', () => {
 
   const d = new Date(selectedDate + 'T12:00:00');
   const [sh, sm] = selectedTime.split(':').map(Number);
-  const contactMethod = email ? `على +965 ${phone} أو بريدك` : `على +965 ${phone}`;
+  const fullPhone = formatFullPhone(phone);
+  const contactMethod = email ? `على ${fullPhone} أو بريدك` : `على ${fullPhone}`;
   document.getElementById('doneSummary').textContent =
     `حيّاك الله. جلستك (${selectedType}) محجوزة يوم ${dayNamesAr[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} الساعة ${formatDisplay(sh, sm)} عبر Zoom. سيصلك رابط اللقاء بلطف ${contactMethod}. خذ نفساً… أنت في المكان المناسب.`;
 
@@ -3278,11 +3440,141 @@ document.getElementById('scrollMetaBtn')?.addEventListener('click', (e) => {
   if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
 });
 
+/* ===== PWA: تثبيت التطبيق ===== */
+const PWA_DISMISS_KEY = 'nasqPwaInstallDismissV1';
+let deferredPwaPrompt = null;
+
+function isStandalonePwa(){
+  return window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true
+    || document.referrer.includes('android-app://');
+}
+
+function isIosSafari(){
+  const ua = navigator.userAgent || '';
+  const iOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const webkit = /WebKit/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+  return iOS && webkit;
+}
+
+function wasPwaDismissed(){
+  try{
+    const raw = localStorage.getItem(PWA_DISMISS_KEY);
+    if(!raw) return false;
+    const t = parseInt(raw, 10);
+    if(Number.isNaN(t)) return false;
+    // أخفِ لمدة 7 أيام بعد الإغلاق
+    return (Date.now() - t) < 7 * 24 * 60 * 60 * 1000;
+  }catch(e){
+    return false;
+  }
+}
+
+function dismissPwaBanner(daysOnly){
+  try{ localStorage.setItem(PWA_DISMISS_KEY, String(Date.now())); }catch(e){}
+  hidePwaBanner();
+}
+
+function hidePwaBanner(){
+  const el = document.getElementById('pwaInstallBanner');
+  if(!el) return;
+  el.classList.remove('is-visible');
+  el.hidden = true;
+}
+
+function showPwaBanner({ iosHint = false } = {}){
+  if(isStandalonePwa() || wasPwaDismissed()) return;
+  const el = document.getElementById('pwaInstallBanner');
+  if(!el) return;
+  const hint = document.getElementById('pwaIosHint');
+  const installBtn = document.getElementById('pwaInstallBtn');
+  if(hint){
+    if(iosHint) hint.classList.remove('hidden');
+    else hint.classList.add('hidden');
+  }
+  if(installBtn){
+    // على iOS لا يوجد beforeinstallprompt — نُظهر التعليمات
+    installBtn.textContent = iosHint ? 'كيف أثبّت؟' : 'تثبيت الآن';
+  }
+  el.hidden = false;
+  el.classList.add('is-visible');
+}
+
+function initPwaInstall(){
+  if(isStandalonePwa()) return;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPwaPrompt = e;
+    // أظهِر الرسالة بعد لحظة قصيرة حتى لا تزعج فوراً
+    setTimeout(() => showPwaBanner({ iosHint: false }), 1600);
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredPwaPrompt = null;
+    try{ localStorage.setItem(PWA_DISMISS_KEY, String(Date.now())); }catch(e){}
+    hidePwaBanner();
+  });
+
+  // iOS / متصفحات بدون beforeinstallprompt
+  setTimeout(() => {
+    if(deferredPwaPrompt || isStandalonePwa() || wasPwaDismissed()) return;
+    if(isIosSafari()){
+      showPwaBanner({ iosHint: true });
+    }else{
+      // أظهِر بانر عام بعد زيارة قصيرة — قد يدعم التثبيت من القائمة
+      showPwaBanner({ iosHint: false });
+    }
+  }, 4200);
+
+  const installBtn = document.getElementById('pwaInstallBtn');
+  const laterBtn = document.getElementById('pwaInstallLater');
+  const closeBtn = document.getElementById('pwaInstallDismiss');
+
+  installBtn?.addEventListener('click', async () => {
+    if(deferredPwaPrompt){
+      deferredPwaPrompt.prompt();
+      try{
+        const choice = await deferredPwaPrompt.userChoice;
+        deferredPwaPrompt = null;
+        if(choice && choice.outcome === 'accepted'){
+          hidePwaBanner();
+        }else{
+          dismissPwaBanner();
+        }
+      }catch(e){
+        dismissPwaBanner();
+      }
+      return;
+    }
+    // بدون حدث التثبيت: أكّد تلميح iOS أو الإرشادات
+    if(isIosSafari()){
+      const hint = document.getElementById('pwaIosHint');
+      if(hint){
+        hint.classList.remove('hidden');
+        hint.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+      return;
+    }
+    alert('من قائمة المتصفح اختر: تثبيت التطبيق / Install app / إضافة إلى الشاشة الرئيسية.');
+  });
+
+  laterBtn?.addEventListener('click', () => dismissPwaBanner());
+  closeBtn?.addEventListener('click', () => dismissPwaBanner());
+}
+
 initTheme();
 renderClockNumbers();
 syncFromState();
 goBookingStep(1, { scroll: false });
 updateSummary();
+if(typeof initDateTrainInteractions === 'function') initDateTrainInteractions();
+initPwaInstall();
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
