@@ -66,7 +66,7 @@
     --glow-b:color-mix(in oklab, var(--primary) 12%, transparent);
     --grid-line:color-mix(in oklab, var(--primary) 5%, transparent);
     --shadow:var(--shadow-soft);
-    --photo-bg:url("assets/bg-serene.png?v=3");
+    --photo-bg:url("assets/bg-umbrella-sakura.png?v=6");
   }
 
   *{box-sizing:border-box;}
@@ -2362,9 +2362,9 @@
 <script>
 const PHOTO_BG_KEY = 'nasqPhotoBgV1';
 const PHOTO_BACKGROUNDS = [
+  { file: 'assets/bg-umbrella-sakura.png', label: 'مظلّة تحت الساكورا' },
   { file: 'assets/bg-serene.png', label: 'غرفة وزهور' },
   { file: 'assets/bg-rose-beach.png', label: 'وردة على الشاطئ' },
-  { file: 'assets/bg-umbrella-sakura.png', label: 'مظلّة تحت الساكورا' },
   { file: 'assets/bg-purple-window.png', label: 'نافذة بنفسجية' },
   { file: 'assets/bg-seaside-cafe.png', label: 'مقهى على البحر' },
   { file: 'assets/bg-cozy-morning.png', label: 'صباح هادئ' },
@@ -2380,7 +2380,7 @@ function getAssetBaseRoot(){
 }
 
 function photoBackgroundUrl(file){
-  return new URL(file + '?v=5', location.origin + getAssetBaseRoot()).href;
+  return new URL(file + '?v=6', location.origin + getAssetBaseRoot()).href;
 }
 
 function applyPhotoBackground(index, { persist = true } = {}){
@@ -2404,12 +2404,15 @@ function cyclePhotoBackground(){
 }
 
 (function initPhotoBackground(){
+  // الافتراضي: مظلّة تحت الساكورا — إن وُجد اختيار محفوظ نستخدمه
   let idx = 0;
   try{
     const saved = localStorage.getItem(PHOTO_BG_KEY);
     if(saved != null && saved !== ''){
       const n = parseInt(saved, 10);
-      if(!Number.isNaN(n)) idx = n;
+      if(!Number.isNaN(n) && n >= 0 && n < PHOTO_BACKGROUNDS.length) idx = n;
+    }else{
+      idx = 0; // الخلفية الأساسية
     }
   }catch(e){}
   applyPhotoBackground(idx, { persist: false });
