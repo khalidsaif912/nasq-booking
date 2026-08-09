@@ -728,6 +728,56 @@
 
   .stack{display:flex; flex-direction:column; gap:12px; min-width:0; max-width:100%;}
 
+  /* مراحل الحجز الآلية */
+  .booking-step{
+    transition: opacity .25s ease, transform .25s ease, box-shadow .25s ease;
+  }
+  .booking-step[hidden]{
+    display:none !important;
+  }
+  .booking-step.is-current{
+    box-shadow:
+      0 0 0 2px color-mix(in oklab, var(--primary) 35%, transparent),
+      var(--shadow-soft);
+  }
+  .booking-step.is-done:not(.is-current){
+    opacity:.92;
+  }
+  .booking-step-enter{
+    animation: stepIn .4s ease both;
+  }
+  @keyframes stepIn{
+    from{opacity:0; transform:translateY(12px);}
+    to{opacity:1; transform:none;}
+  }
+  .step-nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:0 0 12px;
+  }
+  .step-nav-item{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    font-weight:700;
+    color:var(--muted-foreground);
+    padding:4px 10px;
+    border-radius:999px;
+    background:color-mix(in oklab, var(--background) 70%, transparent);
+    border:1px solid var(--border);
+  }
+  .step-nav-item.is-on{
+    color:#fff;
+    background:#0f766e;
+    border-color:#0a5c55;
+  }
+  .step-nav-item.is-done{
+    color:var(--primary);
+    border-color:color-mix(in oklab, var(--primary) 40%, transparent);
+  }
+
   /* ===== قطار الأيام (لا يوسّع الصفحة) ===== */
   .date-train{
     width:100%;
@@ -1415,16 +1465,21 @@
 
   <div class="section-head" id="booking">
     <h2>اختر وقتاً يناسبك</h2>
-    <p>خذ وقتك في اختيار اليوم والساعة. بعد التأكيد، نرسل لك رابط الجلسة برفق.</p>
+    <p>خطوات بسيطة ومتتابعة: نوع الاهتمام، ثم اليوم والوقت، ثم نبذة عنك.</p>
+    <div class="step-nav" id="stepNav" aria-label="مراحل الحجز">
+      <span class="step-nav-item is-on" data-nav="1">1 · الاهتمام</span>
+      <span class="step-nav-item" data-nav="2">2 · اليوم والوقت</span>
+      <span class="step-nav-item" data-nav="3">3 · نبذة عنك</span>
+    </div>
   </div>
 
   <div id="bookingFlow" class="booking-layout">
     <div class="stack">
-      <div class="panel">
+      <div class="panel booking-step is-current" data-step="1" id="stepType">
         <h3><span class="step">1</span> بماذا نحتاج أن نهتم معاً؟</h3>
         <div class="type-grid" id="typeGrid">
-          <label class="type-option active">
-            <input type="radio" name="consultType" value="نفسية" checked>
+          <label class="type-option">
+            <input type="radio" name="consultType" value="نفسية">
             <strong>استشارة نفسية</strong>
             <span>القلق، التوتر، الحزن، أو الحاجة لهدوء داخلي</span>
           </label>
@@ -1446,8 +1501,8 @@
         </div>
       </div>
 
-      <div class="panel" id="datePanel">
-        <h3><span class="step">2</span> اختر اليوم</h3>
+      <div class="panel booking-step" data-step="2" id="stepDateTime" hidden>
+        <h3><span class="step">2</span> اختر اليوم والوقت</h3>
         <div class="date-train" id="dateTrain">
           <div class="date-row-shell">
             <div class="date-viewport" id="dateViewport">
@@ -1456,11 +1511,9 @@
           </div>
         </div>
         <p class="date-train-hint" id="dateTrainHint">مرّر أفقياً — يتحرك الشريط تلقائياً أولاً لتتعرّف عليه</p>
-      </div>
 
-      <div class="panel">
-        <div class="time-head">
-          <h3><span class="step">3</span> اختر الوقت</h3>
+        <div class="time-head" style="margin-top:14px">
+          <h3 style="margin:0"><span class="step" style="width:18px;height:18px;font-size:10px">⏱</span> اختر الوقت</h3>
           <button class="format-toggle-btn" id="formatToggleBtn" type="button">24 ساعة</button>
         </div>
         <div class="time-grid" id="timeGrid"></div>
@@ -1472,8 +1525,8 @@
         </div>
       </div>
 
-      <div class="panel">
-        <h3><span class="step">4</span> نبذة عنك</h3>
+      <div class="panel booking-step" data-step="3" id="stepAbout" hidden>
+        <h3><span class="step">3</span> نبذة عنك</h3>
         <div class="field">
           <label for="nameInput">الاسم الذي تفضّل أن نناديك به</label>
           <input type="text" id="nameInput" placeholder="مثال: سلمى" autocomplete="name">
@@ -1496,7 +1549,7 @@
       </div>
     </div>
 
-    <aside class="side-sticky">
+    <aside class="side-sticky" id="bookingAside" hidden>
       <div class="panel">
         <h3>ملخص جلستك</h3>
         <div class="summary" id="summaryBox">عندما تختار موعداً، سيظهر هنا بهدوء.</div>
@@ -1858,7 +1911,71 @@ function initDesignMode(){
 
 let selectedDate = null;
 let selectedTime = null;
-let selectedType = 'نفسية';
+let selectedType = '';
+let bookingStep = 1;
+let datesRendered = false;
+
+function updateStepNav(step){
+  document.querySelectorAll('.step-nav-item').forEach(el => {
+    const n = Number(el.dataset.nav);
+    el.classList.toggle('is-on', n === step);
+    el.classList.toggle('is-done', n < step);
+  });
+}
+
+function goBookingStep(step, opts = {}){
+  const { scroll = true, focus = null } = opts;
+  bookingStep = step;
+
+  document.querySelectorAll('.booking-step').forEach(el => {
+    const n = Number(el.dataset.step);
+    const show = n <= step;
+    el.hidden = !show;
+    el.classList.toggle('is-current', n === step);
+    el.classList.toggle('is-done', n < step);
+    el.classList.remove('booking-step-enter');
+    if(n === step && show){
+      // reflow for animation
+      void el.offsetWidth;
+      el.classList.add('booking-step-enter');
+    }
+  });
+
+  const aside = document.getElementById('bookingAside');
+  if(aside) aside.hidden = step < 2;
+
+  updateStepNav(step);
+
+  if(step >= 2 && !datesRendered){
+    renderDates();
+    datesRendered = true;
+  }else if(step >= 2){
+    requestAnimationFrame(() => observeDateTrainHint());
+  }
+
+  if(scroll){
+    const target = document.querySelector(`.booking-step[data-step="${step}"]`) || document.getElementById('booking');
+    setTimeout(() => {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if(focus){
+        const f = document.getElementById(focus);
+        if(f) f.focus({ preventScroll: true });
+      }
+    }, 80);
+  }
+}
+
+function maybeAdvanceToAbout(){
+  if(bookingStep >= 3) return;
+  if(selectedDate && selectedTime){
+    goBookingStep(3, { scroll: true, focus: 'nameInput' });
+  }
+}
+
+function tryAdvanceAfterSchedule(){
+  updateSummary();
+  maybeAdvanceToAbout();
+}
 let timeFormat = '24';
 let customHour24 = CONFIG.startHour;
 let customMinute = 0;
@@ -2115,7 +2232,7 @@ function playDateTrainHint(){
 }
 
 function observeDateTrainHint(){
-  const panel = document.getElementById('datePanel');
+  const panel = document.getElementById('stepDateTime');
   if(!panel || panel.dataset.hintObserved === '1') return;
   panel.dataset.hintObserved = '1';
 
@@ -2217,7 +2334,7 @@ function renderDates(){
   dateTrainX = 0;
   dateTrainHintStopped = false;
   clearDateTrainHintTimers();
-  const panel = document.getElementById('datePanel');
+  const panel = document.getElementById('stepDateTime');
   if(panel){
     delete panel.dataset.hintPlayed;
     delete panel.dataset.hintObserved;
@@ -2259,6 +2376,10 @@ function renderDates(){
       document.getElementById('customTimeNote').textContent = '';
       renderTimes();
       updateSummary();
+      // إعادة اختيار يوم → تبقى في مرحلة الوقت حتى يختار الساعة
+      if(bookingStep > 2){
+        goBookingStep(2, { scroll: false });
+      }
     });
     track.appendChild(chip);
   }
@@ -2269,11 +2390,13 @@ function renderDates(){
     observeDateTrainHint();
   });
 
+  // اختر أول يوم متاح دون الانتقال لمرحلة «نبذة» قبل اختيار الوقت
   const firstChip = track.querySelector('.date-chip');
   if(firstChip){
     firstChip.classList.add('active');
     firstChip.setAttribute('aria-selected', 'true');
     selectedDate = firstChip.dataset.date;
+    selectedTime = null;
     renderTimes();
     updateSummary();
   }
@@ -2307,7 +2430,7 @@ function renderTimes(){
         slot.classList.add('active');
         document.getElementById('customTimeNote').textContent = '';
         document.getElementById('manualTimePreview').classList.add('hidden');
-        updateSummary();
+        tryAdvanceAfterSchedule();
       });
     }else{
       slot.disabled = true;
@@ -2386,7 +2509,7 @@ document.getElementById('useCustomTimeBtn').addEventListener('click', () => {
   preview.classList.remove('hidden');
   outerNote.textContent = '';
   closeClockModal();
-  updateSummary();
+  tryAdvanceAfterSchedule();
 });
 
 function updateSummary(){
@@ -2398,11 +2521,19 @@ function updateSummary(){
   if(selectedDate && selectedTime){
     const d = new Date(selectedDate + 'T12:00:00');
     const [sh, sm] = selectedTime.split(':').map(Number);
+    const typeLabel = selectedType || '—';
     box.innerHTML = `
-      الموضوع: <strong>${selectedType}</strong><br>
+      الموضوع: <strong>${typeLabel}</strong><br>
       الموعد: <strong>${dayNamesAr[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}</strong><br>
       الوقت: <strong>${formatDisplay(sh, sm)}</strong> · ساعة لك<br>
       الجلسة: <strong>عبر Zoom</strong> · بهدوء وخصوصية
+    `;
+  }else if(selectedDate){
+    const d = new Date(selectedDate + 'T12:00:00');
+    box.innerHTML = `
+      الموضوع: <strong>${selectedType || '—'}</strong><br>
+      اليوم: <strong>${dayNamesAr[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}</strong><br>
+      الوقت: <strong>اختر ساعة مناسبة</strong>
     `;
   }else{
     box.textContent = 'عندما تختار موعداً، سيظهر هنا بهدوء.';
@@ -2419,6 +2550,29 @@ document.querySelectorAll('input[name="consultType"]').forEach(input => {
     document.querySelectorAll('.type-option').forEach(opt => opt.classList.remove('active'));
     input.closest('.type-option').classList.add('active');
     updateSummary();
+    // الانتقال التلقائي لمرحلة اليوم والوقت
+    if(bookingStep < 2){
+      goBookingStep(2, { scroll: true });
+    }else{
+      // إبقاء المستخدم في مرحلته مع تحديث الملخص فقط
+      goBookingStep(Math.max(bookingStep, 2), { scroll: false });
+    }
+  });
+});
+
+// دعم النقر على الخيار حتى لو كان محدداً مسبقاً (للعنصر الذي لم يُشغّل change)
+document.querySelectorAll('.type-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const input = opt.querySelector('input[name="consultType"]');
+    if(!input) return;
+    // إذا لم يتغير الاختيار ولم نتجاوز المرحلة 1، نتقدّم
+    if(input.checked && bookingStep < 2){
+      selectedType = input.value;
+      document.querySelectorAll('.type-option').forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+      updateSummary();
+      goBookingStep(2, { scroll: true });
+    }
   });
 });
 
@@ -2459,21 +2613,22 @@ document.getElementById('confirmBtn').addEventListener('click', () => {
 document.getElementById('newBookingBtn').addEventListener('click', () => {
   selectedDate = null;
   selectedTime = null;
-  selectedType = 'نفسية';
+  selectedType = '';
+  datesRendered = false;
   document.getElementById('nameInput').value = '';
   document.getElementById('phoneInput').value = '';
   document.getElementById('emailInput').value = '';
   document.getElementById('notesInput').value = '';
   document.getElementById('customTimeNote').textContent = '';
   document.getElementById('manualTimePreview').classList.add('hidden');
-  document.querySelectorAll('.type-option').forEach((opt, i) => {
-    opt.classList.toggle('active', i === 0);
+  document.querySelectorAll('.type-option').forEach(opt => {
+    opt.classList.remove('active');
     const radio = opt.querySelector('input');
-    if(radio) radio.checked = i === 0;
+    if(radio) radio.checked = false;
   });
   document.getElementById('doneCard').classList.add('hidden');
   document.getElementById('bookingFlow').classList.remove('hidden');
-  renderDates();
+  goBookingStep(1, { scroll: true });
   updateSummary();
   document.getElementById('booking').scrollIntoView({behavior:'smooth'});
 });
@@ -2487,7 +2642,7 @@ document.getElementById('scrollMetaBtn').addEventListener('click', (e) => {
 initTheme();
 renderClockNumbers();
 syncFromState();
-renderDates();
+goBookingStep(1, { scroll: false });
 updateSummary();
 </script>
 </body>
