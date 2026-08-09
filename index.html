@@ -174,10 +174,10 @@
     flex-wrap:nowrap;
     gap:6px;
   }
-  .theme-btn, .design-btn, .copy-code-btn, .ghost-btn, .primary-btn, .confirm-btn, .use-time-btn, .format-toggle-btn, .new-booking, .date-chip, .time-slot, .ampm-btn, .open-clock-btn, .modal-close-btn{
+  .theme-btn, .design-btn, .copy-code-btn, .photo-btn, .ghost-btn, .primary-btn, .confirm-btn, .use-time-btn, .format-toggle-btn, .new-booking, .date-chip, .time-slot, .ampm-btn, .open-clock-btn, .modal-close-btn{
     font-family:inherit; border:none; cursor:pointer;
   }
-  .theme-btn, .design-btn, .copy-code-btn{
+  .theme-btn, .design-btn, .copy-code-btn, .photo-btn{
     display:inline-flex; align-items:center; justify-content:center;
     position:relative;
     width:34px;
@@ -198,6 +198,10 @@
     border-color:color-mix(in srgb, var(--accent-strong) 45%, var(--border));
     color:var(--accent-strong);
   }
+  .photo-btn{
+    background:color-mix(in srgb, var(--accent-soft) 55%, #f3e8ff);
+    border-color:color-mix(in srgb, var(--primary) 38%, var(--border));
+  }
   .copy-code-btn{
     background:color-mix(in srgb, var(--primary) 12%, white);
     border-color:color-mix(in srgb, var(--primary) 40%, var(--border));
@@ -205,9 +209,10 @@
   }
   .theme-btn:hover{background:color-mix(in srgb, var(--accent-soft) 70%, white);}
   .design-btn:hover{background:color-mix(in srgb, var(--accent-strong) 14%, white);}
+  .photo-btn:hover{background:color-mix(in srgb, #f3e8ff 75%, white);}
   .copy-code-btn:hover{background:color-mix(in srgb, var(--primary) 18%, white);}
-  .theme-btn:active, .design-btn:active, .copy-code-btn:active{transform:scale(.94);}
-  .theme-btn:disabled{opacity:.65; cursor:wait;}
+  .theme-btn:active, .design-btn:active, .copy-code-btn:active, .photo-btn:active{transform:scale(.94);}
+  .theme-btn:disabled, .photo-btn:disabled{opacity:.65; cursor:wait;}
   .copy-code-btn.copied{
     background:var(--primary);
     border-color:var(--primary);
@@ -216,9 +221,11 @@
   .theme-btn .btn-label,
   .design-btn .btn-label,
   .copy-code-btn .btn-label,
+  .photo-btn .btn-label,
   .theme-btn .btn-text,
   .design-btn .btn-text,
-  .copy-code-btn .btn-text{
+  .copy-code-btn .btn-text,
+  .photo-btn .btn-text{
     position:absolute !important;
     width:1px !important; height:1px !important;
     padding:0 !important; margin:-1px !important;
@@ -228,13 +235,13 @@
     border:0 !important;
     font-size:0 !important;
   }
-  .theme-swatch, .design-icon, .copy-icon{
+  .theme-swatch, .design-icon, .copy-icon, .photo-icon{
     width:16px; height:16px;
     display:grid; place-items:center;
     flex-shrink:0;
     background:transparent;
   }
-  .theme-swatch svg, .design-icon svg, .copy-icon svg{display:block; width:16px; height:16px;}
+  .theme-swatch svg, .design-icon svg, .copy-icon svg, .photo-icon svg{display:block; width:16px; height:16px;}
 
   .bg-code-bar{
     display:none !important;
@@ -523,7 +530,8 @@
   body.design-cyber .ghost-btn,
   body.design-cyber .theme-btn,
   body.design-cyber .design-btn,
-  body.design-cyber .copy-code-btn{
+  body.design-cyber .copy-code-btn,
+  body.design-cyber .photo-btn{
     background:rgba(15,23,42,.7);
     border:1px solid rgba(34,211,238,.35);
     color:#67e8f9;
@@ -1406,12 +1414,27 @@
   .phone-row{
     display:flex; background:var(--bg); border:1px solid var(--line); border-radius:12px; overflow:hidden;
   }
+  .phone-prefix-select{
+    flex:0 0 auto;
+    max-width:118px;
+    border:none;
+    background:color-mix(in srgb, var(--accent-soft) 55%, transparent);
+    border-inline-end:1px solid var(--line);
+    padding:0 8px;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+    cursor:pointer;
+    appearance:auto;
+  }
+  .phone-prefix-select:focus{outline:none; background:var(--accent-soft);}
   .phone-prefix{
     display:flex; align-items:center; gap:6px; padding:0 12px;
     font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--muted);
     border-left:1px solid var(--line); white-space:nowrap;
   }
-  .phone-row input[type=tel]{border:none; background:none; border-radius:0;}
+  .phone-row input[type=tel]{border:none; background:none; border-radius:0; min-width:0; flex:1;}
   .phone-row input[type=tel]:focus{outline:none;}
 
   .type-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
@@ -1667,7 +1690,7 @@
       gap:5px;
       margin-inline-start:auto;
     }
-    .theme-btn, .design-btn, .copy-code-btn{
+    .theme-btn, .design-btn, .copy-code-btn, .photo-btn{
       flex:0 0 auto;
       width:34px;
       height:34px;
@@ -1676,8 +1699,8 @@
       padding:0;
       border-radius:50%;
     }
-    .theme-swatch, .design-icon, .copy-icon{width:16px; height:16px;}
-    .theme-swatch svg, .design-icon svg, .copy-icon svg{width:16px; height:16px;}
+    .theme-swatch, .design-icon, .copy-icon, .photo-icon{width:16px; height:16px;}
+    .theme-swatch svg, .design-icon svg, .copy-icon svg, .photo-icon svg{width:16px; height:16px;}
     .top-actions .ghost-btn{display:none;}
     .top-actions .primary-btn{display:none;}
     .hero{
@@ -1842,6 +1865,16 @@
             </svg>
           </span>
           <span class="btn-text" id="themeLabel">خلط الخلفية</span>
+        </button>
+        <button class="photo-btn" id="photoToggleBtn" type="button" title="تغيير صورة الخلفية" aria-label="تغيير صورة الخلفية">
+          <span class="photo-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <circle cx="9" cy="10" r="1.6" fill="currentColor" stroke="none"/>
+              <path d="M3 16l5-4 4 3 4-5 5 6"/>
+            </svg>
+          </span>
+          <span class="btn-text" id="photoLabel">تغيير الصورة</span>
         </button>
         <button class="design-btn" id="designToggleBtn" type="button" title="Material Design" aria-label="تبديل أسلوب التصميم">
           <span class="design-icon" aria-hidden="true">
@@ -2018,7 +2051,23 @@
         <div class="field">
           <label for="phoneInput">رقم الهاتف</label>
           <div class="phone-row">
-            <span class="phone-prefix">🇰🇼 +965</span>
+            <select class="phone-prefix-select" id="dialCodeSelect" aria-label="رمز الدولة">
+              <option value="+965" selected>🇰🇼 +965</option>
+              <option value="+966">🇸🇦 +966</option>
+              <option value="+971">🇦🇪 +971</option>
+              <option value="+973">🇧🇭 +973</option>
+              <option value="+974">🇶🇦 +974</option>
+              <option value="+968">🇴🇲 +968</option>
+              <option value="+962">🇯🇴 +962</option>
+              <option value="+961">🇱🇧 +961</option>
+              <option value="+20">🇪🇬 +20</option>
+              <option value="+212">🇲🇦 +212</option>
+              <option value="+49">🇩🇪 +49</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+90">🇹🇷 +90</option>
+              <option value="+91">🇮🇳 +91</option>
+            </select>
             <input type="tel" id="phoneInput" placeholder="5xxxxxxx" inputmode="numeric" autocomplete="tel-national">
           </div>
         </div>
@@ -2110,15 +2159,54 @@
 </div>
 
 <script>
-/* ضمان مسار صورة الخلفية (يعمل محلياً وعلى GitHub Pages) */
-(function setPhotoBackgroundPath(){
+const PHOTO_BG_KEY = 'nasqPhotoBgV1';
+const PHOTO_BACKGROUNDS = [
+  { file: 'assets/bg-serene.png', label: 'غرفة وزهور' },
+  { file: 'assets/bg-rose-beach.png', label: 'وردة على الشاطئ' }
+];
+let photoBgIndex = 0;
+
+function getAssetBaseRoot(){
+  let root = location.pathname || '/';
+  if(/\.[a-zA-Z0-9]+$/.test(root)) root = root.replace(/\/[^/]*$/, '/');
+  if(!root.endsWith('/')) root += '/';
+  return root;
+}
+
+function photoBackgroundUrl(file){
+  return new URL(file + '?v=4', location.origin + getAssetBaseRoot()).href;
+}
+
+function applyPhotoBackground(index, { persist = true } = {}){
+  const i = ((index % PHOTO_BACKGROUNDS.length) + PHOTO_BACKGROUNDS.length) % PHOTO_BACKGROUNDS.length;
+  photoBgIndex = i;
+  const item = PHOTO_BACKGROUNDS[i];
+  const url = photoBackgroundUrl(item.file);
+  document.documentElement.style.setProperty('--photo-bg', 'url("' + url + '")');
+  const btn = document.getElementById('photoToggleBtn');
+  if(btn){
+    btn.title = 'صورة الخلفية: ' + item.label + ' (اضغط للتغيير)';
+    btn.setAttribute('aria-label', 'تغيير صورة الخلفية — الحالية: ' + item.label);
+  }
+  if(persist){
+    try{ localStorage.setItem(PHOTO_BG_KEY, String(i)); }catch(e){}
+  }
+}
+
+function cyclePhotoBackground(){
+  applyPhotoBackground(photoBgIndex + 1);
+}
+
+(function initPhotoBackground(){
+  let idx = 0;
   try{
-    let root = location.pathname || '/';
-    if(/\.[a-zA-Z0-9]+$/.test(root)) root = root.replace(/\/[^/]*$/, '/');
-    if(!root.endsWith('/')) root += '/';
-    const photoUrl = new URL('assets/bg-serene.png?v=3', location.origin + root).href;
-    document.documentElement.style.setProperty('--photo-bg', 'url("' + photoUrl + '")');
+    const saved = localStorage.getItem(PHOTO_BG_KEY);
+    if(saved != null && saved !== ''){
+      const n = parseInt(saved, 10);
+      if(!Number.isNaN(n)) idx = n;
+    }
   }catch(e){}
+  applyPhotoBackground(idx, { persist: false });
 })();
 
 const CONFIG = {
@@ -2398,12 +2486,27 @@ function initTheme(){
       .catch(() => { clearTimeout(failSafe); unlock(); });
   });
 
+  const photoBtn = document.getElementById('photoToggleBtn');
+  if(photoBtn){
+    photoBtn.addEventListener('click', () => cyclePhotoBackground());
+  }
+
   const copyBtn = document.getElementById('copyBgCodeBtn');
   if(copyBtn){
     copyBtn.addEventListener('click', () => { copyBgCode(); });
   }
 
   initDesignMode();
+}
+
+function getSelectedDialCode(){
+  const el = document.getElementById('dialCodeSelect');
+  return (el && el.value) ? el.value : '+965';
+}
+
+function formatFullPhone(national){
+  const digits = String(national || '').replace(/\s+/g, ' ').trim();
+  return `${getSelectedDialCode()} ${digits}`.trim();
 }
 
 /* ===== أوضاع التصميم ===== */
