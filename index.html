@@ -564,9 +564,9 @@
     color:#e2e8f0;
   }
   body.design-cyber .digital-below{
-    background:
-      linear-gradient(155deg, #070b14 0%, #0f172a 48%, #0b1220 100%) !important;
-    border-color:rgba(34,211,238,.4) !important;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
     color:inherit;
   }
   body.design-cyber .digital-num{
@@ -1249,35 +1249,19 @@
     display:flex;
     align-items:stretch;
     justify-content:center;
-    gap:10px;
+    gap:12px;
     width:100%;
     direction:ltr;
     unicode-bidi:isolate;
-    padding:14px 16px;
-    border-radius:18px;
-    border:1px solid color-mix(in srgb, var(--primary) 28%, transparent);
-    background:
-      linear-gradient(155deg,
-        color-mix(in srgb, var(--ink) 92%, var(--primary)) 0%,
-        color-mix(in srgb, var(--ink) 86%, #1a1024) 48%,
-        color-mix(in srgb, var(--ink) 90%, var(--primary)) 100%);
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 18%, transparent),
-      inset 0 -12px 28px color-mix(in srgb, #000 35%, transparent),
-      0 12px 28px color-mix(in srgb, var(--primary) 18%, transparent),
-      0 0 0 1px color-mix(in srgb, var(--accent-strong) 22%, transparent);
+    padding:4px 0 2px;
+    border:none;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
     position:relative;
-    overflow:hidden;
+    overflow:visible;
   }
-  .digital-below::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-      radial-gradient(120% 80% at 20% 0%, color-mix(in srgb, var(--accent-strong) 22%, transparent), transparent 55%),
-      linear-gradient(180deg, color-mix(in srgb, white 8%, transparent), transparent 40%);
-    pointer-events:none;
-  }
+  .digital-below::before{content:none; display:none;}
   .digital-unit{
     position:relative;
     z-index:1;
@@ -1292,8 +1276,8 @@
     font-weight:700;
     letter-spacing:.18em;
     text-transform:uppercase;
-    color:color-mix(in srgb, var(--accent-strong) 75%, white);
-    opacity:.9;
+    color:color-mix(in srgb, var(--primary) 72%, var(--muted-foreground));
+    opacity:.95;
     font-family:'IBM Plex Sans Arabic',sans-serif;
   }
   .digital-num{
@@ -1352,9 +1336,9 @@
     font-size:1.55rem;
     font-weight:700;
     font-family:'JetBrains Mono',ui-monospace,monospace;
-    color:color-mix(in srgb, var(--accent-strong) 85%, white);
+    color:var(--primary);
     line-height:1;
-    text-shadow:0 0 14px color-mix(in srgb, var(--accent-strong) 60%, transparent);
+    text-shadow:0 0 14px color-mix(in srgb, var(--accent-strong) 40%, transparent);
     animation: digitalColonPulse 1.4s ease-in-out infinite;
   }
   @keyframes digitalColonPulse{
@@ -1367,26 +1351,24 @@
     align-self:center;
     margin-top:14px;
     min-height:42px;
-    background:color-mix(in srgb, #0c1218 90%, var(--primary));
-    border:1px solid color-mix(in srgb, var(--accent-strong) 40%, transparent);
+    background:color-mix(in srgb, var(--surface) 90%, var(--primary));
+    border:1px solid color-mix(in srgb, var(--primary) 30%, var(--border));
     border-radius:11px;
     padding:10px 12px;
     font-family:'IBM Plex Sans Arabic',sans-serif;
     font-size:13px;
     font-weight:700;
-    color:#f5f0e8;
-    box-shadow:inset 0 1px 4px color-mix(in srgb, #000 40%, transparent);
+    color:var(--ink);
+    box-shadow:none;
   }
   .ampm-select:focus{
     outline:none;
-    border-color:var(--accent-strong);
+    border-color:var(--primary);
   }
   body.design-cyber .digital-below{
-    border-color:rgba(34,211,238,.35);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.1),
-      0 0 24px rgba(34,211,238,.18),
-      0 0 0 1px rgba(168,85,247,.2);
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
   }
 
   .clock-controls{
@@ -1789,7 +1771,7 @@
     .merged-clock{padding:12px 10px;}
     .clock-stage{width:min(200px, 78vw);}
     .digital-num{width:58px; min-height:52px; font-size:1.4rem;}
-    .digital-below{padding:12px 12px; gap:8px;}
+    .digital-below{padding:2px 0; gap:10px; background:transparent; border:none; box-shadow:none;}
     .digital-unit-label{letter-spacing:.12em; font-size:8px;}
     .clock-modal{padding:12px; align-items:flex-end;}
     .clock-modal-dialog{
