@@ -1,5 +1,5 @@
 /* Service worker — نَسْق PWA */
-const CACHE_NAME = 'nasq-pwa-v1';
+const CACHE_NAME = 'nasq-pwa-v2';
 const PRECACHE = [
   './',
   './index.html',
@@ -9,7 +9,12 @@ const PRECACHE = [
   './assets/icon-180.png',
   './assets/icon-nasq.png',
   './assets/bg-serene.png',
-  './assets/bg-rose-beach.png'
+  './assets/bg-rose-beach.png',
+  './assets/bg-umbrella-sakura.png',
+  './assets/bg-purple-window.png',
+  './assets/bg-seaside-cafe.png',
+  './assets/bg-cozy-morning.png',
+  './assets/bg-meditation-green.png'
 ];
 
 self.addEventListener('install', (event) => {

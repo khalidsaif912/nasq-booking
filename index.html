@@ -2323,7 +2323,12 @@
 const PHOTO_BG_KEY = 'nasqPhotoBgV1';
 const PHOTO_BACKGROUNDS = [
   { file: 'assets/bg-serene.png', label: 'غرفة وزهور' },
-  { file: 'assets/bg-rose-beach.png', label: 'وردة على الشاطئ' }
+  { file: 'assets/bg-rose-beach.png', label: 'وردة على الشاطئ' },
+  { file: 'assets/bg-umbrella-sakura.png', label: 'مظلّة تحت الساكورا' },
+  { file: 'assets/bg-purple-window.png', label: 'نافذة بنفسجية' },
+  { file: 'assets/bg-seaside-cafe.png', label: 'مقهى على البحر' },
+  { file: 'assets/bg-cozy-morning.png', label: 'صباح هادئ' },
+  { file: 'assets/bg-meditation-green.png', label: 'هدوء الطبيعة' }
 ];
 let photoBgIndex = 0;
 
@@ -2335,7 +2340,7 @@ function getAssetBaseRoot(){
 }
 
 function photoBackgroundUrl(file){
-  return new URL(file + '?v=4', location.origin + getAssetBaseRoot()).href;
+  return new URL(file + '?v=5', location.origin + getAssetBaseRoot()).href;
 }
 
 function applyPhotoBackground(index, { persist = true } = {}){
