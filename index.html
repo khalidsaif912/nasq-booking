@@ -1629,10 +1629,45 @@
   }
   .done-card h2{margin:16px 0 12px; font-size:22px; color:var(--ink); font-weight:700;}
   .done-card p{color:color-mix(in srgb, var(--ink) 75%, var(--muted)); font-size:14px; line-height:1.8; margin:0 0 20px; font-weight:500;}
+  .done-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin:0 0 8px;
+  }
+  .done-wa-btn,
+  .done-ics-btn{
+    font-family:inherit;
+    border:none;
+    cursor:pointer;
+    font-weight:800;
+    font-size:13.5px;
+    padding:12px 18px;
+    border-radius:999px;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .done-wa-btn{
+    background:linear-gradient(135deg, #25D366, #128C7E);
+    color:#fff;
+    box-shadow:0 10px 22px rgba(18,140,126,.28);
+  }
+  .done-ics-btn{
+    background:var(--gradient-accent);
+    color:var(--primary-foreground);
+    box-shadow:0 8px 18px color-mix(in srgb, var(--primary) 22%, transparent);
+  }
+  .done-wa-btn:hover, .done-ics-btn:hover{transform:translateY(-2px);}
+  .done-hint{
+    margin:4px auto 16px !important;
+    max-width:36ch;
+    font-size:12.5px !important;
+    color:var(--muted-foreground) !important;
+  }
   .new-booking{
     background:var(--surface); border:1px solid var(--border); color:var(--ink);
     padding:12px 24px; border-radius:999px; font-size:14px; font-weight:700;
-    margin-top:24px; transition: background .15s ease;
+    margin-top:8px; transition: background .15s ease;
   }
   .new-booking:hover{background:var(--accent-soft);}
 
@@ -2248,6 +2283,11 @@
     <div class="done-icon">✓</div>
     <h2>موعدك محجوز بكل هدوء</h2>
     <p id="doneSummary"></p>
+    <div class="done-actions">
+      <button type="button" class="done-wa-btn" id="shareWhatsAppBtn">إرسال عبر واتساب</button>
+      <button type="button" class="done-ics-btn" id="downloadIcsBtn">إضافة للتقويم (.ics)</button>
+    </div>
+    <p class="done-hint" id="doneShareHint">افتحنا واتساب برسالة منسّقة، ونزّلنا ملف التقويم تلقائياً — يمكنك إعادة الإرسال من هنا في أي وقت.</p>
     <button class="new-booking" id="newBookingBtn">حجز جلسة أخرى</button>
   </div>
 
@@ -2380,7 +2420,9 @@ const CONFIG = {
   startHour: 9,
   endHour: 17,
   slotDurationMins: 60,
-  storageKey: 'nasq_consult_bookings_v1'
+  storageKey: 'nasq_consult_bookings_v1',
+  /* رقم واتساب لاستقبال الحجوزات (أرقام فقط مع مفتاح الدولة، مثال: 9655xxxxxxx). فارغ = يفتح واتساب ليختار المستخدم جهة الاتصال */
+  whatsAppBusinessDigits: ''
 };
 
 const dayNamesAr = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
@@ -2673,6 +2715,186 @@ function getSelectedDialCode(){
 function formatFullPhone(national){
   const digits = String(national || '').replace(/\s+/g, ' ').trim();
   return `${getSelectedDialCode()} ${digits}`.trim();
+}
+
+/* —— واتساب + ICS بعد التأكيد —— */
+let lastConfirmedBooking = null;
+
+function padIcs(n){ return String(n).padStart(2, '0'); }
+
+function toIcsLocalDateTime(d){
+  return (
+    d.getFullYear() +
+    padIcs(d.getMonth() + 1) +
+    padIcs(d.getDate()) + 'T' +
+    padIcs(d.getHours()) +
+    padIcs(d.getMinutes()) +
+    padIcs(d.getSeconds())
+  );
+}
+
+function toIcsUtcStamp(d){
+  return (
+    d.getUTCFullYear() +
+    padIcs(d.getUTCMonth() + 1) +
+    padIcs(d.getUTCDate()) + 'T' +
+    padIcs(d.getUTCHours()) +
+    padIcs(d.getUTCMinutes()) +
+    padIcs(d.getUTCSeconds()) + 'Z'
+  );
+}
+
+function escapeIcsText(s){
+  return String(s || '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\r?\n/g, '\\n')
+    .replace(/,/g, '\\,')
+    .replace(/;/g, '\\;');
+}
+
+function buildSessionStartDate(dateStr, timeStr){
+  const [h, m] = String(timeStr).split(':').map(Number);
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setHours(h || 0, m || 0, 0, 0);
+  return d;
+}
+
+function formatArabicLongDate(dateStr){
+  const d = new Date(dateStr + 'T12:00:00');
+  return `${dayNamesAr[d.getDay()]} ${d.getDate()} ${monthNamesAr[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function buildIcsContent(booking){
+  const start = buildSessionStartDate(booking.date, booking.time);
+  const end = new Date(start.getTime() + (CONFIG.slotDurationMins || 60) * 60000);
+  const [sh, sm] = booking.time.split(':').map(Number);
+  const title = `جلسة نَسْق — ${booking.type}`;
+  const descLines = [
+    'جلسة استشارة عبر نَسْق',
+    `الاسم: ${booking.name}`,
+    `النوع: ${booking.type}`,
+    `الوقت: ${formatDisplay(sh, sm)}`,
+    `الجوال: ${booking.phone}`,
+    booking.email ? `البريد: ${booking.email}` : '',
+    booking.notes ? `ملاحظات: ${booking.notes}` : '',
+    '',
+    'المكان: Zoom (يُرسل الرابط لاحقاً بلطف).',
+    'نَسْق — مساحة آمنة للتحدث.'
+  ].filter(line => line !== undefined);
+  const desc = descLines.join('\n');
+  const uid = `nasq-${booking.date}-${String(booking.time).replace(':','')}-${Date.now()}@nasq`;
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Nasq//Consultation Booking//AR',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:نَسْق',
+    'BEGIN:VEVENT',
+    `UID:${uid}`,
+    `DTSTAMP:${toIcsUtcStamp(new Date())}`,
+    `DTSTART:${toIcsLocalDateTime(start)}`,
+    `DTEND:${toIcsLocalDateTime(end)}`,
+    `SUMMARY:${escapeIcsText(title)}`,
+    `DESCRIPTION:${escapeIcsText(desc)}`,
+    'LOCATION:Zoom — جلسة عن بُعد',
+    'STATUS:CONFIRMED',
+    'TRANSP:OPAQUE',
+    'BEGIN:VALARM',
+    'TRIGGER:-PT30M',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:تذكير بجلسة نَسْق بعد قليل',
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+}
+
+function buildWhatsAppMessage(booking){
+  const [sh, sm] = booking.time.split(':').map(Number);
+  const dateAr = formatArabicLongDate(booking.date);
+  const timeAr = formatDisplay(sh, sm);
+  const notesBlock = booking.notes && booking.notes.trim()
+    ? booking.notes.trim()
+    : 'لم تُضف ملاحظات — وهذا بخير أيضاً 🕊️';
+
+  return [
+    '🌿 *تأكيد جلسة نَسْق*',
+    '',
+    `مرحباً *${booking.name}* 🤍`,
+    'يسعدنا وجودك معنا في مساحة *هادئة وآمنة*… بلا أحكام، وبكل لطف.',
+    '',
+    '───────────────',
+    '📋 *تفاصيل التسجيل*',
+    `• النوع: *${booking.type}*`,
+    `• اليوم: *${dateAr}*`,
+    `• الوقت: *${timeAr}*`,
+    `• المدة: *${CONFIG.slotDurationMins || 60} دقيقة لك*`,
+    '• المكان: *جلسة مريحة عن بُعد عبر Zoom*',
+    `• الجوال: *${booking.phone}*`,
+    booking.email ? `• البريد: *${booking.email}*` : '• البريد: _لم يُدخل_',
+    '───────────────',
+    '',
+    '📝 *ما يثقل القلب*',
+    notesBlock,
+    '',
+    '───────────────',
+    '🎥 سيصلك *رابط Zoom* بهدوء قبل الموعد.',
+    '📅 ملف *التقويم (.ics)* جاهز للإضافة إلى تقويمك.',
+    '',
+    'خذ نفساً عميقاً…',
+    'أنت في المكان المناسب، وفي الوقت المناسب 🌷',
+    '',
+    '— فريق *نَسْق*',
+    '_مساحة آمنة للاستشارة النفسية والاجتماعية_'
+  ].join('\n');
+}
+
+function downloadIcsFile(booking){
+  const ics = buildIcsContent(booking);
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const fileName = `nasq-session-${booking.date}-${String(booking.time).replace(':','')}.ics`;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2500);
+  return { blob, fileName, ics };
+}
+
+function openWhatsAppWithMessage(message){
+  const digits = String(CONFIG.whatsAppBusinessDigits || '').replace(/\D/g, '');
+  const encoded = encodeURIComponent(message);
+  const url = digits
+    ? `https://wa.me/${digits}?text=${encoded}`
+    : `https://wa.me/?text=${encoded}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+async function shareBookingToWhatsAppAndCalendar(booking){
+  const message = buildWhatsAppMessage(booking);
+  const { blob, fileName } = downloadIcsFile(booking);
+
+  try{
+    const file = new File([blob], fileName, { type: 'text/calendar' });
+    if(navigator.canShare && navigator.canShare({ files: [file] })){
+      await navigator.share({
+        files: [file],
+        title: 'جلسة نَسْق',
+        text: message
+      });
+      return { shared: true, method: 'share' };
+    }
+  }catch(e){
+    /* المستخدم ألغى أو المشاركة غير مدعومة */
+  }
+
+  openWhatsAppWithMessage(message);
+  return { shared: true, method: 'whatsapp-link' };
 }
 
 /* ===== أوضاع التصميم ===== */
@@ -3381,7 +3603,7 @@ document.querySelectorAll('.type-option').forEach(opt => {
   });
 });
 
-document.getElementById('confirmBtn').addEventListener('click', () => {
+document.getElementById('confirmBtn').addEventListener('click', async () => {
   const name = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
   const email = document.getElementById('emailInput').value.trim();
@@ -3393,27 +3615,50 @@ document.getElementById('confirmBtn').addEventListener('click', () => {
     return;
   }
 
-  saveBooking({
+  const fullPhone = formatFullPhone(phone);
+  const booking = {
     type: selectedType,
     date: selectedDate,
     time: selectedTime,
     name,
-    phone: formatFullPhone(phone),
+    phone: fullPhone,
     email,
     notes,
     createdAt: new Date().toISOString()
-  });
+  };
+
+  saveBooking(booking);
+  lastConfirmedBooking = booking;
 
   const d = new Date(selectedDate + 'T12:00:00');
   const [sh, sm] = selectedTime.split(':').map(Number);
-  const fullPhone = formatFullPhone(phone);
   const contactMethod = email ? `على ${fullPhone} أو بريدك` : `على ${fullPhone}`;
   document.getElementById('doneSummary').textContent =
-    `حيّاك الله. جلستك (${selectedType}) محجوزة يوم ${dayNamesAr[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} الساعة ${formatDisplay(sh, sm)} عبر Zoom. سيصلك رابط اللقاء بلطف ${contactMethod}. خذ نفساً… أنت في المكان المناسب.`;
+    `حيّاك الله. جلستك (${selectedType}) محجوزة يوم ${dayNamesAr[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} الساعة ${formatDisplay(sh, sm)} عبر Zoom. سنبلغك بلطف ${contactMethod}. خذ نفساً… أنت في المكان المناسب.`;
 
   document.getElementById('bookingFlow').classList.add('hidden');
   document.getElementById('doneCard').classList.remove('hidden');
   document.getElementById('doneCard').scrollIntoView({behavior:'smooth', block:'center'});
+
+  // واتساب + ملف ICS
+  try{
+    await shareBookingToWhatsAppAndCalendar(booking);
+  }catch(e){
+    try{
+      downloadIcsFile(booking);
+      openWhatsAppWithMessage(buildWhatsAppMessage(booking));
+    }catch(err){}
+  }
+});
+
+document.getElementById('shareWhatsAppBtn')?.addEventListener('click', () => {
+  if(!lastConfirmedBooking) return;
+  openWhatsAppWithMessage(buildWhatsAppMessage(lastConfirmedBooking));
+});
+
+document.getElementById('downloadIcsBtn')?.addEventListener('click', () => {
+  if(!lastConfirmedBooking) return;
+  downloadIcsFile(lastConfirmedBooking);
 });
 
 document.getElementById('newBookingBtn').addEventListener('click', () => {
@@ -3434,6 +3679,7 @@ document.getElementById('newBookingBtn').addEventListener('click', () => {
   });
   document.getElementById('doneCard').classList.add('hidden');
   document.getElementById('bookingFlow').classList.remove('hidden');
+  lastConfirmedBooking = null;
   goBookingStep(1, { scroll: true });
   updateSummary();
   document.getElementById('booking').scrollIntoView({behavior:'smooth'});
