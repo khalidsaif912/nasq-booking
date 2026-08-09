@@ -1,0 +1,2494 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نَسْق — استشارة نفسية واجتماعية</title>
+<meta name="description" content="نَسْق: مساحة آمنة ولطيفة للاستشارة النفسية والاجتماعية، مع حجز جلسة عبر Zoom.">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* تنسيق موحّد من page-style-unified.lovable.app */
+  :root{
+    --background:oklch(96.3% .011 180);
+    --foreground:oklch(19% .014 180);
+    --surface:oklch(99.5% .003 180);
+    --primary:oklch(42% .062 175);
+    --primary-foreground:oklch(98.5% .006 175);
+    --accent-strong:oklch(56% .078 172);
+    --secondary:oklch(94% .014 178);
+    --muted-bg:oklch(94% .014 178);
+    --muted-foreground:oklch(46% .021 175);
+    --accent-tint:oklch(92% .029 175);
+    --accent-soft:oklch(94% .024 175);
+    --accent-foreground:oklch(30% .045 175);
+    --border:oklch(87% .019 175);
+    --line-soft:oklch(92% .014 175);
+    --destructive:oklch(52% .14 28);
+    --radius:1.125rem;
+    --shadow-soft:0 12px 34px color-mix(in oklab, var(--foreground) 6%, transparent);
+    --shadow-elegant:0 26px 60px color-mix(in oklab, var(--foreground) 12%, transparent);
+    --gradient-accent:linear-gradient(145deg, var(--accent-strong), var(--primary));
+    --gradient-page:
+      radial-gradient(1200px 700px at 100% -10%, color-mix(in oklab, var(--accent-strong) 16%, transparent), transparent 55%),
+      radial-gradient(900px 500px at -10% 20%, color-mix(in oklab, var(--primary) 12%, transparent), transparent 50%),
+      linear-gradient(165deg, var(--background) 0%, color-mix(in oklab, var(--background) 60%, white) 45%, color-mix(in oklab, var(--background) 82%, var(--primary)) 100%);
+
+    /* aliases للتوافق مع بقية الصفحة */
+    --bg:var(--background);
+    --bg-deep:color-mix(in oklab, var(--background) 82%, var(--primary));
+    --panel:var(--surface);
+    --line:var(--border);
+    --ink:var(--foreground);
+    --muted:var(--muted-foreground);
+    --accent:var(--primary);
+    --accent-glow:var(--accent-strong);
+    --danger:var(--destructive);
+    --glow-a:color-mix(in oklab, var(--accent-strong) 16%, transparent);
+    --glow-b:color-mix(in oklab, var(--primary) 12%, transparent);
+    --grid-line:color-mix(in oklab, var(--primary) 5%, transparent);
+    --shadow:var(--shadow-soft);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    min-height:100vh;
+    min-height:100dvh;
+    color:var(--foreground);
+    font-family:'IBM Plex Sans Arabic',ui-sans-serif,system-ui,sans-serif;
+    font-weight:500;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+    background:var(--gradient-page);
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
+  body.modal-open{overflow:hidden;}
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.4;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:44px 44px;
+    -webkit-mask-image:radial-gradient(at 50% 15%, #000 20%, transparent 75%);
+    mask-image:radial-gradient(at 50% 15%, #000 20%, transparent 75%);
+  }
+
+  .shell{
+    position:relative;
+    z-index:1;
+    max-width:1040px;
+    width:100%;
+    margin:0 auto;
+    padding:16px 16px 48px;
+    box-sizing:border-box;
+    overflow-x:clip;
+  }
+
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin-bottom:12px;
+    animation: rise .7s ease both;
+    min-width:0;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    text-decoration:none; color:inherit;
+  }
+  .brand-mark{
+    width:44px; height:44px; border-radius:1rem;
+    background:var(--gradient-accent);
+    display:grid; place-items:center;
+    color:var(--primary-foreground); font-weight:700; font-size:17px;
+    box-shadow:0 10px 24px color-mix(in oklab, var(--primary) 22%, transparent);
+    flex-shrink:0;
+  }
+  .brand-name{font-weight:700; font-size:18px; letter-spacing:-.025em; color:var(--ink); display:block; line-height:1.25;}
+  .brand-tag{display:block; font-size:12px; color:var(--muted-foreground); font-weight:500; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+  .top-actions{display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+  .top-tools{
+    display:inline-flex;
+    align-items:center;
+    flex-wrap:nowrap;
+    gap:6px;
+  }
+  .theme-btn, .design-btn, .copy-code-btn, .ghost-btn, .primary-btn, .confirm-btn, .use-time-btn, .format-toggle-btn, .new-booking, .date-chip, .time-slot, .ampm-btn, .open-clock-btn, .modal-close-btn{
+    font-family:inherit; border:none; cursor:pointer;
+  }
+  .theme-btn, .design-btn, .copy-code-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    position:relative;
+    width:34px;
+    height:34px;
+    min-width:34px;
+    min-height:34px;
+    padding:0;
+    background:#f5f3ff;
+    border:1px solid #c4b5fd;
+    color:#5b21b6;
+    border-radius:50%;
+    line-height:0;
+    backdrop-filter:blur(8px);
+    transition: background .15s ease, transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+  }
+  .design-btn{
+    background:#ecfeff;
+    border-color:#67e8f9;
+    color:#0e7490;
+  }
+  .copy-code-btn{
+    background:#ecfdf5;
+    border-color:#6ee7b7;
+    color:#047857;
+  }
+  .theme-btn:hover{background:#ede9fe;}
+  .design-btn:hover{background:#cffafe;}
+  .copy-code-btn:hover{background:#d1fae5;}
+  .theme-btn:active, .design-btn:active, .copy-code-btn:active{transform:scale(.94);}
+  .theme-btn:disabled{opacity:.65; cursor:wait;}
+  .copy-code-btn.copied{
+    background:#16a34a;
+    border-color:#16a34a;
+    color:#fff;
+  }
+  .theme-btn .btn-label,
+  .design-btn .btn-label,
+  .copy-code-btn .btn-label,
+  .theme-btn .btn-text,
+  .design-btn .btn-text,
+  .copy-code-btn .btn-text{
+    position:absolute !important;
+    width:1px !important; height:1px !important;
+    padding:0 !important; margin:-1px !important;
+    overflow:hidden !important;
+    clip:rect(0,0,0,0) !important;
+    white-space:nowrap !important;
+    border:0 !important;
+    font-size:0 !important;
+  }
+  .theme-swatch, .design-icon, .copy-icon{
+    width:16px; height:16px;
+    display:grid; place-items:center;
+    flex-shrink:0;
+    background:transparent;
+  }
+  .theme-swatch svg, .design-icon svg, .copy-icon svg{display:block; width:16px; height:16px;}
+
+  .bg-code-bar{
+    display:none !important;
+  }
+  .bg-code-title{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    color:#c4b5fd !important;
+    margin:0 0 10px;
+    line-height:1.5;
+  }
+  .bg-code-body{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  #bgCodeValue,
+  .bg-code-value{
+    display:block !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    width:100% !important;
+    min-height:84px;
+    margin:0 !important;
+    padding:12px 14px !important;
+    border-radius:12px !important;
+    background:#020617 !important;
+    color:#f8fafc !important;
+    border:1px solid #334155 !important;
+    font-family:Consolas,'Courier New',ui-monospace,monospace !important;
+    font-size:13px !important;
+    font-weight:600 !important;
+    line-height:1.7 !important;
+    white-space:pre-wrap !important;
+    word-break:break-word !important;
+    direction:ltr !important;
+    text-align:left !important;
+    overflow:auto !important;
+    box-sizing:border-box;
+  }
+  .bg-code-btn{
+    font-family:inherit;
+    font-size:14px;
+    font-weight:700;
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:none;
+    background:#7c3aed;
+    color:#fff !important;
+    cursor:pointer;
+  }
+  .bg-code-btn:hover{background:#6d28d9;}
+  .bg-code-btn.copied{
+    background:#16a34a !important;
+    color:#fff !important;
+  }
+
+  /* خلفية عشوائية (لون + نسيج) */
+  html.bg-shuffled, body.bg-shuffled{
+    background-repeat:repeat !important;
+    background-attachment:fixed;
+  }
+  body.bg-shuffled{
+    background-image:var(--shuffle-pattern) !important;
+    background-color:var(--shuffle-color) !important;
+  }
+  body.bg-shuffled::before{opacity:.12;}
+  body.bg-shuffled .panel{
+    background:rgba(255,255,255,.82);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+  @supports not ((backdrop-filter: blur(1px))){
+    body.bg-shuffled .panel{background:rgba(255,255,255,.94);}
+  }
+  @media (max-width: 900px){
+    html.bg-shuffled, body.bg-shuffled{background-attachment:scroll;}
+  }
+
+  /* ========== أوضاع التصميم ========== */
+  body.design-material .panel{
+    border-radius:12px;
+    border:none;
+    background:#fff;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,.06),
+      0 2px 6px rgba(0,0,0,.06),
+      0 8px 16px rgba(0,0,0,.06);
+  }
+  body.design-material .primary-btn,
+  body.design-material .confirm-btn,
+  body.design-material .use-time-btn{
+    border-radius:8px;
+    text-transform:none;
+    letter-spacing:.2px;
+    box-shadow:0 2px 4px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  body.design-material .date-chip,
+  body.design-material .time-slot,
+  body.design-material .type-option{
+    border-radius:8px;
+    box-shadow:0 1px 3px rgba(0,0,0,.08);
+  }
+  body.design-material .brand-mark{border-radius:8px;}
+  body.design-material .hero-visual{border-radius:16px;}
+  body.design-material .summary{
+    border:none;
+    border-radius:8px;
+    box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+
+  body.design-glass .panel{
+    background:rgba(255,255,255,.38) !important;
+    border:1px solid rgba(255,255,255,.5);
+    box-shadow:0 12px 40px rgba(15,23,42,.08);
+    backdrop-filter:blur(18px) saturate(1.35);
+    -webkit-backdrop-filter:blur(18px) saturate(1.35);
+  }
+  body.design-glass .summary{
+    background:rgba(255,255,255,.28);
+    border:1px solid rgba(255,255,255,.45);
+    backdrop-filter:blur(12px);
+  }
+  body.design-glass .date-chip,
+  body.design-glass .time-slot,
+  body.design-glass .type-option,
+  body.design-glass input,
+  body.design-glass textarea,
+  body.design-glass .phone-row,
+  body.design-glass .digital-below,
+  body.design-glass .merged-clock{
+    background:rgba(255,255,255,.35);
+    border-color:rgba(255,255,255,.55);
+    backdrop-filter:blur(10px);
+  }
+  body.design-glass .primary-btn,
+  body.design-glass .confirm-btn{
+    box-shadow:0 10px 30px color-mix(in srgb, var(--accent) 30%, transparent);
+    border:1px solid rgba(255,255,255,.35);
+  }
+  body.design-glass .hero-visual{
+    border:1px solid rgba(255,255,255,.4);
+    box-shadow:0 20px 50px rgba(15,23,42,.15);
+  }
+  body.design-glass .bg-code-bar{
+    background:#111827 !important;
+    backdrop-filter:none;
+  }
+
+  body.design-flat .panel{
+    border-radius:10px;
+    border:2px solid var(--line);
+    box-shadow:none !important;
+    background:var(--panel);
+    backdrop-filter:none !important;
+  }
+  body.design-flat .primary-btn,
+  body.design-flat .confirm-btn,
+  body.design-flat .use-time-btn{
+    border-radius:10px;
+    box-shadow:none !important;
+    background:var(--accent);
+  }
+  body.design-flat .date-chip,
+  body.design-flat .time-slot,
+  body.design-flat .type-option{
+    border-width:2px;
+    box-shadow:none !important;
+    border-radius:10px;
+  }
+  body.design-flat .date-chip.active,
+  body.design-flat .time-slot.active,
+  body.design-flat .type-option.active{
+    outline:2px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    outline-offset:1px;
+  }
+  body.design-flat .summary{
+    border:2px solid var(--line);
+    box-shadow:none;
+    background:var(--accent-soft);
+  }
+  body.design-flat .hero-visual{
+    border-radius:12px;
+    box-shadow:none;
+    border:2px solid var(--line);
+  }
+  body.design-flat .brand-mark{box-shadow:none; border-radius:10px;}
+
+  body.design-cyber{
+    --ink:#e2e8f0 !important;
+    --muted:#94a3b8 !important;
+    --panel:#0b1220 !important;
+    --line:#1f2a44 !important;
+    --accent:#22d3ee !important;
+    --accent-soft:#123043 !important;
+    --accent-glow:#a855f7 !important;
+    --bg:#070b14 !important;
+    --bg-deep:#050810 !important;
+  }
+  body.design-cyber{
+    color:#e2e8f0;
+    background:
+      radial-gradient(900px 500px at 0% 0%, rgba(168,85,247,.18), transparent 50%),
+      radial-gradient(800px 500px at 100% 20%, rgba(34,211,238,.14), transparent 45%),
+      linear-gradient(165deg, #050810, #0b1220 55%, #070b14) !important;
+  }
+  body.design-cyber.bg-shuffled{
+    background-image:
+      linear-gradient(rgba(5,8,16,.55), rgba(5,8,16,.72)),
+      var(--shuffle-pattern) !important;
+    background-color:#070b14 !important;
+  }
+  body.design-cyber::before{
+    opacity:.25;
+    background-image:
+      linear-gradient(rgba(34,211,238,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(168,85,247,.08) 1px, transparent 1px);
+  }
+  body.design-cyber .panel{
+    background:rgba(11,18,32,.88) !important;
+    border:1px solid rgba(34,211,238,.28);
+    box-shadow:
+      0 0 0 1px rgba(168,85,247,.12),
+      0 0 30px rgba(34,211,238,.08);
+    border-radius:10px;
+    color:#e2e8f0;
+    backdrop-filter:blur(8px);
+  }
+  body.design-cyber .panel h3,
+  body.design-cyber .brand-name,
+  body.design-cyber .section-head h2,
+  body.design-cyber .hero h1{
+    color:#f8fafc;
+  }
+  body.design-cyber .hero h1 em{
+    color:#22d3ee;
+    text-shadow:0 0 18px rgba(34,211,238,.45);
+  }
+  body.design-cyber .brand-mark{
+    background:linear-gradient(135deg, #22d3ee, #a855f7);
+    box-shadow:0 0 20px rgba(34,211,238,.45);
+    border-radius:6px;
+  }
+  body.design-cyber .primary-btn,
+  body.design-cyber .confirm-btn,
+  body.design-cyber .use-time-btn{
+    background:linear-gradient(90deg, #22d3ee, #a855f7);
+    color:#041016;
+    border-radius:6px;
+    box-shadow:0 0 22px rgba(34,211,238,.35);
+  }
+  body.design-cyber .ghost-btn,
+  body.design-cyber .theme-btn,
+  body.design-cyber .design-btn,
+  body.design-cyber .copy-code-btn{
+    background:rgba(15,23,42,.7);
+    border:1px solid rgba(34,211,238,.35);
+    color:#67e8f9;
+  }
+  body.design-cyber .copy-code-btn.copied{
+    background:rgba(22,163,74,.25);
+    border-color:#4ade80;
+    color:#bbf7d0;
+  }
+  body.design-cyber .date-chip,
+  body.design-cyber .time-slot,
+  body.design-cyber .type-option{
+    background:rgba(15,23,42,.75);
+    border:1px solid rgba(168,85,247,.28);
+    color:#e2e8f0;
+    border-radius:6px;
+  }
+  body.design-cyber .date-chip.active,
+  body.design-cyber .time-slot.active,
+  body.design-cyber .type-option.active{
+    background:#0f766e !important;
+    border-color:#22d3ee !important;
+    color:#ffffff !important;
+    box-shadow:0 0 18px rgba(34,211,238,.45);
+  }
+  body.design-cyber .date-chip.active .dow,
+  body.design-cyber .date-chip.active .dnum,
+  body.design-cyber .date-chip.active .mon{
+    color:#ffffff !important;
+  }
+  body.design-cyber input,
+  body.design-cyber textarea,
+  body.design-cyber select,
+  body.design-cyber .phone-row,
+  body.design-cyber .digital-num,
+  body.design-cyber .digital-below,
+  body.design-cyber .merged-clock{
+    background:rgba(7,11,20,.85);
+    border-color:rgba(34,211,238,.25);
+    color:#e2e8f0;
+  }
+  body.design-cyber .summary{
+    background:rgba(34,211,238,.08);
+    border:1px solid rgba(34,211,238,.25);
+    color:#e2e8f0;
+  }
+  body.design-cyber .summary strong{color:#22d3ee;}
+  body.design-cyber .hero-visual{
+    border:1px solid rgba(168,85,247,.35);
+    box-shadow:0 0 40px rgba(168,85,247,.2);
+    border-radius:8px;
+  }
+  body.design-cyber .bg-code-bar{
+    background:#111827 !important;
+    border-color:#22d3ee !important;
+  }
+  body.design-cyber .bg-code-title{color:#67e8f9 !important;}
+  body.design-cyber #bgCodeValue,
+  body.design-cyber .bg-code-value{
+    background:#020617 !important;
+    color:#f8fafc !important;
+    border-color:#334155 !important;
+  }
+  body.design-cyber .open-clock-btn{
+    background:rgba(168,85,247,.15);
+    border-color:rgba(168,85,247,.4);
+    color:#e9d5ff;
+  }
+  body.design-cyber .step{
+    background:linear-gradient(135deg, #22d3ee, #a855f7);
+    color:#041016;
+  }
+  body.design-cyber .meta-list,
+  body.design-cyber .brand-tag,
+  body.design-cyber .hero-lead,
+  body.design-cyber .section-head p,
+  body.design-cyber label{
+    color:#94a3b8;
+  }
+  body.design-cyber .meta-list b,
+  body.design-cyber .type-option strong{color:#f1f5f9;}
+  body.design-cyber footer{color:#64748b;}
+  body.design-cyber .clock-modal-dialog{
+    background:#0b1220;
+    border:1px solid rgba(34,211,238,.3);
+    color:#e2e8f0;
+  }
+  .ghost-btn{
+    background:color-mix(in oklab, var(--surface) 70%, transparent);
+    border:1px solid var(--border);
+    color:var(--foreground);
+    font-weight:700; font-size:13px;
+    padding:9px 16px; border-radius:999px;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .ghost-btn:hover{background:var(--accent-soft);}
+  .primary-btn{
+    background:var(--gradient-accent);
+    color:var(--primary-foreground);
+    font-weight:700; font-size:13px;
+    padding:9px 16px; border-radius:999px;
+    box-shadow:0 8px 18px color-mix(in oklab, var(--primary) 22%, transparent);
+    transition: transform .18s ease, box-shadow .18s ease;
+    text-decoration:none;
+  }
+  .primary-btn:hover{transform:translateY(-2px); box-shadow:0 16px 32px color-mix(in oklab, var(--primary) 28%, transparent);}
+  .primary-btn:active{transform:scale(.98);}
+
+  .hero{
+    position:relative;
+    display:grid;
+    grid-template-columns:minmax(0, 1.15fr) minmax(0, .85fr);
+    gap:16px;
+    align-items:center;
+    padding:16px 0 4px;
+    margin-bottom:12px;
+    animation: rise .8s .05s ease both;
+    min-width:0;
+  }
+  .hero-copy{padding-bottom:0; min-width:0;}
+  .hero-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--accent-foreground);
+    background:color-mix(in oklab, var(--accent-soft) 70%, transparent);
+    border:1px solid var(--border);
+    font-weight:700;
+    font-size:11px;
+    padding:3px 10px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+  .hero h1{
+    margin:0;
+    font-size:clamp(1.6rem, 3.6vw, 2.25rem);
+    line-height:1.2;
+    letter-spacing:-.025em;
+    font-weight:700;
+    color:var(--foreground);
+  }
+  .hero h1 em{
+    font-style:normal;
+    font-weight:400;
+    color:var(--primary);
+    display:block;
+    margin-top:.1em;
+  }
+  .hero-lead{
+    margin:10px 0 0;
+    max-width:48ch;
+    color:var(--muted-foreground);
+    font-size:14px;
+    font-weight:500;
+    line-height:1.7;
+  }
+  .hero-cta{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:14px;}
+
+  .hero-visual{
+    position:relative;
+    min-height:auto;
+    border-radius:14px;
+    overflow:hidden;
+    isolation:isolate;
+    background:color-mix(in oklab, var(--surface) 88%, transparent);
+    border:1px solid color-mix(in oklab, var(--border) 75%, transparent);
+    box-shadow:var(--shadow-soft);
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+    padding:18px;
+    animation: float 8s ease-in-out infinite;
+  }
+  .hero-visual::before{
+    content:"";
+    position:absolute;
+    top:-4rem; left:-4rem;
+    width:14rem; height:14rem;
+    border-radius:50%;
+    background:color-mix(in oklab, var(--accent-strong) 35%, transparent);
+    filter:blur(64px);
+    opacity:.6;
+    pointer-events:none;
+  }
+  .hero-visual-inner{
+    position:relative;
+    display:flex; flex-direction:column;
+    color:var(--foreground);
+  }
+  .hero-visual-inner strong{
+    font-size:1.05rem; font-weight:700; line-height:1.5; max-width:none;
+  }
+  .hero-visual-inner > span{
+    margin-top:8px; opacity:1; font-size:13px; line-height:1.5; color:var(--muted-foreground);
+  }
+  .hero-stats{
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:14px;
+  }
+  .hero-stat{
+    border:1px solid var(--border);
+    background:color-mix(in oklab, var(--background) 60%, transparent);
+    border-radius:12px;
+    padding:10px;
+  }
+  .hero-stat .stat-num{
+    display:block;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:1.2rem;
+    font-weight:700;
+    color:var(--primary);
+    line-height:1.2;
+  }
+  .hero-stat .stat-label{
+    display:block;
+    margin-top:4px;
+    font-size:12px;
+    color:var(--muted-foreground);
+    font-weight:600;
+  }
+
+  .section-head{
+    margin:20px 0 12px;
+    animation: rise .7s .12s ease both;
+  }
+  .section-head h2{
+    margin:0 0 4px;
+    font-size:clamp(1.35rem, 2.4vw, 1.55rem);
+    letter-spacing:-.025em;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .section-head p{
+    margin:0;
+    color:var(--muted-foreground);
+    font-size:13.5px;
+    font-weight:500;
+    line-height:1.6;
+    max-width:42rem;
+  }
+
+  .booking-layout{
+    display:grid;
+    grid-template-columns:minmax(0, 1.15fr) minmax(0, .85fr);
+    gap:14px;
+    align-items:start;
+    animation: rise .75s .15s ease both;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+
+  .panel{
+    background:color-mix(in oklab, var(--surface) 88%, transparent);
+    border:1px solid color-mix(in oklab, var(--border) 75%, transparent);
+    border-radius:14px;
+    padding:14px 14px;
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+    box-shadow:var(--shadow-soft);
+    min-width:0;
+    max-width:100%;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+  .panel h3{
+    margin:0 0 12px;
+    font-size:15px;
+    font-weight:700;
+    color:var(--ink);
+    display:flex; align-items:center; gap:8px;
+  }
+  .step{
+    width:22px; height:22px; border-radius:999px;
+    display:inline-grid; place-items:center;
+    background:var(--gradient-accent); color:var(--primary-foreground);
+    font-size:11px; font-weight:700; flex-shrink:0;
+  }
+
+  .stack{display:flex; flex-direction:column; gap:12px; min-width:0; max-width:100%;}
+
+  /* ===== قطار الأيام (لا يوسّع الصفحة) ===== */
+  .date-train{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow:hidden;
+  }
+  .date-row-shell{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    border-radius:12px;
+    background:#f3faf8;
+    border:1px solid #b7d4cd;
+    padding:8px;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+  .date-viewport{
+    display:block;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow:hidden;
+    cursor:grab;
+    touch-action:none;
+    user-select:none;
+    -webkit-user-select:none;
+    direction:ltr;
+    position:relative;
+  }
+  .date-viewport.is-dragging{cursor:grabbing;}
+  .date-viewport::after{
+    content:"";
+    position:absolute;
+    inset-block:0;
+    inset-inline-end:0;
+    width:36px;
+    pointer-events:none;
+    background:linear-gradient(to left, #f3faf8 0%, transparent 100%);
+    opacity:.95;
+    z-index:2;
+  }
+  .date-viewport.show-hint-hand::before{
+    content:"اسحب ←";
+    position:absolute;
+    inset-block:50%;
+    inset-inline-end:10px;
+    transform:translateY(-50%);
+    z-index:3;
+    font-size:11px;
+    font-weight:700;
+    color:#0f766e;
+    background:rgba(255,255,255,.92);
+    border:1px solid #9fbfb8;
+    border-radius:999px;
+    padding:4px 10px;
+    pointer-events:none;
+    animation: dateHintPulse 1.2s ease-in-out infinite;
+    white-space:nowrap;
+  }
+  @keyframes dateHintPulse{
+    0%,100%{ opacity:.55; transform:translateY(-50%) translateX(0); }
+    50%{ opacity:1; transform:translateY(-50%) translateX(-6px); }
+  }
+  .date-track{
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    align-items:stretch;
+    gap:8px;
+    width:max-content;
+    max-width:none;
+    will-change:transform;
+    transform:translate3d(0,0,0);
+  }
+  .date-track.is-auto-sliding{
+    transition: transform .9s cubic-bezier(.22, 1, .36, 1);
+  }
+  .date-chip{
+    position:relative;
+    flex:0 0 70px;
+    width:70px;
+    min-width:70px;
+    max-width:70px;
+    min-height:74px;
+    margin:0;
+    padding:8px 4px;
+    box-sizing:border-box;
+    text-align:center;
+    background:#ffffff;
+    border:1.5px solid #9fbfb8;
+    border-radius:12px;
+    color:#0b1614;
+    cursor:pointer;
+    -webkit-user-drag:none;
+    font-family:inherit;
+    appearance:none;
+    -webkit-appearance:none;
+  }
+  .date-chip::after{display:none !important; content:none !important;}
+  .date-chip .dow{
+    display:block;
+    font-size:10px;
+    line-height:1.2;
+    color:#3a5a54;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .date-chip .dnum{
+    display:block;
+    margin-top:4px;
+    font-size:1.15rem;
+    font-weight:800;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    line-height:1;
+    color:#0f766e;
+  }
+  .date-chip .mon{
+    display:block;
+    margin-top:4px;
+    font-size:10px;
+    font-weight:600;
+    color:#5a736e;
+  }
+  .date-chip:hover{border-color:#0f766e;}
+  .date-chip.active{
+    background:#0f766e !important;
+    border-color:#0a5c55 !important;
+    color:#ffffff !important;
+    box-shadow:0 6px 14px rgba(15,118,110,.32);
+  }
+  .date-chip.active .dow,
+  .date-chip.active .dnum,
+  .date-chip.active .mon{
+    color:#ffffff !important;
+  }
+  .date-train-hint{
+    margin:8px 2px 0;
+    font-size:11px;
+    color:var(--muted-foreground);
+    font-weight:600;
+  }
+
+  .time-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;}
+  .time-head h3{margin:0;}
+  .format-toggle-btn{
+    background:color-mix(in oklab, var(--background) 60%, transparent);
+    border:1px solid var(--border); color:var(--muted-foreground);
+    font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700;
+    padding:6px 12px; border-radius:999px;
+    transition: background .15s ease;
+  }
+  .format-toggle-btn:hover{background:var(--accent-soft);}
+  .time-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(104px,1fr)); gap:8px;}
+  .time-slot{
+    background:color-mix(in oklab, var(--background) 60%, transparent);
+    border:1px solid var(--border); border-radius:.75rem;
+    padding:12px 8px; text-align:center;
+    font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; color:var(--ink);
+    transition: all .14s ease;
+  }
+  .time-slot:hover{border-color:var(--primary);}
+  .time-slot.active{background:var(--primary); border-color:var(--primary); color:var(--primary-foreground);}
+  .time-slot.taken{
+    opacity:.45; text-decoration:line-through; cursor:not-allowed; background:transparent;
+  }
+  .empty-note{color:var(--muted); font-size:13px; text-align:center; padding:16px 0;}
+
+  .custom-time-wrap{
+    margin-top:14px; padding-top:14px;
+    border-top:1px solid var(--line);
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .open-clock-btn{
+    width:100%;
+    background:var(--accent-soft);
+    color:var(--accent-foreground);
+    font-weight:700; font-size:14px;
+    padding:12px 16px;
+    border-radius:.75rem;
+    border:1px solid color-mix(in oklab, var(--primary) 20%, transparent);
+    transition: transform .15s ease, background .15s ease;
+  }
+  .open-clock-btn:hover{transform:translateY(-2px);}
+  .manual-time-preview{
+    background:var(--accent-soft);
+    color:var(--ink);
+    border-radius:12px;
+    padding:10px 12px;
+    font-size:13px; font-weight:700;
+    text-align:center;
+  }
+  .time-note{display:block; font-size:12px; color:var(--muted); text-align:center;}
+  .time-note.error{color:var(--danger);}
+
+  /* ===== Clock modal ===== */
+  .clock-modal{
+    position:fixed; inset:0; z-index:1000;
+    display:flex; align-items:center; justify-content:center;
+    padding:18px;
+  }
+  .clock-modal.hidden{display:none !important;}
+  .clock-modal-backdrop{
+    position:absolute; inset:0;
+    background:color-mix(in srgb, var(--ink) 45%, transparent);
+    backdrop-filter:blur(4px);
+    animation: fadeIn .2s ease both;
+  }
+  .clock-modal-dialog{
+    position:relative; z-index:1;
+    width:min(400px, 100%);
+    max-height:min(90vh, 640px);
+    overflow:auto;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:0 28px 60px color-mix(in srgb, var(--ink) 22%, transparent);
+    padding:18px 18px 16px;
+    animation: modalIn .25s cubic-bezier(.2,1.1,.4,1) both;
+  }
+  .clock-modal-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin-bottom:14px;
+  }
+  .clock-modal-head h3{
+    margin:0; font-size:17px; font-weight:700; color:var(--ink);
+  }
+  .modal-close-btn{
+    width:36px; height:36px; border-radius:10px;
+    background:var(--bg); color:var(--muted); font-size:20px; line-height:1;
+    display:grid; place-items:center;
+  }
+  .modal-close-btn:hover{background:var(--accent-soft); color:var(--accent);}
+  .clock-hint{font-size:12px; color:var(--muted); text-align:center; margin:0 0 12px;}
+
+  .merged-clock{
+    display:flex; flex-direction:column; align-items:center; gap:12px;
+    padding:14px 12px 10px;
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:16px;
+  }
+  .clock-stage{
+    width:min(220px, 100%);
+    aspect-ratio:1;
+  }
+  .clock-svg{
+    width:100%; height:100%; display:block; touch-action:none;
+    user-select:none;
+  }
+  .clock-face{fill:var(--panel); stroke:var(--line); stroke-width:2;}
+  .clock-num{fill:var(--muted); font-family:'JetBrains Mono',monospace; font-size:13px; text-anchor:middle; dominant-baseline:middle;}
+  .hand{stroke:var(--ink); stroke-linecap:round;}
+  .hour-hand{stroke-width:5;}
+  .minute-hand{stroke-width:3; stroke:var(--accent);}
+  .clock-center{fill:var(--accent);}
+  .hand-grip{fill:var(--accent); opacity:0; cursor:grab;}
+  .hand-grip:hover{opacity:.18;}
+
+  .digital-below{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    width:100%;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .digital-num{
+    width:52px; text-align:center; background:var(--bg); border:1px solid var(--line);
+    border-radius:10px; padding:10px 4px; font-family:'JetBrains Mono',monospace;
+    font-size:22px; font-weight:700; color:var(--accent);
+  }
+  .digital-num:focus{outline:none; border-color:var(--accent);}
+  .digital-colon{font-size:22px; font-weight:700; color:var(--muted); line-height:1;}
+  .ampm-select{
+    background:var(--bg); border:1px solid var(--line); border-radius:10px;
+    padding:10px 8px; font-family:inherit; font-size:13px; font-weight:600; color:var(--ink);
+  }
+
+  .clock-controls{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:8px;
+    width:100%;
+  }
+  .analog-ampm{display:flex; gap:6px;}
+  .ampm-btn{
+    background:var(--panel); border:1px solid var(--line); color:var(--muted);
+    padding:8px 16px; border-radius:999px; font-size:13px;
+  }
+  .ampm-btn.active{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600;}
+  .use-time-btn{
+    background:var(--gradient-accent);
+    color:var(--primary-foreground); font-weight:700; font-size:13px;
+    padding:10px 16px; border-radius:999px; white-space:nowrap;
+  }
+  .use-time-btn:active{transform:scale(.98);}
+  .modal-time-note{display:block; font-size:12px; color:var(--muted); text-align:center; margin-top:12px; min-height:18px;}
+  .modal-time-note.error{color:var(--danger);}
+
+  label{display:block; font-size:13px; color:color-mix(in srgb, var(--ink) 80%, var(--muted)); margin-bottom:6px; font-weight:700;}
+  .field{margin-bottom:12px;}
+  input[type=text], input[type=email], input[type=tel], textarea, select{
+    width:100%; background:var(--bg); border:1px solid var(--line); border-radius:12px;
+    padding:12px; font-family:inherit; font-size:15px; font-weight:500; color:var(--ink);
+  }
+  input::placeholder, textarea::placeholder{
+    color:color-mix(in srgb, var(--ink) 42%, var(--muted));
+    opacity:1;
+  }
+  input:focus, textarea:focus, select:focus{outline:none; border-color:var(--accent);}
+  textarea{resize:vertical; min-height:72px;}
+
+  .phone-row{
+    display:flex; background:var(--bg); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  }
+  .phone-prefix{
+    display:flex; align-items:center; gap:6px; padding:0 12px;
+    font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--muted);
+    border-left:1px solid var(--line); white-space:nowrap;
+  }
+  .phone-row input[type=tel]{border:none; background:none; border-radius:0;}
+  .phone-row input[type=tel]:focus{outline:none;}
+
+  .type-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .type-option{
+    border:1px solid var(--border);
+    background:color-mix(in oklab, var(--background) 60%, transparent);
+    border-radius:1rem;
+    padding:16px; cursor:pointer; text-align:right;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .type-option strong{display:block; font-size:14px; margin-bottom:4px; font-weight:700; color:var(--ink);}
+  .type-option span{font-size:12px; color:var(--muted-foreground); line-height:1.6; font-weight:500;}
+  .type-option:hover{border-color:color-mix(in oklab, var(--primary) 50%, transparent);}
+  .type-option.active{border-color:var(--primary); background:var(--accent-soft);}
+  .type-option input{display:none;}
+
+  .side-sticky{position:sticky; top:16px; display:flex; flex-direction:column; gap:12px; min-width:0; max-width:100%;}
+  .summary{
+    background:color-mix(in oklab, var(--accent-soft) 70%, transparent);
+    border-radius:1rem; padding:16px; font-size:14px; line-height:2;
+    border:1px solid color-mix(in oklab, var(--primary) 15%, transparent);
+    color:var(--foreground);
+    font-weight:500;
+  }
+  .summary strong{color:var(--primary); font-weight:700;}
+  .confirm-btn{
+    width:100%;
+    background:var(--gradient-accent);
+    color:var(--primary-foreground); font-weight:700; font-size:14px; padding:14px 24px; border-radius:999px;
+    margin-top:16px;
+    transition: transform .15s ease, opacity .15s ease;
+  }
+  .confirm-btn:disabled{
+    opacity:.45; cursor:not-allowed; transform:none;
+  }
+  .confirm-btn:enabled:hover{transform:translateY(-2px);}
+  .confirm-btn:active:not(:disabled){transform:scale(.985);}
+  .meta-list{display:grid; gap:12px; font-size:14px; color:var(--muted-foreground); font-weight:500; line-height:1.75;}
+  .meta-list div{
+    display:flex; gap:12px; align-items:flex-start;
+    padding-bottom:0; border-bottom:0;
+  }
+  .meta-list b{color:var(--foreground); font-weight:700;}
+  .meta-icon{
+    width:32px; height:32px; border-radius:.75rem; flex-shrink:0;
+    display:grid; place-items:center;
+    background:var(--accent-soft); color:var(--primary);
+    font-size:14px;
+  }
+
+  .done-card{text-align:center; padding:40px;}
+  .done-icon{
+    width:64px; height:64px; border-radius:50%;
+    background:var(--gradient-accent); color:var(--primary-foreground);
+    display:grid; place-items:center; margin:0 auto; font-size:28px; font-weight:700;
+    animation: pop .45s cubic-bezier(.2,1.2,.4,1) both;
+  }
+  .done-card h2{margin:16px 0 12px; font-size:22px; color:var(--ink); font-weight:700;}
+  .done-card p{color:color-mix(in srgb, var(--ink) 75%, var(--muted)); font-size:14px; line-height:1.8; margin:0 0 20px; font-weight:500;}
+  .new-booking{
+    background:var(--surface); border:1px solid var(--border); color:var(--ink);
+    padding:12px 24px; border-radius:999px; font-size:14px; font-weight:700;
+    margin-top:24px; transition: background .15s ease;
+  }
+  .new-booking:hover{background:var(--accent-soft);}
+
+  .hidden{display:none !important;}
+
+  footer{
+    margin-top:64px; padding-top:24px;
+    border-top:1px solid color-mix(in oklab, var(--border) 70%, transparent);
+    text-align:center; color:var(--muted-foreground); font-size:14px;
+    animation: rise .7s .2s ease both;
+  }
+
+  @keyframes rise{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:none;}
+  }
+  @keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-8px);}
+  }
+  @keyframes pop{
+    from{opacity:0; transform:scale(.7);}
+    to{opacity:1; transform:scale(1);}
+  }
+  @keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+  }
+  @keyframes modalIn{
+    from{opacity:0; transform:translateY(12px) scale(.96);}
+    to{opacity:1; transform:translateY(0) scale(1);}
+  }
+
+  @media (max-width: 900px){
+    html, body{overflow-x:hidden; max-width:100vw;}
+    .shell{padding:12px 10px calc(24px + env(safe-area-inset-bottom, 0px)); max-width:100%; width:100%; box-sizing:border-box;}
+    .booking-layout, .stack, .side-sticky, .panel{min-width:0; max-width:100%;}
+    .section-head p{max-width:none; font-size:13.5px; line-height:1.65;}
+    .section-head h2{font-size:20px;}
+    .panel h3{font-size:14.5px; line-height:1.4; margin-bottom:12px;}
+    .hero-visual{min-height:auto; padding:20px;}
+    .hero h1{font-size:clamp(26px, 7.2vw, 34px); line-height:1.28;}
+    .hero-lead{font-size:14.5px;}
+    .confirm-btn{min-height:50px; font-size:15px; width:100%;}
+    .topbar{
+      flex-direction:row;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px 10px;
+      margin-bottom:12px;
+    }
+    .brand{
+      flex:1 1 auto;
+      min-width:0;
+      max-width:calc(100% - 128px);
+    }
+    .brand-mark{width:36px; height:36px; border-radius:10px; font-size:14px;}
+    .brand-name{font-size:18px;}
+    .brand-tag{font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    /* الأزرار تصبح أبناء مباشرة للشريط → صف مع الشعار */
+    .top-actions{display:contents;}
+    .top-tools{
+      display:flex;
+      flex-direction:row;
+      flex-wrap:nowrap;
+      flex:0 0 auto;
+      gap:5px;
+      margin-inline-start:auto;
+    }
+    .theme-btn, .design-btn, .copy-code-btn{
+      flex:0 0 auto;
+      width:34px;
+      height:34px;
+      min-width:34px;
+      min-height:34px;
+      padding:0;
+      border-radius:50%;
+    }
+    .theme-swatch, .design-icon, .copy-icon{width:16px; height:16px;}
+    .theme-swatch svg, .design-icon svg, .copy-icon svg{width:16px; height:16px;}
+    .top-actions .ghost-btn{display:none;}
+    .top-actions .primary-btn{display:none;}
+    .hero{
+      grid-template-columns:1fr;
+      min-height:auto;
+      gap:14px;
+      padding:8px 0 18px;
+      margin-bottom:10px;
+      align-items:start;
+    }
+    .hero-copy{padding-bottom:0;}
+    .hero h1{font-size:clamp(28px, 8vw, 36px); line-height:1.25;}
+    .hero-lead{font-size:15px; max-width:none; line-height:1.75;}
+    .hero-cta{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+    }
+    .hero-cta .primary-btn,
+    .hero-cta .ghost-btn{
+      display:flex !important;
+      width:100%;
+      justify-content:center;
+      min-height:48px;
+      border-radius:999px;
+    }
+    .hero-visual{
+      min-height:auto;
+      border-radius:var(--radius);
+      padding:20px;
+      order:0;
+    }
+    .hero-visual-inner{padding:0;}
+    .hero-visual-inner strong{font-size:18px; max-width:none;}
+    .hero-stats{margin-top:16px;}
+    .hero-stat{padding:12px;}
+    .hero-stat .stat-num{font-size:1.25rem;}
+    .section-head{margin:6px 0 12px;}
+    .section-head h2{font-size:22px;}
+    .booking-layout{grid-template-columns:1fr; gap:12px;}
+    .side-sticky{position:static; gap:12px;}
+    .stack{gap:12px;}
+    .panel{padding:12px 10px; border-radius:12px; width:100%; max-width:100%; min-width:0; box-sizing:border-box; overflow:hidden;}
+    .panel:has(.date-train){overflow:hidden;}
+    .date-row-shell{overflow:hidden; border-radius:12px; padding:8px; background:#f3faf8; border:1px solid #b7d4cd;}
+    .type-grid{grid-template-columns:1fr; gap:8px;}
+    .type-option{padding:12px; min-height:auto; border-radius:12px;}
+    .date-viewport{overflow:hidden !important; width:100% !important; max-width:100% !important; min-width:0 !important;}
+    .date-track{display:flex !important; flex-wrap:nowrap !important; gap:8px !important; width:max-content !important;}
+    .date-chip{
+      flex:0 0 66px !important;
+      width:66px !important;
+      min-width:66px !important;
+      max-width:66px !important;
+      min-height:72px;
+      padding:8px 4px;
+      border-radius:12px;
+      background:#fff !important;
+    }
+    .date-chip.active{background:#0f766e !important; color:#fff !important;}
+    .date-chip .dow{font-size:11px; color:#3a5a54;}
+    .date-chip .dnum{font-size:1.25rem; color:#0f766e;}
+    .date-chip.active .dow,
+    .date-chip.active .dnum,
+    .date-chip.active .mon{color:#fff !important;}
+    .date-chip .mon{font-size:10px;}
+    .date-train-hint{font-size:11px;}
+    .time-grid{grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px; width:100%;}
+    .time-slot{
+      min-height:46px;
+      min-width:0;
+      width:100%;
+      font-size:12px;
+      padding:10px 4px;
+      box-sizing:border-box;
+    }
+    .time-head{flex-wrap:wrap; gap:8px;}
+    .open-clock-btn{min-height:48px; font-size:14px;}
+    .phone-row{min-height:48px;}
+    input[type=text], input[type=email], input[type=tel], textarea, select{
+      font-size:16px; /* يمنع زووم iOS */
+      min-height:48px;
+      padding:12px 14px;
+    }
+    textarea{min-height:96px;}
+    .confirm-btn{min-height:52px; font-size:16px; border-radius:14px;}
+    .summary{font-size:14px; padding:12px;}
+    .merged-clock{padding:12px 10px;}
+    .clock-stage{width:min(200px, 78vw);}
+    .digital-num{width:48px; font-size:18px;}
+    .clock-modal{padding:12px; align-items:flex-end;}
+    .clock-modal-dialog{
+      width:100%;
+      max-height:88vh;
+      border-radius:20px 20px 12px 12px;
+      padding:16px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+    }
+    .bg-code-bar{margin-bottom:12px; padding:12px; border-radius:14px;}
+    #bgCodeValue, .bg-code-value{font-size:12px; min-height:78px;}
+    .meta-list{font-size:13px;}
+    footer{
+      margin-top:28px;
+      padding-bottom:env(safe-area-inset-bottom, 8px);
+      font-size:12px;
+      line-height:1.6;
+    }
+    /* إبقاء زر الجلسة في الهيرو ظاهراً */
+    .hero-cta .ghost-btn{display:flex !important;}
+  }
+  @media (max-width: 400px){
+    .shell{padding:10px 8px 20px;}
+    .panel{padding:12px 10px;}
+    .date-chip{min-height:88px; flex:0 0 78px !important; width:78px !important; min-width:78px !important; padding:8px 4px;}
+    .date-chip .dow{font-size:10px;}
+    .date-chip .dnum{font-size:1.15rem;}
+    .date-chip .mon{font-size:10px;}
+    .theme-btn, .design-btn, .copy-code-btn{width:32px; height:32px; min-height:32px;}
+    .time-slot{font-size:11px; min-height:44px;}
+    .hero h1{font-size:24px;}
+    .section-head h2{font-size:18px;}
+  }
+  @media (min-width: 480px) and (max-width: 900px){
+    .date-chip .dow{font-size:12px;}
+    .date-chip{min-width:76px !important; width:76px !important;}
+  }
+  @media (max-width: 380px){
+    .brand-name{font-size:17px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation:none !important;
+      transition:none !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="topbar">
+    <a class="brand" href="#top" id="top">
+      <span class="brand-mark">ن</span>
+      <span>
+        <span class="brand-name">نَسْق</span>
+        <span class="brand-tag">استشارة نفسية واجتماعية</span>
+      </span>
+    </a>
+    <div class="top-actions">
+      <div class="top-tools">
+        <button class="theme-btn" id="themeToggleBtn" type="button" title="خلط الخلفية" aria-label="خلط الخلفية">
+          <span class="theme-swatch" id="themeSwatch" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true">
+              <circle cx="13.5" cy="6.5" r="2.5" fill="#7c3aed"/>
+              <circle cx="17.5" cy="10.5" r="2.5" fill="#a78bfa"/>
+              <circle cx="8.5" cy="7.5" r="2.5" fill="#c4b5fd"/>
+              <circle cx="6.5" cy="12.5" r="2.5" fill="#ddd6fe"/>
+            </svg>
+          </span>
+          <span class="btn-text" id="themeLabel">خلط الخلفية</span>
+        </button>
+        <button class="design-btn" id="designToggleBtn" type="button" title="Material Design" aria-label="تبديل أسلوب التصميم">
+          <span class="design-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+              <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+              <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+              <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+            </svg>
+          </span>
+          <span class="btn-text" id="designLabel">Material</span>
+        </button>
+        <button class="copy-code-btn" id="copyBgCodeBtn" type="button" title="نسخ كود الخلفية" aria-label="نسخ كود الخلفية">
+          <span class="copy-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="12" height="12" rx="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </span>
+          <span class="btn-text" id="copyBgCodeLabel">نسخ الكود</span>
+        </button>
+      </div>
+      <!-- زر احجز يبقى في قسم الهيرو فقط -->
+    </div>
+  </header>
+
+  <div class="bg-code-bar hidden" id="bgCodeBar" aria-hidden="true" hidden>
+    <pre class="bg-code-value" id="bgCodeValue" hidden></pre>
+  </div>
+
+  <section class="hero" aria-label="مقدمة الموقع">
+    <div class="hero-copy">
+      <span class="hero-kicker">استشارة نفسية واجتماعية</span>
+      <h1>نَسْق<br><em>مساحتك الآمنة للتحدث والاستشارة</em></h1>
+      <p class="hero-lead">مكان دافئ ولطيف لتكون كما أنت. نستمع إليك بهدوء، ونرافقك في فهم مشاعرك وعلاقاتك بخطوات مرنة وآمنة.</p>
+      <div class="hero-cta">
+        <a class="primary-btn" href="#booking">احجز جلسة الآن</a>
+        <a class="ghost-btn" href="#expectations" id="scrollMetaBtn">تعرّف على الجلسة</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-label="لمحة عن الجلسة">
+      <div class="hero-visual-inner">
+        <strong>هنا مساحة للتحدث… بلا أحكام</strong>
+        <span>خصوصية · لطف · جلسات مريحة عبر Zoom</span>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="stat-num">٦٠</span>
+            <span class="stat-label">دقيقة لك</span>
+          </div>
+          <div class="hero-stat">
+            <span class="stat-num">١٠٠٪</span>
+            <span class="stat-label">سرّية تامة</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-head" id="booking">
+    <h2>اختر وقتاً يناسبك</h2>
+    <p>خذ وقتك في اختيار اليوم والساعة. بعد التأكيد، نرسل لك رابط الجلسة برفق.</p>
+  </div>
+
+  <div id="bookingFlow" class="booking-layout">
+    <div class="stack">
+      <div class="panel">
+        <h3><span class="step">1</span> بماذا نحتاج أن نهتم معاً؟</h3>
+        <div class="type-grid" id="typeGrid">
+          <label class="type-option active">
+            <input type="radio" name="consultType" value="نفسية" checked>
+            <strong>استشارة نفسية</strong>
+            <span>القلق، التوتر، الحزن، أو الحاجة لهدوء داخلي</span>
+          </label>
+          <label class="type-option">
+            <input type="radio" name="consultType" value="اجتماعية">
+            <strong>استشارة اجتماعية</strong>
+            <span>ضغوط الحياة، التكيّف، والدعم في المواقف اليومية</span>
+          </label>
+          <label class="type-option">
+            <input type="radio" name="consultType" value="علاقات وأسرية">
+            <strong>علاقات وأسرة</strong>
+            <span>التواصل، الحدود، وفهم من حولك بمزيد من الحنان</span>
+          </label>
+          <label class="type-option">
+            <input type="radio" name="consultType" value="موضوع آخر">
+            <strong>شيء آخر على قلبك</strong>
+            <span>اكتبه في الملاحظات… كل ما يهمّك له مكان هنا</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="panel" id="datePanel">
+        <h3><span class="step">2</span> اختر اليوم</h3>
+        <div class="date-train" id="dateTrain">
+          <div class="date-row-shell">
+            <div class="date-viewport" id="dateViewport">
+              <div class="date-track" id="dateTrack" role="listbox" aria-label="أيام الأسبوعين القادمين"></div>
+            </div>
+          </div>
+        </div>
+        <p class="date-train-hint" id="dateTrainHint">مرّر أفقياً — يتحرك الشريط تلقائياً أولاً لتتعرّف عليه</p>
+      </div>
+
+      <div class="panel">
+        <div class="time-head">
+          <h3><span class="step">3</span> اختر الوقت</h3>
+          <button class="format-toggle-btn" id="formatToggleBtn" type="button">24 ساعة</button>
+        </div>
+        <div class="time-grid" id="timeGrid"></div>
+
+        <div class="custom-time-wrap">
+          <button class="open-clock-btn" id="openClockModalBtn" type="button">إدخال الوقت يدوياً</button>
+          <div class="manual-time-preview hidden" id="manualTimePreview"></div>
+          <span class="time-note" id="customTimeNote"></span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3><span class="step">4</span> نبذة عنك</h3>
+        <div class="field">
+          <label for="nameInput">الاسم الذي تفضّل أن نناديك به</label>
+          <input type="text" id="nameInput" placeholder="مثال: سلمى" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="phoneInput">رقم الهاتف</label>
+          <div class="phone-row">
+            <span class="phone-prefix">🇰🇼 +965</span>
+            <input type="tel" id="phoneInput" placeholder="5xxxxxxx" inputmode="numeric" autocomplete="tel-national">
+          </div>
+        </div>
+        <div class="field">
+          <label for="emailInput">البريد الإلكتروني (اختياري)</label>
+          <input type="email" id="emailInput" placeholder="name@example.com" autocomplete="email">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="notesInput">ما الذي يثقل قلبك اليوم؟ (اختياري)</label>
+          <textarea id="notesInput" placeholder="اكتب بحرّية… لا حاجة للتنسيق أو الكمال. أي كلمة تبدو مهمة لك كافية."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <aside class="side-sticky">
+      <div class="panel">
+        <h3>ملخص جلستك</h3>
+        <div class="summary" id="summaryBox">عندما تختار موعداً، سيظهر هنا بهدوء.</div>
+        <button class="confirm-btn" id="confirmBtn" disabled>أؤكد الجلسة بلطف</button>
+      </div>
+      <div class="panel" id="expectations">
+        <h3>ما يمكن أن تتوقّعه</h3>
+        <div class="meta-list">
+          <div><span class="meta-icon">⏱</span><div><b>المدة:</b> ساعة كاملة لك، بلا استعجال</div></div>
+          <div><span class="meta-icon">🌿</span><div><b>الطابع:</b> استشارة نفسية واجتماعية بلغة هادئة</div></div>
+          <div><span class="meta-icon">🔒</span><div><b>الخصوصية:</b> ما تشاركه يبقى بينكما</div></div>
+          <div><span class="meta-icon">🎥</span><div><b>المكان:</b> جلسة مريحة عن بُعد عبر Zoom</div></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="panel done-card hidden" id="doneCard">
+    <div class="done-icon">✓</div>
+    <h2>موعدك محجوز بكل هدوء</h2>
+    <p id="doneSummary"></p>
+    <button class="new-booking" id="newBookingBtn">حجز جلسة أخرى</button>
+  </div>
+
+  <footer>نَسْق · مساحة آمنة للاستشارة النفسية والاجتماعية · 2026</footer>
+</div>
+
+<!-- نافذة اختيار الوقت اليدوي -->
+<div class="clock-modal hidden" id="clockModal" role="dialog" aria-modal="true" aria-labelledby="clockModalTitle">
+  <div class="clock-modal-backdrop" id="clockModalBackdrop"></div>
+  <div class="clock-modal-dialog">
+    <div class="clock-modal-head">
+      <h3 id="clockModalTitle">اختيار الوقت</h3>
+      <button type="button" class="modal-close-btn" id="closeClockModalBtn" aria-label="إغلاق">×</button>
+    </div>
+    <p class="clock-hint">اسحب العقارب أو عدّل الأرقام — كلاهما متزامنان</p>
+    <div class="merged-clock">
+      <div class="clock-stage">
+        <svg viewBox="0 0 200 200" class="clock-svg" id="clockSvg" aria-label="ساعة عقارب">
+          <circle cx="100" cy="100" r="96" class="clock-face"></circle>
+          <g id="clockNumbers"></g>
+          <line id="hourHand" class="hand hour-hand" x1="100" y1="100" x2="100" y2="65"></line>
+          <line id="minuteHand" class="hand minute-hand" x1="100" y1="100" x2="100" y2="40"></line>
+          <circle cx="100" cy="100" r="5" class="clock-center"></circle>
+          <circle id="hourGrip" class="hand-grip" cx="100" cy="65" r="14"></circle>
+          <circle id="minuteGrip" class="hand-grip" cx="100" cy="40" r="14"></circle>
+        </svg>
+      </div>
+      <div class="digital-below">
+        <input type="number" id="hourInput" class="digital-num" min="0" max="23" value="9" aria-label="الساعة">
+        <span class="digital-colon">:</span>
+        <input type="number" id="minuteInput" class="digital-num" min="0" max="59" step="5" value="0" aria-label="الدقيقة">
+        <select id="ampmSelect" class="ampm-select hidden" aria-label="صباحاً أو مساءً">
+          <option value="ص">ص</option>
+          <option value="م">م</option>
+        </select>
+      </div>
+      <div class="clock-controls">
+        <div class="analog-ampm" id="ampmButtons">
+          <button type="button" class="ampm-btn" id="amBtn">ص</button>
+          <button type="button" class="ampm-btn" id="pmBtn">م</button>
+        </div>
+        <button class="use-time-btn" id="useCustomTimeBtn" type="button">استخدام هذا الوقت</button>
+      </div>
+    </div>
+    <span class="modal-time-note" id="modalTimeNote"></span>
+  </div>
+</div>
+
+<script>
+const CONFIG = {
+  daysCount: 14, /* أسبوعان من اليوم */
+  startHour: 9,
+  endHour: 17,
+  slotDurationMins: 60,
+  storageKey: 'nasq_consult_bookings_v1'
+};
+
+const dayNamesAr = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const monthNamesAr = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+/* ===== خلط خلفية عشوائي (نفس فكرة موقع roster) ===== */
+const BG_SHUFFLE_KEY = 'nasqBgTextureV1';
+let lastBgCodeText = '';
+let lastBgCodeCompact = '';
+const PATTERN_BASE = 'https://www.transparenttextures.com/patterns/';
+const FALLBACK_PATTERNS = [
+  'carbon-fibre','cubes','diagmonds-light','groovepaper','greyzz',
+  'hexellence','lined-paper','subtle-grey','white-wall','graphy',
+  'always-grey','beige-paper','blizzard','climpek','debut-light',
+  'diagonal-striped-brick','diamond-upholstery','light-paper-fibers',
+  'ps-neutral','shattered-island','soft-wallpaper','tiny-grid','waves'
+];
+
+function isIOSDevice(){
+  return /iP(hone|ad|od)/i.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+function randomSoftColor(){
+  // نفس معادلة موقع Duty Roster: ألوان فاتحة عشوائية
+  const h = Math.floor(Math.random() * 360);
+  const s = 28 + Math.floor(Math.random() * 28);
+  const l = 74 + Math.floor(Math.random() * 16);
+  return { h, s, l, color: `hsl(${h}, ${s}%, ${l}%)` };
+}
+
+function pickPattern(list){
+  if(!list || !list.length) return '';
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function patternUrl(slug){
+  return PATTERN_BASE + slug + '.png';
+}
+
+function clamp(n, min, max){ return Math.min(max, Math.max(min, n)); }
+
+function formatBgCode(color, slug, parts){
+  const h = parts?.h ?? '—';
+  const s = parts?.s ?? '—';
+  const l = parts?.l ?? '—';
+  const pattern = slug || 'none';
+  const hslLine = `${h}, ${s}%, ${l}%`;
+  return {
+    color,
+    pattern,
+    hslLine,
+    full: [
+      `color: ${color}`,
+      `pattern: ${pattern}`,
+      `h: ${h}`,
+      `s: ${s}`,
+      `l: ${l}`,
+      `fix: ${color} | ${pattern}`
+    ].join('\n')
+  };
+}
+
+function updateBgCodeDisplay(color, slug, parts){
+  const code = formatBgCode(color, slug, parts);
+  lastBgCodeText = code.full;
+  lastBgCodeCompact = code.color + ' | ' + code.pattern;
+  const valueEl = document.getElementById('bgCodeValue');
+  if(valueEl){
+    valueEl.textContent = [
+      'color: ' + code.color,
+      'pattern: ' + code.pattern,
+      'hsl: ' + code.hslLine
+    ].join('\n');
+    valueEl.dataset.full = code.full;
+    valueEl.dataset.compact = lastBgCodeCompact;
+  }
+}
+
+async function copyBgCode(){
+  const el = document.getElementById('bgCodeValue');
+  let text = lastBgCodeText || (el && (el.dataset.full || el.textContent)) || '';
+  if(!String(text).trim() || text.indexOf('—') !== -1){
+    try{
+      const raw = localStorage.getItem(BG_SHUFFLE_KEY);
+      if(raw){
+        const data = JSON.parse(raw);
+        const code = formatBgCode(data.color, data.pattern || '', { h: data.h, s: data.s, l: data.l, color: data.color });
+        text = code.full;
+        lastBgCodeText = code.full;
+      }
+    }catch(e){}
+  }
+  if(!String(text).trim()){
+    alert('لا يوجد كود خلفية بعد. اضغط «خلط الخلفية» أولاً.');
+    return;
+  }
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  }
+  const btn = document.getElementById('copyBgCodeBtn');
+  const label = document.getElementById('copyBgCodeLabel');
+  if(btn){
+    btn.classList.add('copied');
+    btn.title = 'تم النسخ';
+  }
+  if(label) label.textContent = 'تم النسخ';
+  setTimeout(() => {
+    if(btn){
+      btn.classList.remove('copied');
+      btn.title = 'نسخ كود الخلفية';
+    }
+    if(label) label.textContent = 'نسخ الكود';
+  }, 1600);
+}
+
+function applyShuffleBg(color, slug, hslParts){
+  const html = document.documentElement;
+  const body = document.body;
+  const parts = hslParts || parseHsl(color) || randomSoftColor();
+  const h = parts.h, s = parts.s, l = parts.l;
+
+  // ألوان واجهة متناسقة مع الخلفية العشوائية
+  const r = html.style;
+  const ink = `hsl(${h}, ${clamp(s, 12, 28)}%, 12%)`;
+  const muted = `hsl(${h}, ${clamp(s - 4, 10, 24)}%, 32%)`;
+  const accent = `hsl(${h}, ${clamp(s + 18, 35, 62)}%, ${clamp(l - 42, 28, 42)}%)`;
+  const accentGlow = `hsl(${h}, ${clamp(s + 12, 30, 55)}%, ${clamp(l - 32, 36, 50)}%)`;
+  const accentSoft = `hsl(${h}, ${clamp(s - 4, 18, 40)}%, ${clamp(l + 6, 86, 94)}%)`;
+  const line = `hsl(${h}, ${clamp(s - 8, 12, 30)}%, ${clamp(l - 18, 58, 72)}%)`;
+
+  r.setProperty('--bg', color);
+  r.setProperty('--bg-deep', `hsl(${h}, ${s}%, ${clamp(l - 6, 68, 84)}%)`);
+  r.setProperty('--panel', 'rgba(255,255,255,.86)');
+  r.setProperty('--line', line);
+  r.setProperty('--ink', ink);
+  r.setProperty('--muted', muted);
+  r.setProperty('--accent', accent);
+  r.setProperty('--accent-soft', accentSoft);
+  r.setProperty('--accent-glow', accentGlow);
+  r.setProperty('--glow-a', `hsla(${h}, ${s}%, ${l}%, .12)`);
+  r.setProperty('--glow-b', `hsla(${h}, ${s}%, ${clamp(l - 10, 60, 80)}%, .1)`);
+  r.setProperty('--grid-line', `hsla(${h}, ${s}%, 20%, .04)`);
+  r.setProperty('--shuffle-color', color);
+  r.setProperty('--shuffle-pattern', slug ? `url("${patternUrl(slug)}")` : 'none');
+
+  html.classList.add('bg-shuffled');
+  body.classList.add('bg-shuffled');
+  const attach = isIOSDevice() ? 'scroll' : 'fixed';
+  html.style.backgroundColor = color;
+  body.style.backgroundColor = color;
+  html.style.backgroundImage = slug ? `url("${patternUrl(slug)}")` : '';
+  body.style.backgroundImage = slug ? `url("${patternUrl(slug)}")` : '';
+  html.style.backgroundRepeat = 'repeat';
+  body.style.backgroundRepeat = 'repeat';
+  html.style.backgroundAttachment = attach;
+  body.style.backgroundAttachment = attach;
+
+  const label = document.getElementById('themeLabel');
+  if(label) label.textContent = 'خلط الخلفية';
+  const themeBtn = document.getElementById('themeToggleBtn');
+  if(themeBtn) themeBtn.title = 'خلط الخلفية';
+
+  updateBgCodeDisplay(color, slug, { h, s, l, color });
+
+  try{
+    localStorage.setItem(BG_SHUFFLE_KEY, JSON.stringify({ color, pattern: slug || '', h, s, l }));
+  }catch(e){}
+}
+
+function parseHsl(str){
+  const m = String(str).match(/hsl\(\s*([\d.]+)\s*,\s*([\d.]+)%\s*,\s*([\d.]+)%\s*\)/i);
+  if(!m) return null;
+  return { h: +m[1], s: +m[2], l: +m[3], color: str };
+}
+
+function loadPatterns(){
+  return Promise.resolve(FALLBACK_PATTERNS);
+}
+
+function shuffleBackground(){
+  return loadPatterns().then(list => {
+    const parts = randomSoftColor();
+    const slug = pickPattern(list);
+    applyShuffleBg(parts.color, slug, parts);
+  });
+}
+
+function restoreShuffleBackground(){
+  try{
+    const raw = localStorage.getItem(BG_SHUFFLE_KEY);
+    if(!raw) return false;
+    const data = JSON.parse(raw);
+    if(!data || !data.color) return false;
+    const parts = (data.h != null)
+      ? { h: data.h, s: data.s, l: data.l, color: data.color }
+      : parseHsl(data.color);
+    applyShuffleBg(data.color, data.pattern || '', parts || undefined);
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+function initTheme(){
+  // استعادة خلفية سابقة إن وُجدت فقط — الافتراضي: تنسيق page-style-unified
+  restoreShuffleBackground();
+
+  const btn = document.getElementById('themeToggleBtn');
+  btn.addEventListener('click', () => {
+    if(btn.dataset.busy === '1') return;
+    btn.dataset.busy = '1';
+    btn.disabled = true;
+    let done = false;
+    const unlock = () => {
+      if(done) return;
+      done = true;
+      btn.dataset.busy = '0';
+      btn.disabled = false;
+    };
+    const failSafe = setTimeout(unlock, 6000);
+    Promise.resolve(shuffleBackground())
+      .then(() => { clearTimeout(failSafe); unlock(); })
+      .catch(() => { clearTimeout(failSafe); unlock(); });
+  });
+
+  const copyBtn = document.getElementById('copyBgCodeBtn');
+  if(copyBtn){
+    copyBtn.addEventListener('click', () => { copyBgCode(); });
+  }
+
+  initDesignMode();
+}
+
+/* ===== أوضاع التصميم ===== */
+const DESIGN_MODES = [
+  { id: 'material', name: 'Material Design' },
+  { id: 'glass', name: 'Glassmorphism' },
+  { id: 'flat', name: 'Flat Design 2.0' },
+  { id: 'cyber', name: 'Cyberpunk' }
+];
+const DESIGN_KEY = 'nasq_design_mode_v1';
+
+function applyDesignMode(modeId){
+  const body = document.body;
+  body.classList.remove('design-material', 'design-glass', 'design-flat', 'design-cyber');
+  const found = DESIGN_MODES.find(m => m.id === modeId) || DESIGN_MODES[0];
+  body.classList.add('design-' + found.id);
+  const btn = document.getElementById('designToggleBtn');
+  const label = document.getElementById('designLabel');
+  if(label) label.textContent = found.name;
+  if(btn){
+    btn.title = found.name;
+    btn.setAttribute('aria-label', 'التصميم: ' + found.name);
+  }
+  try{ localStorage.setItem(DESIGN_KEY, found.id); }catch(e){}
+}
+
+function initDesignMode(){
+  let saved = '';
+  try{ saved = localStorage.getItem(DESIGN_KEY) || ''; }catch(e){}
+  let index = DESIGN_MODES.findIndex(m => m.id === saved);
+  if(index < 0) index = 0;
+  applyDesignMode(DESIGN_MODES[index].id);
+
+  const btn = document.getElementById('designToggleBtn');
+  if(!btn) return;
+  btn.addEventListener('click', () => {
+    index = (index + 1) % DESIGN_MODES.length;
+    applyDesignMode(DESIGN_MODES[index].id);
+  });
+}
+
+let selectedDate = null;
+let selectedTime = null;
+let selectedType = 'نفسية';
+let timeFormat = '24';
+let customHour24 = CONFIG.startHour;
+let customMinute = 0;
+let ampmPeriod = 'ص';
+
+function pad2(n){ return String(n).padStart(2,'0'); }
+
+function formatDisplay(h, m){
+  if(timeFormat === '24') return `${pad2(h)}:${pad2(m)}`;
+  const period = h < 12 ? 'ص' : 'م';
+  let h12 = h % 12;
+  if(h12 === 0) h12 = 12;
+  return `${h12}:${pad2(m)} ${period}`;
+}
+
+function syncFromState(){
+  const ampmSelect = document.getElementById('ampmSelect');
+  const ampmButtons = document.getElementById('ampmButtons');
+
+  if(timeFormat === '24'){
+    ampmSelect.classList.add('hidden');
+    ampmButtons.classList.add('hidden');
+    document.getElementById('hourInput').min = 0;
+    document.getElementById('hourInput').max = 23;
+    document.getElementById('hourInput').value = customHour24;
+  }else{
+    ampmSelect.classList.remove('hidden');
+    ampmButtons.classList.remove('hidden');
+    let h12 = customHour24 % 12;
+    if(h12 === 0) h12 = 12;
+    document.getElementById('hourInput').min = 1;
+    document.getElementById('hourInput').max = 12;
+    document.getElementById('hourInput').value = h12;
+    ampmPeriod = customHour24 < 12 ? 'ص' : 'م';
+    ampmSelect.value = ampmPeriod;
+  }
+  document.getElementById('minuteInput').value = customMinute;
+
+  const isPM = customHour24 >= 12;
+  document.getElementById('amBtn').classList.toggle('active', !isPM);
+  document.getElementById('pmBtn').classList.toggle('active', isPM);
+
+  const hourAngle = (customHour24 % 12) * 30 + customMinute * 0.5;
+  const minuteAngle = customMinute * 6;
+  setHandAngle('hourHand', 'hourGrip', hourAngle, 45);
+  setHandAngle('minuteHand', 'minuteGrip', minuteAngle, 62);
+}
+
+function setHandAngle(handId, gripId, angleDeg, length){
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  const x = 100 + length * Math.cos(rad);
+  const y = 100 + length * Math.sin(rad);
+  document.getElementById(handId).setAttribute('x2', x);
+  document.getElementById(handId).setAttribute('y2', y);
+  document.getElementById(gripId).setAttribute('cx', x);
+  document.getElementById(gripId).setAttribute('cy', y);
+}
+
+function renderClockNumbers(){
+  const g = document.getElementById('clockNumbers');
+  g.innerHTML = '';
+  for(let i = 1; i <= 12; i++){
+    const angle = i * 30 - 90;
+    const rad = angle * Math.PI / 180;
+    const x = 100 + 78 * Math.cos(rad);
+    const y = 100 + 78 * Math.sin(rad);
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x', x);
+    text.setAttribute('y', y);
+    text.setAttribute('class', 'clock-num');
+    text.textContent = i;
+    g.appendChild(text);
+  }
+}
+
+document.getElementById('formatToggleBtn').addEventListener('click', () => {
+  timeFormat = timeFormat === '24' ? '12' : '24';
+  document.getElementById('formatToggleBtn').textContent = timeFormat === '24' ? '24 ساعة' : '12 ساعة';
+  syncFromState();
+  renderTimes();
+  updateSummary();
+});
+
+function readDigitalInputs(){
+  let hourVal = parseInt(document.getElementById('hourInput').value, 10);
+  let minuteVal = parseInt(document.getElementById('minuteInput').value, 10);
+  if(isNaN(hourVal)) hourVal = timeFormat === '24' ? 0 : 12;
+  if(isNaN(minuteVal)) minuteVal = 0;
+  minuteVal = Math.min(59, Math.max(0, minuteVal));
+
+  if(timeFormat === '24'){
+    hourVal = Math.min(23, Math.max(0, hourVal));
+    customHour24 = hourVal;
+  }else{
+    hourVal = Math.min(12, Math.max(1, hourVal));
+    const period = document.getElementById('ampmSelect').value;
+    customHour24 = period === 'م' ? (hourVal % 12) + 12 : (hourVal % 12);
+  }
+  customMinute = minuteVal;
+  syncFromState();
+}
+document.getElementById('hourInput').addEventListener('input', readDigitalInputs);
+document.getElementById('minuteInput').addEventListener('input', readDigitalInputs);
+document.getElementById('ampmSelect').addEventListener('change', readDigitalInputs);
+
+document.getElementById('amBtn').addEventListener('click', () => {
+  if(customHour24 >= 12) customHour24 -= 12;
+  syncFromState();
+});
+document.getElementById('pmBtn').addEventListener('click', () => {
+  if(customHour24 < 12) customHour24 += 12;
+  syncFromState();
+});
+
+let dragTarget = null;
+function angleFromPointer(evt){
+  const svg = document.getElementById('clockSvg');
+  const rect = svg.getBoundingClientRect();
+  const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+  const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+  const px = ((clientX - rect.left) / rect.width) * 200;
+  const py = ((clientY - rect.top) / rect.height) * 200;
+  let angle = Math.atan2(px - 100, -(py - 100)) * 180 / Math.PI;
+  if(angle < 0) angle += 360;
+  return angle;
+}
+function startDrag(target){
+  return (evt) => { dragTarget = target; evt.preventDefault(); };
+}
+document.getElementById('hourGrip').addEventListener('mousedown', startDrag('hour'));
+document.getElementById('hourGrip').addEventListener('touchstart', startDrag('hour'), {passive:false});
+document.getElementById('minuteGrip').addEventListener('mousedown', startDrag('minute'));
+document.getElementById('minuteGrip').addEventListener('touchstart', startDrag('minute'), {passive:false});
+window.addEventListener('mousemove', handleDragMove);
+window.addEventListener('touchmove', handleDragMove, {passive:false});
+window.addEventListener('mouseup', () => dragTarget = null);
+window.addEventListener('touchend', () => dragTarget = null);
+
+function handleDragMove(evt){
+  if(!dragTarget) return;
+  if(evt.cancelable) evt.preventDefault();
+  const angle = angleFromPointer(evt);
+  if(dragTarget === 'minute'){
+    let mins = Math.round(angle / 30) * 5;
+    if(mins === 60) mins = 0;
+    customMinute = mins;
+  }else{
+    let hr12 = Math.round(angle / 30) % 12;
+    if(hr12 === 0) hr12 = 12;
+    const isPM = customHour24 >= 12;
+    customHour24 = isPM ? (hr12 % 12) + 12 : (hr12 % 12);
+  }
+  syncFromState();
+}
+
+function getBookings(){
+  try{ return JSON.parse(localStorage.getItem(CONFIG.storageKey)) || []; }
+  catch(e){ return []; }
+}
+function saveBooking(booking){
+  const all = getBookings();
+  all.push(booking);
+  localStorage.setItem(CONFIG.storageKey, JSON.stringify(all));
+}
+function isSlotTaken(dateStr, timeStr){
+  return getBookings().some(b => b.date === dateStr && b.time === timeStr);
+}
+
+function toDateStr(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+let dateTrainX = 0;
+let dateTrainDrag = null;
+let dateTrainHintTimers = [];
+let dateTrainHintStopped = false;
+
+function clearDateTrainHintTimers(){
+  dateTrainHintTimers.forEach(id => clearTimeout(id));
+  dateTrainHintTimers = [];
+}
+
+function stopDateTrainHint(){
+  dateTrainHintStopped = true;
+  clearDateTrainHintTimers();
+  const track = document.getElementById('dateTrack');
+  const viewport = document.getElementById('dateViewport');
+  if(track) track.classList.remove('is-auto-sliding');
+  if(viewport) viewport.classList.remove('show-hint-hand');
+  const hint = document.getElementById('dateTrainHint');
+  if(hint) hint.textContent = 'اسحب أفقياً لتصفّح 14 يوماً · انقر لاختيار اليوم';
+}
+
+function getDateTrainMaxScroll(){
+  const viewport = document.getElementById('dateViewport');
+  const track = document.getElementById('dateTrack');
+  if(!viewport || !track) return 0;
+  return Math.max(0, track.offsetWidth - viewport.clientWidth);
+}
+
+function applyDateTrainX(x, animated){
+  const track = document.getElementById('dateTrack');
+  if(!track) return;
+  const max = getDateTrainMaxScroll();
+  dateTrainX = Math.min(0, Math.max(-max, x));
+  if(animated){
+    track.classList.add('is-auto-sliding');
+  }else{
+    track.classList.remove('is-auto-sliding');
+  }
+  track.style.transform = `translate3d(${dateTrainX}px, 0, 0)`;
+}
+
+function playDateTrainHint(){
+  if(dateTrainHintStopped) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const viewport = document.getElementById('dateViewport');
+  const track = document.getElementById('dateTrack');
+  if(!viewport || !track) return;
+
+  const max = getDateTrainMaxScroll();
+  if(max < 24) return;
+
+  clearDateTrainHintTimers();
+  viewport.classList.add('show-hint-hand');
+  const peak = -Math.min(max, Math.max(100, viewport.clientWidth * 0.45));
+
+  // دورة 1: انزلاق للأمام ثم العودة
+  applyDateTrainX(peak, true);
+  dateTrainHintTimers.push(setTimeout(() => {
+    if(dateTrainHintStopped) return;
+    applyDateTrainX(0, true);
+  }, 950));
+
+  // دورة 2: نظرة أصغر لتأكيد الإيحاء
+  dateTrainHintTimers.push(setTimeout(() => {
+    if(dateTrainHintStopped) return;
+    applyDateTrainX(peak * 0.55, true);
+  }, 2000));
+
+  dateTrainHintTimers.push(setTimeout(() => {
+    if(dateTrainHintStopped) return;
+    applyDateTrainX(0, true);
+  }, 2900));
+
+  dateTrainHintTimers.push(setTimeout(() => {
+    if(dateTrainHintStopped) return;
+    viewport.classList.remove('show-hint-hand');
+    track.classList.remove('is-auto-sliding');
+    const hint = document.getElementById('dateTrainHint');
+    if(hint) hint.textContent = 'اسحب أفقياً لتصفّح 14 يوماً · انقر لاختيار اليوم';
+  }, 3800));
+}
+
+function observeDateTrainHint(){
+  const panel = document.getElementById('datePanel');
+  if(!panel || panel.dataset.hintObserved === '1') return;
+  panel.dataset.hintObserved = '1';
+
+  if(!('IntersectionObserver' in window)){
+    setTimeout(playDateTrainHint, 600);
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting && !dateTrainHintStopped && panel.dataset.hintPlayed !== '1'){
+        panel.dataset.hintPlayed = '1';
+        setTimeout(playDateTrainHint, 350);
+        io.disconnect();
+      }
+    });
+  }, { threshold: 0.35 });
+  io.observe(panel);
+}
+
+function bindDateTrainDrag(){
+  const viewport = document.getElementById('dateViewport');
+  if(!viewport || viewport.dataset.dragBound === '1') return;
+  viewport.dataset.dragBound = '1';
+
+  const onUserInteract = () => stopDateTrainHint();
+
+  const onMove = (clientX) => {
+    if(!dateTrainDrag) return;
+    const dx = clientX - dateTrainDrag.startClientX;
+    if(Math.abs(dx) > 4) dateTrainDrag.moved = true;
+    applyDateTrainX(dateTrainDrag.startX + dx, false);
+  };
+
+  const onUp = () => {
+    if(!dateTrainDrag) return;
+    const moved = dateTrainDrag.moved;
+    dateTrainDrag = null;
+    viewport.classList.remove('is-dragging');
+    if(moved){
+      viewport.dataset.suppressClick = '1';
+      setTimeout(() => { delete viewport.dataset.suppressClick; }, 100);
+    }
+  };
+
+  viewport.addEventListener('mousedown', (e) => {
+    if(e.button !== 0) return;
+    onUserInteract();
+    dateTrainDrag = {
+      startClientX: e.clientX,
+      startX: dateTrainX,
+      moved: false
+    };
+    viewport.classList.add('is-dragging');
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if(!dateTrainDrag) return;
+    onMove(e.clientX);
+    e.preventDefault();
+  });
+
+  window.addEventListener('mouseup', onUp);
+
+  viewport.addEventListener('touchstart', (e) => {
+    if(!e.touches[0]) return;
+    onUserInteract();
+    dateTrainDrag = {
+      startClientX: e.touches[0].clientX,
+      startX: dateTrainX,
+      moved: false
+    };
+    viewport.classList.add('is-dragging');
+  }, { passive: true });
+
+  viewport.addEventListener('touchmove', (e) => {
+    if(!dateTrainDrag || !e.touches[0]) return;
+    onMove(e.touches[0].clientX);
+    e.preventDefault();
+  }, { passive: false });
+
+  viewport.addEventListener('touchend', onUp);
+  viewport.addEventListener('touchcancel', onUp);
+
+  viewport.addEventListener('wheel', (e) => {
+    onUserInteract();
+    applyDateTrainX(dateTrainX - (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY), false);
+    e.preventDefault();
+  }, { passive: false });
+
+  window.addEventListener('resize', () => applyDateTrainX(dateTrainX, false));
+}
+
+function renderDates(){
+  const track = document.getElementById('dateTrack');
+  if(!track) return;
+  track.innerHTML = '';
+  dateTrainX = 0;
+  dateTrainHintStopped = false;
+  clearDateTrainHintTimers();
+  const panel = document.getElementById('datePanel');
+  if(panel){
+    delete panel.dataset.hintPlayed;
+    delete panel.dataset.hintObserved;
+  }
+  applyDateTrainX(0, false);
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  for(let i = 0; i < CONFIG.daysCount; i++){
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    const dateStr = toDateStr(d);
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'date-chip';
+    chip.dataset.date = dateStr;
+    chip.setAttribute('role', 'option');
+    chip.draggable = false;
+    chip.innerHTML = `<span class="dow">${dayNamesAr[d.getDay()]}</span><span class="dnum">${d.getDate()}</span><span class="mon">${monthNamesAr[d.getMonth()]}</span>`;
+    chip.setAttribute('aria-label', `${dayNamesAr[d.getDay()]} ${d.getDate()} ${monthNamesAr[d.getMonth()]}`);
+    chip.addEventListener('click', (e) => {
+      const viewport = document.getElementById('dateViewport');
+      if(viewport && viewport.dataset.suppressClick === '1'){
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      stopDateTrainHint();
+      selectedDate = dateStr;
+      selectedTime = null;
+      document.querySelectorAll('.date-chip').forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-selected', 'false');
+      });
+      chip.classList.add('active');
+      chip.setAttribute('aria-selected', 'true');
+      document.getElementById('manualTimePreview').classList.add('hidden');
+      document.getElementById('customTimeNote').textContent = '';
+      renderTimes();
+      updateSummary();
+    });
+    track.appendChild(chip);
+  }
+
+  bindDateTrainDrag();
+  requestAnimationFrame(() => {
+    applyDateTrainX(0, false);
+    observeDateTrainHint();
+  });
+
+  const firstChip = track.querySelector('.date-chip');
+  if(firstChip){
+    firstChip.classList.add('active');
+    firstChip.setAttribute('aria-selected', 'true');
+    selectedDate = firstChip.dataset.date;
+    renderTimes();
+    updateSummary();
+  }
+}
+
+function renderTimes(){
+  const grid = document.getElementById('timeGrid');
+  grid.innerHTML = '';
+  if(!selectedDate){
+    grid.innerHTML = '<div class="empty-note">اختر يوماً أولاً</div>';
+    return;
+  }
+
+  const now = new Date();
+  const isToday = selectedDate === toDateStr(now);
+  let any = false;
+
+  for(let h = CONFIG.startHour; h < CONFIG.endHour; h++){
+    const timeStr = pad2(h) + ':00';
+    if(isToday && h <= now.getHours()) continue;
+    any = true;
+    const taken = isSlotTaken(selectedDate, timeStr);
+    const slot = document.createElement('button');
+    slot.type = 'button';
+    slot.className = 'time-slot' + (taken ? ' taken' : '');
+    slot.textContent = `${formatDisplay(h,0)} – ${formatDisplay(h+1,0)}`;
+    if(!taken){
+      slot.addEventListener('click', () => {
+        selectedTime = timeStr;
+        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('active'));
+        slot.classList.add('active');
+        document.getElementById('customTimeNote').textContent = '';
+        document.getElementById('manualTimePreview').classList.add('hidden');
+        updateSummary();
+      });
+    }else{
+      slot.disabled = true;
+    }
+    grid.appendChild(slot);
+  }
+  if(!any) grid.innerHTML = '<div class="empty-note">لا توجد أوقات متاحة في هذا اليوم</div>';
+}
+
+function openClockModal(){
+  const modal = document.getElementById('clockModal');
+  modal.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  document.getElementById('modalTimeNote').textContent = '';
+  document.getElementById('modalTimeNote').classList.remove('error');
+  syncFromState();
+  document.getElementById('closeClockModalBtn').focus();
+}
+
+function closeClockModal(){
+  document.getElementById('clockModal').classList.add('hidden');
+  document.body.classList.remove('modal-open');
+}
+
+document.getElementById('openClockModalBtn').addEventListener('click', openClockModal);
+document.getElementById('closeClockModalBtn').addEventListener('click', closeClockModal);
+document.getElementById('clockModalBackdrop').addEventListener('click', closeClockModal);
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape' && !document.getElementById('clockModal').classList.contains('hidden')){
+    closeClockModal();
+  }
+});
+
+document.getElementById('useCustomTimeBtn').addEventListener('click', () => {
+  const note = document.getElementById('modalTimeNote');
+  const outerNote = document.getElementById('customTimeNote');
+  const preview = document.getElementById('manualTimePreview');
+  const val = `${pad2(customHour24)}:${pad2(customMinute)}`;
+  note.classList.remove('error');
+  note.textContent = '';
+  outerNote.classList.remove('error');
+  outerNote.textContent = '';
+
+  if(!selectedDate){
+    note.textContent = 'اختر اليوم أولاً ثم أعد فتح النافذة.';
+    note.classList.add('error');
+    return;
+  }
+
+  const h = customHour24, m = customMinute;
+  const withinHours = (h > CONFIG.startHour || (h === CONFIG.startHour && m >= 0)) &&
+                      (h < CONFIG.endHour || (h === CONFIG.endHour && m === 0));
+  if(!withinHours){
+    note.textContent = `الوقت يجب أن يكون بين ${formatDisplay(CONFIG.startHour,0)} و ${formatDisplay(CONFIG.endHour,0)}.`;
+    note.classList.add('error');
+    return;
+  }
+
+  const now = new Date();
+  const isToday = selectedDate === toDateStr(now);
+  if(isToday && (h < now.getHours() || (h === now.getHours() && m <= now.getMinutes()))){
+    note.textContent = 'هذا الوقت مضى بالفعل، اختر وقتاً لاحقاً.';
+    note.classList.add('error');
+    return;
+  }
+
+  if(isSlotTaken(selectedDate, val)){
+    note.textContent = 'هذا الوقت محجوز بالفعل، اختر وقتاً آخر.';
+    note.classList.add('error');
+    return;
+  }
+
+  selectedTime = val;
+  document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('active'));
+  preview.textContent = `الوقت اليدوي المختار: ${formatDisplay(h,m)}`;
+  preview.classList.remove('hidden');
+  outerNote.textContent = '';
+  closeClockModal();
+  updateSummary();
+});
+
+function updateSummary(){
+  const box = document.getElementById('summaryBox');
+  const btn = document.getElementById('confirmBtn');
+  const name = document.getElementById('nameInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
+
+  if(selectedDate && selectedTime){
+    const d = new Date(selectedDate + 'T12:00:00');
+    const [sh, sm] = selectedTime.split(':').map(Number);
+    box.innerHTML = `
+      الموضوع: <strong>${selectedType}</strong><br>
+      الموعد: <strong>${dayNamesAr[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}</strong><br>
+      الوقت: <strong>${formatDisplay(sh, sm)}</strong> · ساعة لك<br>
+      الجلسة: <strong>عبر Zoom</strong> · بهدوء وخصوصية
+    `;
+  }else{
+    box.textContent = 'عندما تختار موعداً، سيظهر هنا بهدوء.';
+  }
+  btn.disabled = !(selectedDate && selectedTime && name && phone);
+}
+
+document.getElementById('nameInput').addEventListener('input', updateSummary);
+document.getElementById('phoneInput').addEventListener('input', updateSummary);
+
+document.querySelectorAll('input[name="consultType"]').forEach(input => {
+  input.addEventListener('change', () => {
+    selectedType = input.value;
+    document.querySelectorAll('.type-option').forEach(opt => opt.classList.remove('active'));
+    input.closest('.type-option').classList.add('active');
+    updateSummary();
+  });
+});
+
+document.getElementById('confirmBtn').addEventListener('click', () => {
+  const name = document.getElementById('nameInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const notes = document.getElementById('notesInput').value.trim();
+
+  if(isSlotTaken(selectedDate, selectedTime)){
+    alert('عذراً، هذا الموعد تم حجزه للتو. اختر وقتاً آخر.');
+    renderTimes();
+    return;
+  }
+
+  saveBooking({
+    type: selectedType,
+    date: selectedDate,
+    time: selectedTime,
+    name,
+    phone: `+965 ${phone}`,
+    email,
+    notes,
+    createdAt: new Date().toISOString()
+  });
+
+  const d = new Date(selectedDate + 'T12:00:00');
+  const [sh, sm] = selectedTime.split(':').map(Number);
+  const contactMethod = email ? `على +965 ${phone} أو بريدك` : `على +965 ${phone}`;
+  document.getElementById('doneSummary').textContent =
+    `حيّاك الله. جلستك (${selectedType}) محجوزة يوم ${dayNamesAr[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} الساعة ${formatDisplay(sh, sm)} عبر Zoom. سيصلك رابط اللقاء بلطف ${contactMethod}. خذ نفساً… أنت في المكان المناسب.`;
+
+  document.getElementById('bookingFlow').classList.add('hidden');
+  document.getElementById('doneCard').classList.remove('hidden');
+  document.getElementById('doneCard').scrollIntoView({behavior:'smooth', block:'center'});
+});
+
+document.getElementById('newBookingBtn').addEventListener('click', () => {
+  selectedDate = null;
+  selectedTime = null;
+  selectedType = 'نفسية';
+  document.getElementById('nameInput').value = '';
+  document.getElementById('phoneInput').value = '';
+  document.getElementById('emailInput').value = '';
+  document.getElementById('notesInput').value = '';
+  document.getElementById('customTimeNote').textContent = '';
+  document.getElementById('manualTimePreview').classList.add('hidden');
+  document.querySelectorAll('.type-option').forEach((opt, i) => {
+    opt.classList.toggle('active', i === 0);
+    const radio = opt.querySelector('input');
+    if(radio) radio.checked = i === 0;
+  });
+  document.getElementById('doneCard').classList.add('hidden');
+  document.getElementById('bookingFlow').classList.remove('hidden');
+  renderDates();
+  updateSummary();
+  document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+});
+
+document.getElementById('scrollMetaBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  const el = document.getElementById('expectations');
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+initTheme();
+renderClockNumbers();
+syncFromState();
+renderDates();
+updateSummary();
+</script>
+</body>
+</html>
