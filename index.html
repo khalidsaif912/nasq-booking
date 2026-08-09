@@ -52,13 +52,20 @@
     --glow-b:color-mix(in oklab, var(--primary) 12%, transparent);
     --grid-line:color-mix(in oklab, var(--primary) 5%, transparent);
     --shadow:var(--shadow-soft);
-    --photo-bg:url("assets/bg-serene.png");
-    --photo-bg-opacity:.38;
-    --photo-veil:color-mix(in oklab, var(--background) 62%, transparent);
+    --photo-bg:url("assets/bg-serene.png?v=3");
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{
+    scroll-behavior:smooth;
+    min-height:100%;
+    background-color:#e8ebf4;
+    background-image:var(--photo-bg);
+    background-size:cover;
+    background-position:center center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+  }
   body{
     margin:0;
     min-height:100vh;
@@ -71,45 +78,36 @@
     text-rendering:optimizeLegibility;
     touch-action:manipulation;
     -webkit-tap-highlight-color:transparent;
-    background:var(--gradient-page);
+    /* طبقة خفيفة جداً — الصورة تُرى بوضوح */
+    background:linear-gradient(
+      165deg,
+      rgba(255,255,255,.42) 0%,
+      rgba(245,240,255,.28) 50%,
+      rgba(232,248,245,.38) 100%
+    );
     background-attachment:fixed;
     overflow-x:hidden;
   }
   body.modal-open{overflow:hidden;}
 
-  /* صورة الخلفية الشفافة (تحت الطبقة) */
-  body::after{
+  /* شبكة خفيفة فوق الصفحة */
+  body::before{
     content:"";
     position:fixed;
     inset:0;
     z-index:0;
     pointer-events:none;
-    background-image:var(--photo-bg);
-    background-size:cover;
-    background-position:center center;
-    background-repeat:no-repeat;
-    opacity:var(--photo-bg-opacity);
-  }
-  /* طبقة شفافة فوق الصورة لقراءة النص */
-  body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    z-index:1;
-    pointer-events:none;
-    background:
-      linear-gradient(165deg, var(--photo-veil), color-mix(in oklab, var(--background) 48%, transparent)),
+    opacity:.22;
+    background-image:
       linear-gradient(var(--grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size:auto, 44px 44px, 44px 44px;
-    opacity:1;
-    -webkit-mask-image:none;
-    mask-image:none;
+    background-size:44px 44px;
   }
+  body::after{content:none; display:none;}
 
   .shell{
     position:relative;
-    z-index:2;
+    z-index:1;
     max-width:1040px;
     width:100%;
     margin:0 auto;
@@ -266,26 +264,30 @@
     color:#fff !important;
   }
 
-  /* خلفية عشوائية (لون + نسيج) */
+  /* خلفية عشوائية (لون + نسيج) — مع بقاء الصورة شفافة تحتها */
+  html.bg-shuffled{
+    background-image:
+      linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.35)),
+      var(--photo-bg) !important;
+    background-size:cover !important;
+    background-position:center center !important;
+    background-repeat:no-repeat !important;
+    background-attachment:fixed !important;
+    background-color:var(--shuffle-color, #eef2f8) !important;
+  }
   html.bg-shuffled, body.bg-shuffled{
-    background-repeat:repeat !important;
     background-attachment:fixed;
   }
   body.bg-shuffled{
-    background-image:var(--shuffle-pattern) !important;
-    background-color:var(--shuffle-color) !important;
-  }
-  body.bg-shuffled::after{
-    opacity:.16;
-    mix-blend-mode:soft-light;
+    background-image:
+      linear-gradient(165deg, color-mix(in srgb, var(--shuffle-color) 42%, transparent), color-mix(in srgb, var(--shuffle-color) 28%, transparent)),
+      var(--shuffle-pattern) !important;
+    background-color:transparent !important;
+    background-size:auto, auto !important;
+    background-repeat:no-repeat, repeat !important;
   }
   body.bg-shuffled::before{
-    background:
-      linear-gradient(165deg, color-mix(in srgb, var(--shuffle-color) 50%, transparent), color-mix(in srgb, var(--shuffle-color) 28%, transparent)),
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size:auto, 44px 44px, 44px 44px;
-    opacity:.5;
+    opacity:.1;
   }
   body.bg-shuffled .panel{
     background:rgba(255,255,255,.82);
@@ -437,29 +439,25 @@
   body.design-cyber{
     color:#e2e8f0;
     background:
-      radial-gradient(900px 500px at 0% 0%, rgba(168,85,247,.18), transparent 50%),
-      radial-gradient(800px 500px at 100% 20%, rgba(34,211,238,.14), transparent 45%),
-      linear-gradient(165deg, #050810, #0b1220 55%, #070b14) !important;
+      radial-gradient(900px 500px at 0% 0%, rgba(168,85,247,.22), transparent 50%),
+      radial-gradient(800px 500px at 100% 20%, rgba(34,211,238,.16), transparent 45%),
+      linear-gradient(165deg, rgba(5,8,16,.55), rgba(11,18,32,.42) 55%, rgba(7,11,20,.5)) !important;
   }
   body.design-cyber.bg-shuffled{
     background-image:
-      linear-gradient(rgba(5,8,16,.55), rgba(5,8,16,.72)),
+      linear-gradient(rgba(5,8,16,.45), rgba(5,8,16,.55)),
       var(--shuffle-pattern) !important;
-    background-color:#070b14 !important;
+    background-color:transparent !important;
   }
   body.design-cyber::before{
-    z-index:1;
-    opacity:.7;
-    background:
-      linear-gradient(165deg, rgba(5,8,16,.72), rgba(7,11,20,.55)),
+    z-index:0;
+    opacity:.35;
+    background-image:
       linear-gradient(rgba(34,211,238,.08) 1px, transparent 1px),
       linear-gradient(90deg, rgba(168,85,247,.08) 1px, transparent 1px);
-    background-size:auto, 44px 44px, 44px 44px;
+    background-size:44px 44px;
   }
-  body.design-cyber::after{
-    opacity:.26;
-    filter:saturate(.85) brightness(.9);
-  }
+  body.design-cyber::after{content:none; display:none;}
   body.design-cyber .panel{
     background:rgba(11,18,32,.88) !important;
     border:1px solid rgba(34,211,238,.28);
@@ -1814,6 +1812,17 @@
 </div>
 
 <script>
+/* ضمان مسار صورة الخلفية (يعمل محلياً وعلى GitHub Pages) */
+(function setPhotoBackgroundPath(){
+  try{
+    let root = location.pathname || '/';
+    if(/\.[a-zA-Z0-9]+$/.test(root)) root = root.replace(/\/[^/]*$/, '/');
+    if(!root.endsWith('/')) root += '/';
+    const photoUrl = new URL('assets/bg-serene.png?v=3', location.origin + root).href;
+    document.documentElement.style.setProperty('--photo-bg', 'url("' + photoUrl + '")');
+  }catch(e){}
+})();
+
 const CONFIG = {
   daysCount: 14, /* أسبوعان من اليوم */
   startHour: 9,
@@ -2001,20 +2010,26 @@ function applyShuffleBg(color, slug, hslParts){
   html.classList.add('bg-shuffled');
   body.classList.add('bg-shuffled');
   const attach = isIOSDevice() ? 'scroll' : 'fixed';
+  // أبقِ الصورة ظاهرة على html بطبقة شفافة؛ لا تغطّيها بلون صلب
   html.style.backgroundColor = color;
-  body.style.backgroundColor = color;
-  // لا نطمس تدرّج الصفحة بالكامل: نمط + لون، مع إبقاء متغير gradient للـ :root بدون bg-shuffled فقط
-  if(slug){
-    const pat = patternUrl(slug);
-    html.style.backgroundImage = `url("${pat}")`;
-    body.style.backgroundImage = `url("${pat}")`;
-  }else{
-    html.style.backgroundImage = '';
-    body.style.backgroundImage = '';
-  }
-  html.style.backgroundRepeat = 'repeat';
-  body.style.backgroundRepeat = 'repeat';
+  html.style.backgroundImage = `linear-gradient(rgba(255,255,255,.32), rgba(255,255,255,.32)), var(--photo-bg)`;
+  html.style.backgroundSize = 'cover';
+  html.style.backgroundPosition = 'center center';
+  html.style.backgroundRepeat = 'no-repeat';
   html.style.backgroundAttachment = attach;
+
+  body.style.backgroundColor = 'transparent';
+  if(slug){
+    body.style.backgroundImage =
+      `linear-gradient(165deg, color-mix(in srgb, ${color} 38%, transparent), color-mix(in srgb, ${color} 22%, transparent)), url("${patternUrl(slug)}")`;
+    body.style.backgroundRepeat = 'no-repeat, repeat';
+    body.style.backgroundSize = 'auto, auto';
+  }else{
+    body.style.backgroundImage =
+      `linear-gradient(165deg, color-mix(in srgb, ${color} 38%, transparent), color-mix(in srgb, ${color} 22%, transparent))`;
+    body.style.backgroundRepeat = 'no-repeat';
+    body.style.backgroundSize = 'auto';
+  }
   body.style.backgroundAttachment = attach;
 
   const label = document.getElementById('themeLabel');
