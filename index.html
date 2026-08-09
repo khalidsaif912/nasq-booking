@@ -52,6 +52,9 @@
     --glow-b:color-mix(in oklab, var(--primary) 12%, transparent);
     --grid-line:color-mix(in oklab, var(--primary) 5%, transparent);
     --shadow:var(--shadow-soft);
+    --photo-bg:url("assets/bg-serene.png");
+    --photo-bg-opacity:.38;
+    --photo-veil:color-mix(in oklab, var(--background) 62%, transparent);
   }
 
   *{box-sizing:border-box;}
@@ -74,23 +77,39 @@
   }
   body.modal-open{overflow:hidden;}
 
+  /* صورة الخلفية الشفافة (تحت الطبقة) */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background-image:var(--photo-bg);
+    background-size:cover;
+    background-position:center center;
+    background-repeat:no-repeat;
+    opacity:var(--photo-bg-opacity);
+  }
+  /* طبقة شفافة فوق الصورة لقراءة النص */
   body::before{
     content:"";
     position:fixed;
     inset:0;
+    z-index:1;
     pointer-events:none;
-    opacity:.4;
-    background-image:
+    background:
+      linear-gradient(165deg, var(--photo-veil), color-mix(in oklab, var(--background) 48%, transparent)),
       linear-gradient(var(--grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size:44px 44px;
-    -webkit-mask-image:radial-gradient(at 50% 15%, #000 20%, transparent 75%);
-    mask-image:radial-gradient(at 50% 15%, #000 20%, transparent 75%);
+    background-size:auto, 44px 44px, 44px 44px;
+    opacity:1;
+    -webkit-mask-image:none;
+    mask-image:none;
   }
 
   .shell{
     position:relative;
-    z-index:1;
+    z-index:2;
     max-width:1040px;
     width:100%;
     margin:0 auto;
@@ -256,7 +275,18 @@
     background-image:var(--shuffle-pattern) !important;
     background-color:var(--shuffle-color) !important;
   }
-  body.bg-shuffled::before{opacity:.12;}
+  body.bg-shuffled::after{
+    opacity:.16;
+    mix-blend-mode:soft-light;
+  }
+  body.bg-shuffled::before{
+    background:
+      linear-gradient(165deg, color-mix(in srgb, var(--shuffle-color) 50%, transparent), color-mix(in srgb, var(--shuffle-color) 28%, transparent)),
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:auto, 44px 44px, 44px 44px;
+    opacity:.5;
+  }
   body.bg-shuffled .panel{
     background:rgba(255,255,255,.82);
     backdrop-filter:blur(10px);
@@ -418,10 +448,17 @@
     background-color:#070b14 !important;
   }
   body.design-cyber::before{
-    opacity:.25;
-    background-image:
+    z-index:1;
+    opacity:.7;
+    background:
+      linear-gradient(165deg, rgba(5,8,16,.72), rgba(7,11,20,.55)),
       linear-gradient(rgba(34,211,238,.08) 1px, transparent 1px),
       linear-gradient(90deg, rgba(168,85,247,.08) 1px, transparent 1px);
+    background-size:auto, 44px 44px, 44px 44px;
+  }
+  body.design-cyber::after{
+    opacity:.26;
+    filter:saturate(.85) brightness(.9);
   }
   body.design-cyber .panel{
     background:rgba(11,18,32,.88) !important;
