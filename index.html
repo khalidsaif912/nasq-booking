@@ -67,6 +67,9 @@
     --grid-line:color-mix(in oklab, var(--primary) 5%, transparent);
     --shadow:var(--shadow-soft);
     --photo-bg:url("assets/bg-umbrella-sakura.png?v=6");
+    --heart-opacity:.92;
+    --panel-opacity:.88;
+    --menu-opacity:.9;
   }
 
   *{box-sizing:border-box;}
@@ -784,6 +787,7 @@
     filter: drop-shadow(0 14px 28px color-mix(in srgb, var(--primary) 32%, transparent));
     pointer-events:none;
     z-index:0;
+    opacity:var(--heart-opacity, .92);
   }
   #heartGrad .hg-a,
   #heartGradMiniA .hg-a,
@@ -871,6 +875,7 @@
     pointer-events:none;
     z-index:0;
     filter: drop-shadow(0 8px 16px color-mix(in srgb, var(--primary) 28%, transparent));
+    opacity:var(--heart-opacity, .92);
   }
   .hero-stat-inner{
     position:relative;
@@ -943,7 +948,7 @@
   }
 
   .panel{
-    background:color-mix(in oklab, var(--surface) 88%, transparent);
+    background:color-mix(in oklab, var(--surface) calc(var(--panel-opacity, .88) * 100%), transparent);
     border:1px solid color-mix(in oklab, var(--border) 75%, transparent);
     border-radius:14px;
     padding:14px 14px;
@@ -1475,7 +1480,7 @@
     align-items:flex-start;
     gap:12px;
     border:1.5px solid var(--border);
-    background:color-mix(in oklab, var(--surface) 75%, transparent);
+    background:color-mix(in oklab, var(--surface) calc(var(--menu-opacity, .9) * 100%), transparent);
     border-radius:1rem;
     padding:16px;
     cursor:pointer;
@@ -1484,6 +1489,8 @@
     isolation:isolate;
     transform:translateY(0) scale(1);
     box-shadow:0 0 0 0 transparent;
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
     transition:
       border-color .22s ease,
       background .22s ease,
@@ -2052,35 +2059,14 @@
 
   <header class="topbar">
     <a class="brand" href="#top" id="top">
-      <span class="brand-mark">ن</span>
+      <span class="brand-mark" data-text="brandMark">ن</span>
       <span>
-        <span class="brand-name">نَسْق</span>
-        <span class="brand-tag">استشارة نفسية واجتماعية</span>
+        <span class="brand-name" data-text="brandName">نَسْق</span>
+        <span class="brand-tag" data-text="brandTag">استشارة نفسية واجتماعية</span>
       </span>
     </a>
     <div class="top-actions">
       <div class="top-tools">
-        <button class="theme-btn" id="themeToggleBtn" type="button" title="خلط الخلفية" aria-label="خلط الخلفية">
-          <span class="theme-swatch" id="themeSwatch" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true">
-              <circle cx="13.5" cy="6.5" r="2.5" fill="#7c3aed"/>
-              <circle cx="17.5" cy="10.5" r="2.5" fill="#a78bfa"/>
-              <circle cx="8.5" cy="7.5" r="2.5" fill="#c4b5fd"/>
-              <circle cx="6.5" cy="12.5" r="2.5" fill="#ddd6fe"/>
-            </svg>
-          </span>
-          <span class="btn-text" id="themeLabel">خلط الخلفية</span>
-        </button>
-        <button class="photo-btn" id="photoToggleBtn" type="button" title="تغيير صورة الخلفية" aria-label="تغيير صورة الخلفية">
-          <span class="photo-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="5" width="18" height="14" rx="2"/>
-              <circle cx="9" cy="10" r="1.6" fill="currentColor" stroke="none"/>
-              <path d="M3 16l5-4 4 3 4-5 5 6"/>
-            </svg>
-          </span>
-          <span class="btn-text" id="photoLabel">تغيير الصورة</span>
-        </button>
         <button class="pwa-btn" id="pwaHeaderInstallBtn" type="button" title="تثبيت نَسْق كتطبيق" aria-label="تثبيت نَسْق كتطبيق">
           <span class="pwa-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2091,28 +2077,7 @@
           </span>
           <span class="btn-text">تثبيت التطبيق</span>
         </button>
-        <button class="design-btn" id="designToggleBtn" type="button" title="Material Design" aria-label="تبديل أسلوب التصميم">
-          <span class="design-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <rect x="3" y="3" width="7" height="7" rx="1.5"/>
-              <rect x="14" y="3" width="7" height="7" rx="1.5"/>
-              <rect x="3" y="14" width="7" height="7" rx="1.5"/>
-              <rect x="14" y="14" width="7" height="7" rx="1.5"/>
-            </svg>
-          </span>
-          <span class="btn-text" id="designLabel">Material</span>
-        </button>
-        <button class="copy-code-btn" id="copyBgCodeBtn" type="button" title="نسخ كود الخلفية" aria-label="نسخ كود الخلفية">
-          <span class="copy-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="12" height="12" rx="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-          </span>
-          <span class="btn-text" id="copyBgCodeLabel">نسخ الكود</span>
-        </button>
       </div>
-      <!-- زر احجز يبقى في قسم الهيرو فقط -->
     </div>
   </header>
 
@@ -2122,10 +2087,10 @@
 
   <section class="hero" aria-label="مقدمة الموقع">
     <div class="hero-copy">
-      <h1>نَسْق<br><em>مساحتك الآمنة للتحدث والاستشارة</em></h1>
-      <p class="hero-lead">مكان دافئ ولطيف لتكون كما أنت. نستمع إليك بهدوء، ونرافقك في فهم مشاعرك وعلاقاتك بخطوات مرنة وآمنة.</p>
+      <h1><span data-text="heroTitle">نَسْق</span><br><em data-text="heroEm">مساحتك الآمنة للتحدث والاستشارة</em></h1>
+      <p class="hero-lead" data-text="heroLead">مكان دافئ ولطيف لتكون كما أنت. نستمع إليك بهدوء، ونرافقك في فهم مشاعرك وعلاقاتك بخطوات مرنة وآمنة.</p>
       <div class="hero-cta">
-        <a class="primary-btn" href="#booking">احجز جلسة الآن</a>
+        <a class="primary-btn" href="#booking" data-text="bookCta">احجز جلسة الآن</a>
       </div>
     </div>
     <div class="hero-visual-wrap">
@@ -2141,9 +2106,9 @@
           <path fill="url(#heartGrad)" d="M50 84 C 18 58 4 40 4 24 C 4 11 14 2 26 2 C 35 2 42 7 50 16 C 58 7 65 2 74 2 C 86 2 96 11 96 24 C 96 40 82 58 50 84 Z"/>
         </svg>
         <div class="hero-visual-inner">
-          <span class="heart-line heart-line-1">هنا مساحة</span>
-          <span class="heart-line heart-line-2">للتحدّث… بلا أحكام</span>
-          <span class="heart-line heart-line-3">خصوصية · لطف · جلسات عبر Zoom</span>
+          <span class="heart-line heart-line-1" data-text="heartLine1">هنا مساحة</span>
+          <span class="heart-line heart-line-2" data-text="heartLine2">للتحدّث… بلا أحكام</span>
+          <span class="heart-line heart-line-3" data-text="heartLine3">خصوصية · لطف · جلسات عبر Zoom</span>
         </div>
       </div>
       <div class="hero-stats">
@@ -2159,8 +2124,8 @@
             <path fill="url(#heartGradMiniA)" d="M50 84 C 18 58 4 40 4 24 C 4 11 14 2 26 2 C 35 2 42 7 50 16 C 58 7 65 2 74 2 C 86 2 96 11 96 24 C 96 40 82 58 50 84 Z"/>
           </svg>
           <div class="hero-stat-inner">
-            <span class="stat-num">٦٠</span>
-            <span class="stat-label">دقيقة لك</span>
+            <span class="stat-num" data-text="stat1Num">٦٠</span>
+            <span class="stat-label" data-text="stat1Label">دقيقة لك</span>
           </div>
         </div>
         <div class="hero-stat" aria-label="مائة بالمئة سرية تامة">
@@ -2175,8 +2140,8 @@
             <path fill="url(#heartGradMiniB)" d="M50 84 C 18 58 4 40 4 24 C 4 11 14 2 26 2 C 35 2 42 7 50 16 C 58 7 65 2 74 2 C 86 2 96 11 96 24 C 96 40 82 58 50 84 Z"/>
           </svg>
           <div class="hero-stat-inner">
-            <span class="stat-num">١٠٠٪</span>
-            <span class="stat-label">سرّية تامة</span>
+            <span class="stat-num" data-text="stat2Num">١٠٠٪</span>
+            <span class="stat-label" data-text="stat2Label">سرّية تامة</span>
           </div>
         </div>
       </div>
@@ -2184,8 +2149,8 @@
   </section>
 
   <div class="section-head" id="booking">
-    <h2>اختر وقتاً يناسبك</h2>
-    <p>خطوات بسيطة ومتتابعة: نوع الاهتمام، ثم اليوم والوقت، ثم نبذة عنك.</p>
+    <h2 data-text="bookingTitle">اختر وقتاً يناسبك</h2>
+    <p data-text="bookingLead">خطوات بسيطة ومتتابعة: نوع الاهتمام، ثم اليوم والوقت، ثم نبذة عنك.</p>
     <div class="step-nav" id="stepNav" aria-label="مراحل الحجز">
       <span class="step-nav-item is-on" data-nav="1">1 · الاهتمام</span>
       <span class="step-nav-item" data-nav="2">2 · اليوم والوقت</span>
@@ -2196,7 +2161,7 @@
   <div id="bookingFlow" class="booking-layout">
     <div class="stack">
       <div class="panel booking-step is-current" data-step="1" id="stepType">
-        <h3><span class="step">1</span> بماذا نحتاج أن نهتم معاً؟</h3>
+        <h3><span class="step">1</span> <span data-text="step1Title">بماذا نحتاج أن نهتم معاً؟</span></h3>
         <div class="type-grid" id="typeGrid">
           <label class="type-option">
             <input type="radio" name="consultType" value="نفسية">
@@ -2234,7 +2199,7 @@
       </div>
 
       <div class="panel booking-step" data-step="2" id="stepDateTime" hidden>
-        <h3><span class="step">2</span> اختر اليوم والوقت</h3>
+        <h3><span class="step">2</span> <span data-text="step2Title">اختر اليوم والوقت</span></h3>
         <div class="date-train" id="dateTrain">
           <div class="date-row-shell">
             <div class="date-viewport" id="dateViewport">
@@ -2258,13 +2223,13 @@
       </div>
 
       <div class="panel booking-step" data-step="3" id="stepAbout" hidden>
-        <h3><span class="step">3</span> نبذة عنك</h3>
+        <h3><span class="step">3</span> <span data-text="step3Title">نبذة عنك</span></h3>
         <div class="field">
-          <label for="nameInput">الاسم الذي تفضّل أن نناديك به</label>
+          <label for="nameInput" data-text="nameLabel">الاسم الذي تفضّل أن نناديك به</label>
           <input type="text" id="nameInput" placeholder="مثال: سلمى" autocomplete="name">
         </div>
         <div class="field">
-          <label for="phoneInput">رقم الهاتف</label>
+          <label for="phoneInput" data-text="phoneLabel">رقم الهاتف</label>
           <div class="phone-row">
             <select class="phone-prefix-select" id="dialCodeSelect" aria-label="رمز الدولة">
               <option value="+965" selected>🇰🇼 +965</option>
@@ -2287,11 +2252,11 @@
           </div>
         </div>
         <div class="field">
-          <label for="emailInput">البريد الإلكتروني (اختياري)</label>
+          <label for="emailInput" data-text="emailLabel">البريد الإلكتروني (اختياري)</label>
           <input type="email" id="emailInput" placeholder="name@example.com" autocomplete="email">
         </div>
         <div class="field" style="margin-bottom:0">
-          <label for="notesInput">ما الذي يثقل قلبك اليوم؟ (اختياري)</label>
+          <label for="notesInput" data-text="notesLabel">ما الذي يثقل قلبك اليوم؟ (اختياري)</label>
           <textarea id="notesInput" placeholder="اكتب بحرّية… لا حاجة للتنسيق أو الكمال. أي كلمة تبدو مهمة لك كافية."></textarea>
         </div>
       </div>
@@ -2300,16 +2265,16 @@
     <aside class="side-sticky" id="bookingAside" hidden>
       <div class="panel">
         <h3>ملخص جلستك</h3>
-        <div class="summary" id="summaryBox">عندما تختار موعداً، سيظهر هنا بهدوء.</div>
-        <button class="confirm-btn" id="confirmBtn" disabled>أؤكد الجلسة بلطف</button>
+        <div class="summary" id="summaryBox" data-text="summaryEmpty">عندما تختار موعداً، سيظهر هنا بهدوء.</div>
+        <button class="confirm-btn" id="confirmBtn" disabled data-text="confirmBtn">أؤكد الجلسة بلطف</button>
       </div>
       <div class="panel" id="expectations">
-        <h3>ما يمكن أن تتوقّعه</h3>
+        <h3 data-text="expectTitle">ما يمكن أن تتوقّعه</h3>
         <div class="meta-list">
-          <div><span class="meta-icon">⏱</span><div><b>المدة:</b> ساعة كاملة لك، بلا استعجال</div></div>
-          <div><span class="meta-icon">🌿</span><div><b>الطابع:</b> استشارة نفسية واجتماعية بلغة هادئة</div></div>
-          <div><span class="meta-icon">🔒</span><div><b>الخصوصية:</b> ما تشاركه يبقى بينكما</div></div>
-          <div><span class="meta-icon">🎥</span><div><b>المكان:</b> جلسة مريحة عن بُعد عبر Zoom</div></div>
+          <div><span class="meta-icon">⏱</span><div><b>المدة:</b> <span data-text="expectDuration">ساعة كاملة لك، بلا استعجال</span></div></div>
+          <div><span class="meta-icon">🌿</span><div><b>الطابع:</b> <span data-text="expectTone">استشارة نفسية واجتماعية بلغة هادئة</span></div></div>
+          <div><span class="meta-icon">🔒</span><div><b>الخصوصية:</b> <span data-text="expectPrivacy">ما تشاركه يبقى بينكما</span></div></div>
+          <div><span class="meta-icon">🎥</span><div><b>المكان:</b> <span data-text="expectPlace">جلسة مريحة عن بُعد عبر Zoom</span></div></div>
         </div>
       </div>
     </aside>
@@ -2317,7 +2282,7 @@
 
   <div class="panel done-card hidden" id="doneCard">
     <div class="done-icon">✓</div>
-    <h2>موعدك محجوز بكل هدوء</h2>
+    <h2 data-text="doneTitle">موعدك محجوز بكل هدوء</h2>
     <p id="doneSummary"></p>
     <div class="done-actions">
       <button type="button" class="done-wa-btn" id="shareWhatsAppBtn">إرسال عبر واتساب</button>
@@ -2327,7 +2292,7 @@
     <button class="new-booking" id="newBookingBtn">حجز جلسة أخرى</button>
   </div>
 
-  <footer>نَسْق · مساحة آمنة للاستشارة النفسية والاجتماعية · 2026</footer>
+  <footer data-text="footer">نَسْق · مساحة آمنة للاستشارة النفسية والاجتماعية · 2026</footer>
 </div>
 
 <!-- رسالة تثبيت التطبيق -->
@@ -2395,20 +2360,14 @@
   </div>
 </div>
 
+<script src="nasq-core.js"></script>
 <script>
-const PHOTO_BG_KEY = 'nasqPhotoBgV1';
-const PHOTO_BACKGROUNDS = [
-  { file: 'assets/bg-umbrella-sakura.png', label: 'مظلّة تحت الساكورا' },
-  { file: 'assets/bg-serene.png', label: 'غرفة وزهور' },
-  { file: 'assets/bg-rose-beach.png', label: 'وردة على الشاطئ' },
-  { file: 'assets/bg-purple-window.png', label: 'نافذة بنفسجية' },
-  { file: 'assets/bg-seaside-cafe.png', label: 'مقهى على البحر' },
-  { file: 'assets/bg-cozy-morning.png', label: 'صباح هادئ' },
-  { file: 'assets/bg-meditation-green.png', label: 'هدوء الطبيعة' }
-];
+const PHOTO_BACKGROUNDS = (window.NasqCore && NasqCore.PHOTO_BACKGROUNDS) || [];
 let photoBgIndex = 0;
+window.CONFIG = window.CONFIG || {};
 
 function getAssetBaseRoot(){
+  if(window.NasqCore) return NasqCore.getAssetBaseRoot();
   let root = location.pathname || '/';
   if(/\.[a-zA-Z0-9]+$/.test(root)) root = root.replace(/\/[^/]*$/, '/');
   if(!root.endsWith('/')) root += '/';
@@ -2416,43 +2375,21 @@ function getAssetBaseRoot(){
 }
 
 function photoBackgroundUrl(file){
-  return new URL(file + '?v=6', location.origin + getAssetBaseRoot()).href;
+  if(window.NasqCore) return NasqCore.photoBackgroundUrl(file);
+  return new URL(file + '?v=7', location.origin + getAssetBaseRoot()).href;
 }
 
-function applyPhotoBackground(index, { persist = true } = {}){
+function applyPhotoBackground(index){
+  if(window.NasqCore){
+    photoBgIndex = NasqCore.applyPhotoIndex(index);
+    return;
+  }
   const i = ((index % PHOTO_BACKGROUNDS.length) + PHOTO_BACKGROUNDS.length) % PHOTO_BACKGROUNDS.length;
   photoBgIndex = i;
   const item = PHOTO_BACKGROUNDS[i];
-  const url = photoBackgroundUrl(item.file);
-  document.documentElement.style.setProperty('--photo-bg', 'url("' + url + '")');
-  const btn = document.getElementById('photoToggleBtn');
-  if(btn){
-    btn.title = 'صورة الخلفية: ' + item.label + ' (اضغط للتغيير)';
-    btn.setAttribute('aria-label', 'تغيير صورة الخلفية — الحالية: ' + item.label);
-  }
-  if(persist){
-    try{ localStorage.setItem(PHOTO_BG_KEY, String(i)); }catch(e){}
-  }
+  if(!item) return;
+  document.documentElement.style.setProperty('--photo-bg', 'url("' + photoBackgroundUrl(item.file) + '")');
 }
-
-function cyclePhotoBackground(){
-  applyPhotoBackground(photoBgIndex + 1);
-}
-
-(function initPhotoBackground(){
-  // الافتراضي: مظلّة تحت الساكورا — إن وُجد اختيار محفوظ نستخدمه
-  let idx = 0;
-  try{
-    const saved = localStorage.getItem(PHOTO_BG_KEY);
-    if(saved != null && saved !== ''){
-      const n = parseInt(saved, 10);
-      if(!Number.isNaN(n) && n >= 0 && n < PHOTO_BACKGROUNDS.length) idx = n;
-    }else{
-      idx = 0; // الخلفية الأساسية
-    }
-  }catch(e){}
-  applyPhotoBackground(idx, { persist: false });
-})();
 
 const CONFIG = {
   daysCount: 14, /* أسبوعان من اليوم */
@@ -2463,6 +2400,7 @@ const CONFIG = {
   /* رقم واتساب لاستقبال الحجوزات (أرقام فقط مع مفتاح الدولة، مثال: 9655xxxxxxx). فارغ = يفتح واتساب ليختار المستخدم جهة الاتصال */
   whatsAppBusinessDigits: '96599717016'
 };
+window.CONFIG = CONFIG;
 
 const dayNamesAr = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 const monthNamesAr = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
@@ -2589,6 +2527,7 @@ async function copyBgCode(){
 }
 
 function applyShuffleBg(color, slug, hslParts){
+  window.applyShuffleBg = applyShuffleBg;
   const html = document.documentElement;
   const body = document.body;
   const parts = hslParts || parseHsl(color) || randomSoftColor();
@@ -2712,38 +2651,7 @@ function restoreShuffleBackground(){
 }
 
 function initTheme(){
-  // استعادة خلفية سابقة إن وُجدت فقط — الافتراضي: تنسيق page-style-unified
-  restoreShuffleBackground();
-
-  const btn = document.getElementById('themeToggleBtn');
-  btn.addEventListener('click', () => {
-    if(btn.dataset.busy === '1') return;
-    btn.dataset.busy = '1';
-    btn.disabled = true;
-    let done = false;
-    const unlock = () => {
-      if(done) return;
-      done = true;
-      btn.dataset.busy = '0';
-      btn.disabled = false;
-    };
-    const failSafe = setTimeout(unlock, 6000);
-    Promise.resolve(shuffleBackground())
-      .then(() => { clearTimeout(failSafe); unlock(); })
-      .catch(() => { clearTimeout(failSafe); unlock(); });
-  });
-
-  const photoBtn = document.getElementById('photoToggleBtn');
-  if(photoBtn){
-    photoBtn.addEventListener('click', () => cyclePhotoBackground());
-  }
-
-  const copyBtn = document.getElementById('copyBgCodeBtn');
-  if(copyBtn){
-    copyBtn.addEventListener('click', () => { copyBgCode(); });
-  }
-
-  initDesignMode();
+  /* الثيم والصورة والأسلوب من لوحة الإدارة فقط (NasqCore.applySettingsToPage) */
 }
 
 function getSelectedDialCode(){
@@ -3198,15 +3106,22 @@ function handleDragMove(evt){
 }
 
 function getBookings(){
+  if(window.NasqCore) return NasqCore.getBookings();
   try{ return JSON.parse(localStorage.getItem(CONFIG.storageKey)) || []; }
   catch(e){ return []; }
 }
 function saveBooking(booking){
+  if(!booking.durationMins) booking.durationMins = CONFIG.slotDurationMins || 60;
+  if(window.NasqCore) return NasqCore.saveBooking(booking);
   const all = getBookings();
+  if(!booking.id) booking.id = 'b_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
   all.push(booking);
   localStorage.setItem(CONFIG.storageKey, JSON.stringify(all));
+  return booking;
 }
 function isSlotTaken(dateStr, timeStr){
+  const dur = CONFIG.slotDurationMins || 60;
+  if(window.NasqCore) return NasqCore.isSlotTaken(dateStr, timeStr, dur);
   return getBookings().some(b => b.date === dateStr && b.time === timeStr);
 }
 
@@ -3547,10 +3462,24 @@ document.getElementById('useCustomTimeBtn').addEventListener('click', () => {
   }
 
   const h = customHour24, m = customMinute;
-  const withinHours = (h > CONFIG.startHour || (h === CONFIG.startHour && m >= 0)) &&
-                      (h < CONFIG.endHour || (h === CONFIG.endHour && m === 0));
+  const hoursCfg = {
+    startHour: CONFIG.startHour,
+    endHour: CONFIG.endHour,
+    slotDurationMins: CONFIG.slotDurationMins || 60
+  };
+  const withinHours = window.NasqCore
+    ? NasqCore.isWithinWorkingHours(h, m, hoursCfg)
+    : (() => {
+        const start = hoursCfg.startHour * 60;
+        const lastStart = hoursCfg.endHour * 60 - hoursCfg.slotDurationMins;
+        const t = h * 60 + m;
+        return t >= start && t <= lastStart;
+      })();
   if(!withinHours){
-    note.textContent = `الوقت يجب أن يكون بين ${formatDisplay(CONFIG.startHour,0)} و ${formatDisplay(CONFIG.endHour,0)}.`;
+    const rangeLabel = window.NasqCore
+      ? NasqCore.workingHoursLabel(hoursCfg, formatDisplay)
+      : `${formatDisplay(CONFIG.startHour, 0)} – ${formatDisplay(CONFIG.endHour - Math.ceil((CONFIG.slotDurationMins || 60) / 60), 0)}`;
+    note.textContent = `وقت بدء الجلسة يجب أن يكون بين ${rangeLabel} (تنتهي الجلسة قبل ${formatDisplay(CONFIG.endHour, 0)}).`;
     note.classList.add('error');
     return;
   }
@@ -3564,7 +3493,7 @@ document.getElementById('useCustomTimeBtn').addEventListener('click', () => {
   }
 
   if(isSlotTaken(selectedDate, val)){
-    note.textContent = 'هذا الوقت محجوز بالفعل، اختر وقتاً آخر.';
+    note.textContent = 'هذا الوقت يتداخل مع موعد محجوز، اختر وقتاً آخر.';
     note.classList.add('error');
     return;
   }
@@ -3602,7 +3531,9 @@ function updateSummary(){
       الوقت: <strong>اختر ساعة مناسبة</strong>
     `;
   }else{
-    box.textContent = 'عندما تختار موعداً، سيظهر هنا بهدوء.';
+    const empty = (window.NasqCore && NasqCore.DEFAULT_TEXTS && NasqCore.DEFAULT_TEXTS.summaryEmpty)
+      || 'عندما تختار موعداً، سيظهر هنا بهدوء.';
+    box.textContent = empty;
   }
   btn.disabled = !(selectedDate && selectedTime && name && phone);
 }
@@ -3663,6 +3594,7 @@ document.getElementById('confirmBtn').addEventListener('click', async () => {
     phone: fullPhone,
     email,
     notes,
+    durationMins: CONFIG.slotDurationMins || 60,
     createdAt: new Date().toISOString()
   };
 
@@ -3898,13 +3830,47 @@ function initPwaInstall(){
 // تسجيل SW مبكراً قبل بقية الإقلاع
 registerPwaServiceWorker();
 
+function clearPublicShuffleStyles(){
+  try{
+    document.documentElement.classList.remove('bg-shuffled');
+    document.body.classList.remove('bg-shuffled');
+  }catch(e){}
+}
+
+async function bootFromSiteSettings(){
+  if(!window.NasqCore) return;
+  try{
+    const settings = await NasqCore.loadSettings();
+    // لا تستخدم خلطاً محلياً قديمًا من الزائر
+    clearPublicShuffleStyles();
+    window.applyShuffleBg = applyShuffleBg;
+    NasqCore.applySettingsToPage(settings, { syncConfigObject: true });
+    window.addEventListener('nasq-settings-changed', (e) => {
+      NasqCore.applySettingsToPage(e.detail, { syncConfigObject: true });
+      if(typeof renderTimes === 'function') renderTimes();
+    });
+    window.addEventListener('nasq-bookings-changed', () => {
+      if(typeof renderTimes === 'function') renderTimes();
+    });
+    // تحديث دوري لالتقاط site-settings.json بعد نشر الإدارة
+    setInterval(async () => {
+      try{
+        const s = await NasqCore.loadSettings();
+        NasqCore.applySettingsToPage(s, { syncConfigObject: true });
+      }catch(e){}
+    }, 60000);
+  }catch(e){}
+}
+
 initTheme();
-renderClockNumbers();
-syncFromState();
-goBookingStep(1, { scroll: false });
-updateSummary();
-if(typeof initDateTrainInteractions === 'function') initDateTrainInteractions();
-initPwaInstall();
+bootFromSiteSettings().then(() => {
+  renderClockNumbers();
+  syncFromState();
+  goBookingStep(1, { scroll: false });
+  updateSummary();
+  if(typeof initDateTrainInteractions === 'function') initDateTrainInteractions();
+  initPwaInstall();
+});
 </script>
 </body>
 </html>

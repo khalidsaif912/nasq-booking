@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نَسْق — لوحة الإدارة</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="assets/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f7f6; --ink:#14201e; --muted:#5a6f6a; --line:#d5e0dc;
+    --primary:#0f766e; --primary-soft:#e7f6f3; --danger:#b91c1c;
+    --panel:#fff; --shadow:0 14px 40px rgba(20,32,30,.08);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;
+    background:radial-gradient(900px 500px at 100% 0%, #dff5f0, transparent 55%), var(--bg);
+    color:var(--ink);
+  }
+  .wrap{max-width:1100px; margin:0 auto; padding:20px 16px 48px}
+  .top{display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:18px}
+  .brand{display:flex; gap:10px; align-items:center; text-decoration:none; color:inherit}
+  .mark{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#34d3b8,#0f766e);color:#fff;font-weight:800}
+  h1{margin:0; font-size:1.25rem}
+  .sub{margin:2px 0 0; color:var(--muted); font-size:13px}
+  .btn{
+    border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:13px;
+    border-radius:999px; padding:10px 16px; background:var(--primary); color:#fff;
+  }
+  .btn.ghost{background:#fff; color:var(--ink); border:1px solid var(--line)}
+  .btn.warn{background:var(--danger)}
+  .btn.soft{background:var(--primary-soft); color:var(--primary)}
+  .btn.sm{padding:7px 12px; font-size:12px}
+  .panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:16px; margin-bottom:14px;
+  }
+  .panel h2{margin:0 0 12px; font-size:1.05rem}
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .grid-3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px}
+  @media(max-width:800px){ .grid-2,.grid-3{grid-template-columns:1fr} }
+  label{display:block; font-size:12.5px; font-weight:700; color:var(--muted); margin-bottom:6px}
+  input[type=text], input[type=password], input[type=number], input[type=email], input[type=tel], input[type=url], select, textarea{
+    width:100%; border:1px solid var(--line); border-radius:12px; padding:10px 12px;
+    font-family:inherit; font-size:14px; background:#fafcfb;
+  }
+  textarea{min-height:72px; resize:vertical}
+  .field{margin-bottom:12px}
+  .row{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+  .login-box{max-width:420px; margin:12vh auto}
+  .hidden{display:none !important}
+  table{width:100%; border-collapse:collapse; font-size:13px}
+  th,td{padding:10px 8px; border-bottom:1px solid var(--line); text-align:right; vertical-align:top}
+  th{font-size:12px; color:var(--muted); font-weight:800}
+  tr:hover td{background:#f7fbfa}
+  .pill{display:inline-block; padding:3px 8px; border-radius:999px; background:var(--primary-soft); color:var(--primary); font-weight:700; font-size:11px}
+  .pill.bad{background:#fee2e2; color:var(--danger)}
+  .hint{font-size:12.5px; color:var(--muted); line-height:1.65; margin:0 0 12px}
+  .photo-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:10px}
+  .photo-card{
+    border:2px solid var(--line); border-radius:14px; overflow:hidden; cursor:pointer;
+    background:#eee; aspect-ratio:3/4; position:relative;
+  }
+  .photo-card img{width:100%; height:100%; object-fit:cover; display:block}
+  .photo-card.active{border-color:var(--primary); box-shadow:0 0 0 3px rgba(15,118,110,.2)}
+  .photo-card span{
+    position:absolute; inset-inline:0; bottom:0; background:linear-gradient(transparent,rgba(0,0,0,.72));
+    color:#fff; font-size:11px; font-weight:700; padding:18px 8px 8px;
+  }
+  .tabs{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px}
+  .tab{
+    border:1px solid var(--line); background:#fff; border-radius:999px; padding:8px 14px;
+    font-family:inherit; font-weight:700; font-size:13px; cursor:pointer; color:var(--muted);
+  }
+  .tab.on{background:var(--primary); color:#fff; border-color:var(--primary)}
+  .range-row{display:flex; gap:10px; align-items:center}
+  .range-row input[type=range]{flex:1}
+  .toast{
+    position:fixed; bottom:18px; inset-inline:16px; max-width:420px; margin-inline:auto;
+    background:#0f766e; color:#fff; padding:12px 16px; border-radius:14px; font-weight:700;
+    box-shadow:0 12px 30px rgba(15,118,110,.35); z-index:50; display:none;
+  }
+  .toast.show{display:block; animation:up .3s ease}
+  @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .empty{padding:24px; text-align:center; color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="loginView" class="panel login-box">
+    <h2>دخول لوحة الإدارة</h2>
+    <p class="hint">افتراضياً كلمة المرور: <code>nasq@admin</code> — غيّرها من الإعدادات بعد الدخول.</p>
+    <div class="field">
+      <label for="adminPass">كلمة المرور</label>
+      <input type="password" id="adminPass" autocomplete="current-password">
+    </div>
+    <button class="btn" type="button" id="loginBtn">دخول</button>
+    <p class="hint" style="margin-top:12px"><a href="index.html">← العودة للموقع</a></p>
+  </div>
+
+  <div id="adminView" class="hidden">
+    <div class="top">
+      <a class="brand" href="index.html">
+        <span class="mark">ن</span>
+        <span>
+          <h1>لوحة إدارة نَسْق</h1>
+          <p class="sub">الحجوزات · الثيم للجميع · النصوص · الشفافية</p>
+        </span>
+      </a>
+      <div class="row">
+        <a class="btn ghost" href="index.html" target="_blank">فتح الموقع</a>
+        <button class="btn soft" type="button" id="saveAllBtn">حفظ ونشر الإعدادات</button>
+        <button class="btn ghost" type="button" id="logoutBtn">خروج</button>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-tab="bookings" type="button">الحجوزات</button>
+      <button class="tab" data-tab="theme" type="button">الثيم والصور</button>
+      <button class="tab" data-tab="look" type="button">الشفافية والأوقات</button>
+      <button class="tab" data-tab="texts" type="button">النصوص</button>
+      <button class="tab" data-tab="system" type="button">النظام</button>
+    </div>
+
+    <!-- الحجوزات -->
+    <section class="panel tab-panel" id="panel-bookings">
+      <div class="row" style="justify-content:space-between;margin-bottom:10px">
+        <h2 style="margin:0">جميع الحجوزات</h2>
+        <div class="row">
+          <button class="btn soft sm" type="button" id="exportBookingsBtn">تصدير JSON</button>
+          <button class="btn soft sm" type="button" id="importBookingsBtn">استيراد JSON</button>
+          <input type="file" id="importBookingsFile" accept="application/json,.json" class="hidden">
+          <button class="btn sm" type="button" id="refreshBookingsBtn">تحديث</button>
+        </div>
+      </div>
+      <p class="hint">يُمنع تداخل المواعيد (نفس اليوم ونطاق الوقت). أضف للتقويم كل موعد على حدة عبر زر ICS.</p>
+      <div class="panel" style="box-shadow:none;padding:12px;background:#f8fbfa">
+        <h2 style="font-size:.95rem">إضافة موعد يدوياً</h2>
+        <div class="grid-3">
+          <div class="field"><label>الاسم</label><input type="text" id="mName"></div>
+          <div class="field"><label>الجوال</label><input type="tel" id="mPhone" placeholder="+965 ..."></div>
+          <div class="field"><label>النوع</label>
+            <select id="mType">
+              <option>استشارة نفسية</option>
+              <option>استشارة اجتماعية</option>
+              <option>علاقات وأسرة</option>
+              <option>شيء آخر على قلبك</option>
+            </select>
+          </div>
+          <div class="field"><label>اليوم</label><input type="date" id="mDate"></div>
+          <div class="field"><label>الوقت</label><input type="time" id="mTime" value="10:00"></div>
+          <div class="field"><label>المدة (دقيقة)</label><input type="number" id="mDur" value="60" min="15" step="15"></div>
+        </div>
+        <div class="field"><label>ملاحظات</label><textarea id="mNotes"></textarea></div>
+        <button class="btn" type="button" id="addManualBtn">إضافة الموعد</button>
+        <span id="manualNote" class="hint" style="display:inline;margin-inline-start:10px"></span>
+      </div>
+      <div style="overflow:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>اليوم / الوقت</th>
+              <th>المستفيد</th>
+              <th>النوع</th>
+              <th>ملاحظات</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsBody"></tbody>
+        </table>
+      </div>
+      <div class="empty hidden" id="bookingsEmpty">لا حجوزات بعد.</div>
+    </section>
+
+    <!-- الثيم -->
+    <section class="panel tab-panel hidden" id="panel-theme">
+      <h2>خلفية الموقع (للجميع بعد الحفظ والنشر)</h2>
+      <p class="hint">اختيار الصورة والأسلوب من هنا فقط — اختفت من الواجهة العامة.</p>
+      <div class="photo-grid" id="photoGrid"></div>
+      <div class="field" style="margin-top:16px">
+        <label>نمط التصميم</label>
+        <select id="designSelect"></select>
+      </div>
+      <div class="row">
+        <button class="btn soft" type="button" id="shuffleBtn">خلط لون خلفية عشوائي</button>
+        <button class="btn ghost" type="button" id="clearShuffleBtn">إزالة الخلط العشوائي</button>
+      </div>
+    </section>
+
+    <!-- شفافية + ساعات -->
+    <section class="panel tab-panel hidden" id="panel-look">
+      <h2>شفافية القلوب والقوائم</h2>
+      <div class="field">
+        <label>شفافية القلوب (<span id="valHearts">92%</span>)</label>
+        <div class="range-row">
+          <input type="range" id="trHearts" min="40" max="100" value="92">
+        </div>
+      </div>
+      <div class="field">
+        <label>شفافية البطاقات/القوائم (<span id="valPanels">88%</span>)</label>
+        <div class="range-row">
+          <input type="range" id="trPanels" min="40" max="100" value="88">
+        </div>
+      </div>
+      <div class="field">
+        <label>شفافية القوائم العلوية (<span id="valMenus">90%</span>)</label>
+        <div class="range-row">
+          <input type="range" id="trMenus" min="40" max="100" value="90">
+        </div>
+      </div>
+      <h2 style="margin-top:18px">ساعات العمل</h2>
+      <p class="hint">تُستخدم للتحقق من الوقت اليدوي وجدول المواعيد ومنع التداخل.</p>
+      <div class="grid-3">
+        <div class="field"><label>بداية (ساعة)</label><input type="number" id="hStart" min="0" max="23" value="9"></div>
+        <div class="field"><label>نهاية الدوام (ساعة)</label><input type="number" id="hEnd" min="1" max="24" value="17"></div>
+        <div class="field"><label>مدة الجلسة (دقيقة)</label><input type="number" id="hSlot" min="15" step="15" value="60"></div>
+      </div>
+      <div class="field">
+        <label>واتساب استقبال الحجوزات (أرقام فقط)</label>
+        <input type="text" id="waDigits" value="96599717016">
+      </div>
+    </section>
+
+    <!-- نصوص -->
+    <section class="panel tab-panel hidden" id="panel-texts">
+      <h2>تعديل نصوص الموقع</h2>
+      <p class="hint">عدّل أي نص ظاهر للزوّار. بعد الحفظ والنشر تظهر للجميع (عبر site-settings.json).</p>
+      <div id="textsFields" class="grid-2"></div>
+    </section>
+
+    <!-- نظام -->
+    <section class="panel tab-panel hidden" id="panel-system">
+      <h2>النظام والنشر</h2>
+      <p class="hint">
+        1) اضغط «حفظ ونشر الإعدادات».<br>
+        2) يُحمَّل ملف <strong>site-settings.json</strong> — ضعه بجانب index.html في الاستضافة (جذر الموقع) ثم أعد الرفع.<br>
+        هكذا يصبح الثيم والنصوص والشفافية موحّدة للجميع.
+      </p>
+      <div class="field">
+        <label>رابط إعدادات بعيد (اختياري، JSON عام)</label>
+        <input type="url" id="remoteUrl" placeholder="https://.../settings.json">
+      </div>
+      <div class="field">
+        <label>كلمة مرور الإدارة الجديدة</label>
+        <input type="text" id="newPass" placeholder="اتركه فارغاً للإبقاء">
+      </div>
+      <div class="row">
+        <button class="btn" type="button" id="saveAllBtn2">حفظ ونشر الإعدادات</button>
+        <button class="btn ghost" type="button" id="exportSettingsBtn">تحميل site-settings.json</button>
+      </div>
+    </section>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="nasq-core.js"></script>
+<script>
+const C = window.NasqCore;
+let settings = C.defaultSettings();
+let activeTab = 'bookings';
+
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function showAdmin(ok){
+  document.getElementById('loginView').classList.toggle('hidden', ok);
+  document.getElementById('adminView').classList.toggle('hidden', !ok);
+}
+
+async function boot(){
+  settings = await C.loadSettings();
+  if(C.isAdminLoggedIn()){
+    showAdmin(true);
+    renderAll();
+  }else{
+    showAdmin(false);
+  }
+}
+
+document.getElementById('loginBtn').onclick = () => {
+  const pass = document.getElementById('adminPass').value;
+  if(C.checkAdminPassword(pass, settings)){
+    C.setAdminLoggedIn(true);
+    showAdmin(true);
+    renderAll();
+  }else{
+    toast('كلمة المرور غير صحيحة');
+  }
+};
+document.getElementById('logoutBtn').onclick = () => {
+  C.setAdminLoggedIn(false);
+  showAdmin(false);
+};
+
+document.getElementById('tabs').onclick = (e) => {
+  const btn = e.target.closest('.tab');
+  if(!btn) return;
+  activeTab = btn.dataset.tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t === btn));
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('hidden', p.id !== 'panel-' + activeTab);
+  });
+};
+
+function renderAll(){
+  renderBookings();
+  renderPhotos();
+  renderDesign();
+  renderLook();
+  renderTexts();
+  document.getElementById('remoteUrl').value = settings.remoteSettingsUrl || '';
+  document.getElementById('waDigits').value = settings.whatsAppBusinessDigits || '';
+}
+
+function renderBookings(){
+  const list = C.getBookings().slice().sort((a,b) => {
+    const da = (a.date || '') + (a.time || '');
+    const db = (b.date || '') + (b.time || '');
+    return da < db ? -1 : da > db ? 1 : 0;
+  });
+  const body = document.getElementById('bookingsBody');
+  const empty = document.getElementById('bookingsEmpty');
+  body.innerHTML = '';
+  empty.classList.toggle('hidden', list.length > 0);
+  list.forEach((b) => {
+    const conflicts = C.findConflicts(b.date, b.time, b.durationMins || settings.hours.slotDurationMins, b.id);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <strong>${b.date || '—'} · ${b.time || '—'}</strong><br>
+        <span class="pill">${b.durationMins || 60} د</span>
+        ${conflicts.length ? '<span class="pill bad">تداخل!</span>' : ''}
+      </td>
+      <td>
+        <strong>${escapeHtml(b.name || '—')}</strong><br>
+        <span style="color:var(--muted)">${escapeHtml(b.phone || '')}</span>
+        ${b.email ? '<br><span style="color:var(--muted)">' + escapeHtml(b.email) + '</span>' : ''}
+      </td>
+      <td>${escapeHtml(b.type || '—')}</td>
+      <td style="max-width:180px;white-space:pre-wrap">${escapeHtml(b.notes || '—')}</td>
+      <td>
+        <div class="row">
+          <button class="btn soft sm" data-ics="${b.id}" type="button">تقويم ICS</button>
+          <button class="btn ghost sm" data-del="${b.id}" type="button">حذف</button>
+        </div>
+      </td>`;
+    body.appendChild(tr);
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.getElementById('bookingsBody').onclick = (e) => {
+  const ics = e.target.closest('[data-ics]');
+  const del = e.target.closest('[data-del]');
+  if(ics){
+    const b = C.getBookings().find(x => x.id === ics.dataset.ics);
+    if(b){ C.downloadIcsFile(b, settings.hours.slotDurationMins); toast('تم تنزيل ملف التقويم'); }
+  }
+  if(del){
+    if(confirm('حذف هذا الموعد؟')){
+      C.deleteBooking(del.dataset.del);
+      renderBookings();
+      toast('تم الحذف');
+    }
+  }
+};
+
+document.getElementById('refreshBookingsBtn').onclick = () => { renderBookings(); toast('تم التحديث'); };
+document.getElementById('exportBookingsBtn').onclick = () => {
+  const blob = new Blob([JSON.stringify(C.getBookings(), null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'nasq-bookings.json';
+  a.click();
+};
+document.getElementById('importBookingsBtn').onclick = () => document.getElementById('importBookingsFile').click();
+document.getElementById('importBookingsFile').onchange = (e) => {
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const data = JSON.parse(reader.result);
+      if(!Array.isArray(data)) throw new Error('not array');
+      C.setBookings(data);
+      renderBookings();
+      toast('تم الاستيراد');
+    }catch(err){ toast('ملف غير صالح'); }
+  };
+  reader.readAsText(f);
+};
+
+document.getElementById('addManualBtn').onclick = () => {
+  const note = document.getElementById('manualNote');
+  note.textContent = '';
+  const name = document.getElementById('mName').value.trim();
+  const phone = document.getElementById('mPhone').value.trim();
+  const type = document.getElementById('mType').value;
+  const date = document.getElementById('mDate').value;
+  const time = document.getElementById('mTime').value;
+  const durationMins = parseInt(document.getElementById('mDur').value, 10) || 60;
+  const notes = document.getElementById('mNotes').value.trim();
+  if(!name || !date || !time){
+    note.textContent = 'أكمل الاسم واليوم والوقت.';
+    return;
+  }
+  const [hh, mm] = time.split(':').map(Number);
+  if(!C.isWithinWorkingHours(hh, mm || 0, Object.assign({}, settings.hours, { slotDurationMins: durationMins }))){
+    note.textContent = 'خارج ساعات العمل: ' + C.workingHoursLabel(Object.assign({}, settings.hours, { slotDurationMins: durationMins }));
+    return;
+  }
+  if(C.isSlotTaken(date, time, durationMins)){
+    note.textContent = 'يتعارض مع موعد آخر.';
+    return;
+  }
+  C.saveBooking({
+    name, phone, type, date, time, durationMins, notes, email: '',
+    source: 'admin-manual',
+    createdAt: new Date().toISOString()
+  });
+  renderBookings();
+  toast('أُضيف الموعد');
+  note.textContent = '';
+};
+
+function renderPhotos(){
+  const grid = document.getElementById('photoGrid');
+  grid.innerHTML = '';
+  C.PHOTO_BACKGROUNDS.forEach((p, i) => {
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'photo-card' + (i === (settings.photoIndex || 0) ? ' active' : '');
+    card.innerHTML = `<img src="${p.file}" alt=""><span>${p.label}</span>`;
+    card.onclick = () => {
+      settings.photoIndex = i;
+      C.applyPhotoIndex(i);
+      renderPhotos();
+      toast('خلفية: ' + p.label);
+    };
+    grid.appendChild(card);
+  });
+}
+
+function renderDesign(){
+  const sel = document.getElementById('designSelect');
+  sel.innerHTML = C.DESIGN_MODES.map(m =>
+    `<option value="${m.id}" ${m.id === (settings.designMode || 'default') ? 'selected' : ''}>${m.name}</option>`
+  ).join('');
+  sel.onchange = () => {
+    settings.designMode = sel.value;
+    C.applyDesignMode(sel.value);
+  };
+}
+
+document.getElementById('shuffleBtn').onclick = () => {
+  const h = Math.floor(Math.random() * 360);
+  const s = 28 + Math.floor(Math.random() * 18);
+  const l = 86 + Math.floor(Math.random() * 8);
+  const color = `hsl(${h}, ${s}%, ${l}%)`;
+  settings.shuffle = { color, pattern: '', h, s, l };
+  if(typeof applyShuffleBg === 'function'){
+    applyShuffleBg(color, '', { h, s, l, color });
+  }else{
+    document.documentElement.style.setProperty('--background', color);
+    document.body.style.backgroundColor = color;
+  }
+  toast('تم خلط الألوان');
+};
+document.getElementById('clearShuffleBtn').onclick = () => {
+  settings.shuffle = null;
+  try{
+    localStorage.removeItem('nasqBgTextureV1');
+    document.documentElement.classList.remove('bg-shuffled');
+    document.body.classList.remove('bg-shuffled');
+  }catch(e){}
+  toast('أُزيل الخلط — احفظ لتثبيت الثيم الأساسي');
+};
+
+function renderLook(){
+  const t = settings.transparency || {};
+  const setR = (id, valId, v) => {
+    const el = document.getElementById(id);
+    const lab = document.getElementById(valId);
+    const pct = Math.round((v == null ? 0.9 : v) * 100);
+    el.value = pct;
+    lab.textContent = pct + '%';
+  };
+  setR('trHearts', 'valHearts', t.hearts);
+  setR('trPanels', 'valPanels', t.panels);
+  setR('trMenus', 'valMenus', t.menus);
+  document.getElementById('hStart').value = settings.hours.startHour;
+  document.getElementById('hEnd').value = settings.hours.endHour;
+  document.getElementById('hSlot').value = settings.hours.slotDurationMins;
+
+  const bind = (id, valId, key) => {
+    document.getElementById(id).oninput = (e) => {
+      const v = Number(e.target.value) / 100;
+      document.getElementById(valId).textContent = e.target.value + '%';
+      settings.transparency = settings.transparency || {};
+      settings.transparency[key] = v;
+      C.applyTransparency(settings.transparency);
+    };
+  };
+  bind('trHearts', 'valHearts', 'hearts');
+  bind('trPanels', 'valPanels', 'panels');
+  bind('trMenus', 'valMenus', 'menus');
+}
+
+const TEXT_FIELDS = [
+  ['brandName', 'اسم العلامة'],
+  ['brandTag', 'وسم العلامة'],
+  ['brandMark', 'حرف الشعار'],
+  ['heroTitle', 'عنوان الهيرو'],
+  ['heroEm', 'العنوان الفرعي'],
+  ['heroLead', 'الفقرة التعريفية'],
+  ['bookCta', 'نص زر الحجز'],
+  ['heartLine1', 'قلب — سطر 1'],
+  ['heartLine2', 'قلب — سطر 2'],
+  ['heartLine3', 'قلب — سطر 3'],
+  ['stat1Num', 'إحصائية 1 رقم'],
+  ['stat1Label', 'إحصائية 1 نص'],
+  ['stat2Num', 'إحصائية 2 رقم'],
+  ['stat2Label', 'إحصائية 2 نص'],
+  ['bookingTitle', 'عنوان قسم الحجز'],
+  ['bookingLead', 'وصف قسم الحجز'],
+  ['step1Title', 'عنوان الخطوة 1'],
+  ['step2Title', 'عنوان الخطوة 2'],
+  ['step3Title', 'عنوان الخطوة 3'],
+  ['confirmBtn', 'زر التأكيد'],
+  ['summaryEmpty', 'ملخص فارغ'],
+  ['footer', 'تذييل الموقع'],
+  ['typePsychTitle', 'نوع: نفسية — عنوان'],
+  ['typePsychDesc', 'نوع: نفسية — وصف'],
+  ['typeSocialTitle', 'نوع: اجتماعية — عنوان'],
+  ['typeSocialDesc', 'نوع: اجتماعية — وصف'],
+  ['typeFamilyTitle', 'نوع: أسرة — عنوان'],
+  ['typeFamilyDesc', 'نوع: أسرة — وصف'],
+  ['typeOtherTitle', 'نوع: أخرى — عنوان'],
+  ['typeOtherDesc', 'نوع: أخرى — وصف'],
+  ['expectTitle', 'عنوان التوقعات'],
+  ['expectDuration', 'نص المدة'],
+  ['expectTone', 'نص الطابع'],
+  ['expectPrivacy', 'نص الخصوصية'],
+  ['expectPlace', 'نص المكان'],
+  ['doneTitle', 'عنوان ما بعد الحجز'],
+  ['nameLabel', 'تسمية الاسم'],
+  ['phoneLabel', 'تسمية الهاتف'],
+  ['emailLabel', 'تسمية البريد'],
+  ['notesLabel', 'تسمية الملاحظات']
+];
+
+function renderTexts(){
+  const box = document.getElementById('textsFields');
+  box.innerHTML = '';
+  const texts = Object.assign({}, C.DEFAULT_TEXTS, settings.texts || {});
+  TEXT_FIELDS.forEach(([key, label]) => {
+    const div = document.createElement('div');
+    div.className = 'field';
+    const isLong = (texts[key] || '').length > 50 || key.includes('Lead') || key.includes('Desc') || key === 'footer';
+    div.innerHTML = `<label>${label}</label>
+      ${isLong
+        ? `<textarea data-text-key="${key}"></textarea>`
+        : `<input type="text" data-text-key="${key}">`}`;
+    box.appendChild(div);
+    const input = div.querySelector('[data-text-key]');
+    input.value = texts[key] || '';
+    input.oninput = () => {
+      settings.texts = settings.texts || {};
+      settings.texts[key] = input.value;
+    };
+  });
+}
+
+function collectSettingsFromForm(){
+  settings.hours = {
+    startHour: parseInt(document.getElementById('hStart').value, 10) || 9,
+    endHour: parseInt(document.getElementById('hEnd').value, 10) || 17,
+    slotDurationMins: parseInt(document.getElementById('hSlot').value, 10) || 60
+  };
+  settings.whatsAppBusinessDigits = (document.getElementById('waDigits').value || '').replace(/\D/g, '');
+  settings.remoteSettingsUrl = document.getElementById('remoteUrl').value.trim();
+  settings.designMode = document.getElementById('designSelect').value || 'default';
+  settings.transparency = {
+    hearts: Number(document.getElementById('trHearts').value) / 100,
+    panels: Number(document.getElementById('trPanels').value) / 100,
+    menus: Number(document.getElementById('trMenus').value) / 100
+  };
+  const newPass = document.getElementById('newPass').value.trim();
+  if(newPass) settings.adminPassword = newPass;
+  document.querySelectorAll('[data-text-key]').forEach((el) => {
+    settings.texts = settings.texts || {};
+    settings.texts[el.getAttribute('data-text-key')] = el.value;
+  });
+  return settings;
+}
+
+function publishSettings(){
+  const next = collectSettingsFromForm();
+  const saved = C.saveSettings(next);
+  settings = saved;
+  C.applySettingsToPage(saved, {});
+  C.downloadSettingsFile(saved, 'site-settings.json');
+  toast('حُفظت الإعدادات وحُمّل site-settings.json — ارفعه لجذر الموقع لتطبيقه على الجميع');
+}
+
+document.getElementById('saveAllBtn').onclick = publishSettings;
+document.getElementById('saveAllBtn2').onclick = publishSettings;
+document.getElementById('exportSettingsBtn').onclick = () => {
+  C.downloadSettingsFile(collectSettingsFromForm(), 'site-settings.json');
+};
+
+boot();
+</script>
+</body>
+</html>
