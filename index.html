@@ -1433,6 +1433,105 @@
   .modal-time-note{display:block; font-size:12px; color:var(--muted); text-align:center; margin-top:12px; min-height:18px;}
   .modal-time-note.error{color:var(--danger);}
 
+  /* نافذة تأكيد الحجز */
+  .confirm-modal{
+    position:fixed; inset:0; z-index:140; display:flex; align-items:center; justify-content:center;
+    padding:16px;
+  }
+  .confirm-modal.hidden{display:none !important;}
+  .confirm-modal-backdrop{
+    position:absolute; inset:0; background:rgba(12, 22, 20, .48);
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  }
+  .confirm-modal-dialog{
+    position:relative; z-index:1; width:min(420px, 100%);
+    background:color-mix(in oklab, var(--surface) 94%, transparent);
+    border:1px solid color-mix(in oklab, var(--border) 80%, transparent);
+    border-radius:22px; padding:22px 18px 18px;
+    box-shadow:0 24px 60px rgba(15, 40, 36, .22);
+    -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+    animation:confirmModalIn .32s cubic-bezier(.22,1,.36,1);
+  }
+  @keyframes confirmModalIn{
+    from{ opacity:0; transform:translateY(14px) scale(.97); }
+    to{ opacity:1; transform:none; }
+  }
+  .confirm-modal-head{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:8px;
+  }
+  .confirm-modal-head h3{
+    margin:0; font-size:1.15rem; font-weight:800; color:var(--ink); line-height:1.35;
+  }
+  .confirm-modal-sub{
+    margin:0 0 16px; font-size:13.5px; line-height:1.7;
+    color:color-mix(in srgb, var(--ink) 72%, var(--muted)); font-weight:500;
+  }
+  .confirm-loading{
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    gap:14px; padding:28px 12px 20px;
+  }
+  .confirm-spinner{
+    width:52px; height:52px; border-radius:50%;
+    border:3px solid color-mix(in srgb, var(--primary) 18%, transparent);
+    border-top-color:var(--primary);
+    animation:confirmSpin .85s linear infinite;
+  }
+  @keyframes confirmSpin{ to{ transform:rotate(360deg); } }
+  .confirm-loading p{
+    margin:0; font-size:14px; font-weight:700; color:var(--ink);
+  }
+  .confirm-loading span{
+    font-size:12.5px; color:var(--muted); font-weight:500;
+  }
+  .confirm-actions{display:flex; flex-direction:column; gap:10px;}
+  .confirm-action-btn{
+    display:flex; align-items:flex-start; gap:12px; width:100%;
+    text-align:right; border-radius:16px; padding:14px 14px;
+    border:1.5px solid var(--border);
+    background:color-mix(in oklab, var(--surface) 88%, transparent);
+    color:var(--ink); font-family:inherit; cursor:pointer;
+    transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .confirm-action-btn:hover{
+    border-color:color-mix(in srgb, var(--primary) 45%, var(--border));
+    transform:translateY(-1px);
+    box-shadow:0 10px 24px color-mix(in srgb, var(--primary) 12%, transparent);
+  }
+  .confirm-action-btn:active{transform:scale(.99);}
+  .confirm-action-btn.is-primary{
+    border-color:transparent;
+    background:var(--gradient-accent);
+    color:var(--primary-foreground);
+  }
+  .confirm-action-btn.is-primary:hover{
+    box-shadow:0 12px 28px color-mix(in srgb, var(--primary) 28%, transparent);
+  }
+  .confirm-action-icon{
+    flex:0 0 auto; width:40px; height:40px; border-radius:12px;
+    display:grid; place-items:center;
+    background:color-mix(in srgb, var(--primary) 12%, transparent);
+    color:var(--primary); font-size:18px; line-height:1;
+  }
+  .confirm-action-btn.is-primary .confirm-action-icon{
+    background:rgba(255,255,255,.2); color:inherit;
+  }
+  .confirm-action-copy{flex:1; min-width:0;}
+  .confirm-action-copy strong{
+    display:block; font-size:14px; font-weight:800; margin-bottom:3px;
+  }
+  .confirm-action-copy span{
+    display:block; font-size:12px; line-height:1.55; font-weight:500;
+    opacity:.82;
+  }
+  .confirm-modal-footer{
+    margin-top:14px; text-align:center;
+  }
+  .confirm-status{
+    min-height:18px; margin:10px 0 0; font-size:12.5px; font-weight:700;
+    color:var(--primary); text-align:center;
+  }
+  .confirm-status.is-muted{color:var(--muted); font-weight:500;}
+
   label{display:block; font-size:13px; color:color-mix(in srgb, var(--ink) 80%, var(--muted)); margin-bottom:6px; font-weight:700;}
   .field{margin-bottom:12px;}
   input[type=text], input[type=email], input[type=tel], textarea, select{
@@ -2288,7 +2387,7 @@
       <button type="button" class="done-wa-btn" id="shareWhatsAppBtn">إرسال عبر واتساب</button>
       <button type="button" class="done-ics-btn" id="downloadIcsBtn">إضافة للتقويم (.ics)</button>
     </div>
-    <p class="done-hint" id="doneShareHint">افتحنا واتساب برسالة منسّقة، ونزّلنا ملف التقويم تلقائياً — يمكنك إعادة الإرسال من هنا في أي وقت.</p>
+    <p class="done-hint" id="doneShareHint">تم حفظ طلبك. اختر من الأزرار أعلاه متى شئت، أو انتظر تواصلنا معك بلطف.</p>
     <button class="new-booking" id="newBookingBtn">حجز جلسة أخرى</button>
   </div>
 
@@ -2357,6 +2456,54 @@
       </div>
     </div>
     <span class="modal-time-note" id="modalTimeNote"></span>
+  </div>
+</div>
+
+<!-- نافذة تأكيد الجلسة — دون فتح صفحات تلقائياً -->
+<div class="confirm-modal hidden" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+  <div class="confirm-modal-backdrop" id="confirmModalBackdrop"></div>
+  <div class="confirm-modal-dialog">
+    <div class="confirm-modal-head">
+      <h3 id="confirmModalTitle">تأكيد جلستك</h3>
+      <button type="button" class="modal-close-btn" id="closeConfirmModalBtn" aria-label="إغلاق">×</button>
+    </div>
+
+    <div id="confirmLoadingView" class="confirm-loading">
+      <div class="confirm-spinner" aria-hidden="true"></div>
+      <p>جاري حفظ موعدك…</p>
+      <span>لحظة واحدة، بلا استعجال</span>
+    </div>
+
+    <div id="confirmChoicesView" class="hidden">
+      <p class="confirm-modal-sub" id="confirmModalSummary"></p>
+      <div class="confirm-actions">
+        <button type="button" class="confirm-action-btn is-primary" id="confirmWaitBtn">
+          <span class="confirm-action-icon" aria-hidden="true">✓</span>
+          <span class="confirm-action-copy">
+            <strong>حفظ وانتظار التواصل</strong>
+            <span>نحفظ طلبك هنا ونتواصل معك بلطف — دون فتح تطبيقات</span>
+          </span>
+        </button>
+        <button type="button" class="confirm-action-btn" id="confirmWaBtn">
+          <span class="confirm-action-icon" aria-hidden="true">💬</span>
+          <span class="confirm-action-copy">
+            <strong>إرسال الطلب على واتساب</strong>
+            <span>يفتح واتساب برسالة جاهزة عند اختيارك فقط</span>
+          </span>
+        </button>
+        <button type="button" class="confirm-action-btn" id="confirmIcsBtn">
+          <span class="confirm-action-icon" aria-hidden="true">📅</span>
+          <span class="confirm-action-copy">
+            <strong>إضافة إلى التقويم</strong>
+            <span>تحميل ملف .ics لإضافته لتقويم هاتفك</span>
+          </span>
+        </button>
+      </div>
+      <p class="confirm-status is-muted" id="confirmModalStatus" aria-live="polite"></p>
+      <div class="confirm-modal-footer">
+        <button type="button" class="new-booking" id="confirmDoneCloseBtn" style="margin-top:4px">إغلاق والمتابعة</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2819,29 +2966,69 @@ function openWhatsAppWithMessage(message){
   const url = digits
     ? `https://wa.me/${digits}?text=${encoded}`
     : `https://wa.me/?text=${encoded}`;
+  // نفس النافذة/تبويب التطبيق عند التأكيد — لا نفتح صفحة تلقائية عند الحجز
   window.open(url, '_blank', 'noopener,noreferrer');
 }
 
-async function shareBookingToWhatsAppAndCalendar(booking){
-  const message = buildWhatsAppMessage(booking);
-  const { blob, fileName } = downloadIcsFile(booking);
+function setConfirmModalStatus(text, muted){
+  const el = document.getElementById('confirmModalStatus');
+  if(!el) return;
+  el.textContent = text || '';
+  el.classList.toggle('is-muted', !!muted || !text);
+}
 
-  try{
-    const file = new File([blob], fileName, { type: 'text/calendar' });
-    if(navigator.canShare && navigator.canShare({ files: [file] })){
-      await navigator.share({
-        files: [file],
-        title: 'جلسة نَسْق',
-        text: message
-      });
-      return { shared: true, method: 'share' };
-    }
-  }catch(e){
-    /* المستخدم ألغى أو المشاركة غير مدعومة */
+function fillDoneCardFromBooking(booking){
+  if(!booking) return;
+  const d = new Date(booking.date + 'T12:00:00');
+  const [sh, sm] = String(booking.time || '0:0').split(':').map(Number);
+  const contactMethod = booking.email
+    ? `على ${booking.phone} أو بريدك`
+    : `على ${booking.phone}`;
+  document.getElementById('doneSummary').textContent =
+    `حيّاك الله. جلستك (${booking.type}) محجوزة يوم ${dayNamesAr[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} الساعة ${formatDisplay(sh, sm)} عبر Zoom. سنبلغك بلطف ${contactMethod}. خذ نفساً… أنت في المكان المناسب.`;
+}
+
+function showBookingDoneCard(booking){
+  fillDoneCardFromBooking(booking);
+  document.getElementById('bookingFlow').classList.add('hidden');
+  document.getElementById('doneCard').classList.remove('hidden');
+  document.getElementById('doneCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function openConfirmModal(booking){
+  lastConfirmedBooking = booking;
+  const modal = document.getElementById('confirmModal');
+  const loading = document.getElementById('confirmLoadingView');
+  const choices = document.getElementById('confirmChoicesView');
+  const summary = document.getElementById('confirmModalSummary');
+  if(!modal || !loading || !choices) return;
+
+  const d = new Date(booking.date + 'T12:00:00');
+  const [sh, sm] = String(booking.time || '0:0').split(':').map(Number);
+  summary.textContent =
+    `تم حفظ طلب ${booking.name} — ${booking.type} · ${dayNamesAr[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1} · ${formatDisplay(sh, sm)}. اختر كيف تكمّل:`;
+
+  loading.classList.remove('hidden');
+  choices.classList.add('hidden');
+  setConfirmModalStatus('', true);
+  modal.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+
+  // تحميل قصير ثم عرض الخيارات (دون فتح واتساب/تقويم تلقائياً)
+  clearTimeout(openConfirmModal._t);
+  openConfirmModal._t = setTimeout(() => {
+    loading.classList.add('hidden');
+    choices.classList.remove('hidden');
+  }, 1100);
+}
+
+function closeConfirmModal({ showDone = true } = {}){
+  const modal = document.getElementById('confirmModal');
+  if(modal) modal.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  if(showDone && lastConfirmedBooking){
+    showBookingDoneCard(lastConfirmedBooking);
   }
-
-  openWhatsAppWithMessage(message);
-  return { shared: true, method: 'whatsapp-link' };
 }
 
 /* ===== أوضاع التصميم ===== */
@@ -3574,11 +3761,20 @@ document.querySelectorAll('.type-option').forEach(opt => {
   });
 });
 
-document.getElementById('confirmBtn').addEventListener('click', async () => {
+document.getElementById('confirmBtn').addEventListener('click', () => {
   const name = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
   const email = document.getElementById('emailInput').value.trim();
   const notes = document.getElementById('notesInput').value.trim();
+
+  if(!selectedDate || !selectedTime || !selectedType){
+    alert('أكمل اختيار النوع واليوم والوقت أولاً.');
+    return;
+  }
+  if(!name || !phone){
+    alert('الاسم ورقم الهاتف مطلوبان لتأكيد الجلسة.');
+    return;
+  }
 
   if(isSlotTaken(selectedDate, selectedTime)){
     alert('عذراً، هذا الموعد تم حجزه للتو. اختر وقتاً آخر.');
@@ -3600,26 +3796,41 @@ document.getElementById('confirmBtn').addEventListener('click', async () => {
   };
 
   saveBooking(booking);
-  lastConfirmedBooking = booking;
+  // نافذة داخل الموقع فقط — بدون فتح واتساب/تقويم تلقائياً
+  openConfirmModal(booking);
+});
 
-  const d = new Date(selectedDate + 'T12:00:00');
-  const [sh, sm] = selectedTime.split(':').map(Number);
-  const contactMethod = email ? `على ${fullPhone} أو بريدك` : `على ${fullPhone}`;
-  document.getElementById('doneSummary').textContent =
-    `حيّاك الله. جلستك (${selectedType}) محجوزة يوم ${dayNamesAr[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} الساعة ${formatDisplay(sh, sm)} عبر Zoom. سنبلغك بلطف ${contactMethod}. خذ نفساً… أنت في المكان المناسب.`;
+document.getElementById('confirmWaitBtn')?.addEventListener('click', () => {
+  setConfirmModalStatus('حُفظ طلبك. سنعود إليك بهدوء — لا حاجة لفعل شيء الآن.', false);
+  setTimeout(() => closeConfirmModal({ showDone: true }), 650);
+});
 
-  document.getElementById('bookingFlow').classList.add('hidden');
-  document.getElementById('doneCard').classList.remove('hidden');
-  document.getElementById('doneCard').scrollIntoView({behavior:'smooth', block:'center'});
+document.getElementById('confirmWaBtn')?.addEventListener('click', () => {
+  if(!lastConfirmedBooking) return;
+  openWhatsAppWithMessage(buildWhatsAppMessage(lastConfirmedBooking));
+  setConfirmModalStatus('جاهز: إذا لم يفتح واتساب، جرّب الزر مرة أخرى أو من شاشة «تم الحفظ».', false);
+});
 
-  // واتساب + ملف ICS
-  try{
-    await shareBookingToWhatsAppAndCalendar(booking);
-  }catch(e){
-    try{
-      downloadIcsFile(booking);
-      openWhatsAppWithMessage(buildWhatsAppMessage(booking));
-    }catch(err){}
+document.getElementById('confirmIcsBtn')?.addEventListener('click', () => {
+  if(!lastConfirmedBooking) return;
+  downloadIcsFile(lastConfirmedBooking);
+  setConfirmModalStatus('تم تنزيل ملف التقويم (.ics) — افتحه لإضافته لتقويمك.', false);
+});
+
+document.getElementById('confirmDoneCloseBtn')?.addEventListener('click', () => {
+  closeConfirmModal({ showDone: true });
+});
+document.getElementById('closeConfirmModalBtn')?.addEventListener('click', () => {
+  closeConfirmModal({ showDone: true });
+});
+document.getElementById('confirmModalBackdrop')?.addEventListener('click', () => {
+  closeConfirmModal({ showDone: true });
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key !== 'Escape') return;
+  const modal = document.getElementById('confirmModal');
+  if(modal && !modal.classList.contains('hidden')){
+    closeConfirmModal({ showDone: true });
   }
 });
 
