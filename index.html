@@ -3531,9 +3531,10 @@ function updateSummary(){
       الوقت: <strong>اختر ساعة مناسبة</strong>
     `;
   }else{
-    const empty = (window.NasqCore && NasqCore.DEFAULT_TEXTS && NasqCore.DEFAULT_TEXTS.summaryEmpty)
-      || 'عندما تختار موعداً، سيظهر هنا بهدوء.';
-    box.textContent = empty;
+    const t = window.__nasqSettings && window.__nasqSettings.texts;
+    box.textContent = (t && t.summaryEmpty) ||
+      (window.NasqCore && NasqCore.DEFAULT_TEXTS.summaryEmpty) ||
+      'عندما تختار موعداً، سيظهر هنا بهدوء.';
   }
   btn.disabled = !(selectedDate && selectedTime && name && phone);
 }
@@ -3845,7 +3846,9 @@ async function bootFromSiteSettings(){
     clearPublicShuffleStyles();
     window.applyShuffleBg = applyShuffleBg;
     NasqCore.applySettingsToPage(settings, { syncConfigObject: true });
+    window.__nasqSettings = settings;
     window.addEventListener('nasq-settings-changed', (e) => {
+      window.__nasqSettings = e.detail;
       NasqCore.applySettingsToPage(e.detail, { syncConfigObject: true });
       if(typeof renderTimes === 'function') renderTimes();
     });
