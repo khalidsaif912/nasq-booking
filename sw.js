@@ -1,5 +1,5 @@
 /* Service worker — نَسْق PWA */
-const CACHE_NAME = 'nasq-pwa-v2';
+const CACHE_NAME = 'nasq-pwa-v3';
 const PRECACHE = [
   './',
   './index.html',
@@ -42,7 +42,7 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request).then((cached) => {
       const network = fetch(event.request)
         .then((response) => {
-          if (response && response.status === 200 && response.type === 'basic') {
+          if (response && response.status === 200 && (response.type === 'basic' || response.type === 'cors')) {
             const copy = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           }

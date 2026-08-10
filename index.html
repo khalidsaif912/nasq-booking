@@ -188,10 +188,10 @@
     flex-wrap:nowrap;
     gap:6px;
   }
-  .theme-btn, .design-btn, .copy-code-btn, .photo-btn, .ghost-btn, .primary-btn, .confirm-btn, .use-time-btn, .format-toggle-btn, .new-booking, .date-chip, .time-slot, .ampm-btn, .open-clock-btn, .modal-close-btn{
+  .theme-btn, .design-btn, .copy-code-btn, .photo-btn, .pwa-btn, .ghost-btn, .primary-btn, .confirm-btn, .use-time-btn, .format-toggle-btn, .new-booking, .date-chip, .time-slot, .ampm-btn, .open-clock-btn, .modal-close-btn{
     font-family:inherit; border:none; cursor:pointer;
   }
-  .theme-btn, .design-btn, .copy-code-btn, .photo-btn{
+  .theme-btn, .design-btn, .copy-code-btn, .photo-btn, .pwa-btn{
     display:inline-flex; align-items:center; justify-content:center;
     position:relative;
     width:34px;
@@ -216,6 +216,12 @@
     background:color-mix(in srgb, var(--accent-soft) 55%, #f3e8ff);
     border-color:color-mix(in srgb, var(--primary) 38%, var(--border));
   }
+  .pwa-btn{
+    background:color-mix(in srgb, var(--primary) 14%, white);
+    border-color:color-mix(in srgb, var(--primary) 45%, var(--border));
+    color:var(--primary);
+  }
+  .pwa-btn:hover{background:color-mix(in srgb, var(--primary) 22%, white);}
   .copy-code-btn{
     background:color-mix(in srgb, var(--primary) 12%, white);
     border-color:color-mix(in srgb, var(--primary) 40%, var(--border));
@@ -225,7 +231,7 @@
   .design-btn:hover{background:color-mix(in srgb, var(--accent-strong) 14%, white);}
   .photo-btn:hover{background:color-mix(in srgb, #f3e8ff 75%, white);}
   .copy-code-btn:hover{background:color-mix(in srgb, var(--primary) 18%, white);}
-  .theme-btn:active, .design-btn:active, .copy-code-btn:active, .photo-btn:active{transform:scale(.94);}
+  .theme-btn:active, .design-btn:active, .copy-code-btn:active, .photo-btn:active, .pwa-btn:active{transform:scale(.94);}
   .theme-btn:disabled, .photo-btn:disabled{opacity:.65; cursor:wait;}
   .copy-code-btn.copied{
     background:var(--primary);
@@ -236,10 +242,12 @@
   .design-btn .btn-label,
   .copy-code-btn .btn-label,
   .photo-btn .btn-label,
+  .pwa-btn .btn-label,
   .theme-btn .btn-text,
   .design-btn .btn-text,
   .copy-code-btn .btn-text,
-  .photo-btn .btn-text{
+  .photo-btn .btn-text,
+  .pwa-btn .btn-text{
     position:absolute !important;
     width:1px !important; height:1px !important;
     padding:0 !important; margin:-1px !important;
@@ -249,13 +257,13 @@
     border:0 !important;
     font-size:0 !important;
   }
-  .theme-swatch, .design-icon, .copy-icon, .photo-icon{
+  .theme-swatch, .design-icon, .copy-icon, .photo-icon, .pwa-icon{
     width:16px; height:16px;
     display:grid; place-items:center;
     flex-shrink:0;
     background:transparent;
   }
-  .theme-swatch svg, .design-icon svg, .copy-icon svg, .photo-icon svg{display:block; width:16px; height:16px;}
+  .theme-swatch svg, .design-icon svg, .copy-icon svg, .photo-icon svg, .pwa-icon svg{display:block; width:16px; height:16px;}
 
   .bg-code-bar{
     display:none !important;
@@ -545,7 +553,8 @@
   body.design-cyber .theme-btn,
   body.design-cyber .design-btn,
   body.design-cyber .copy-code-btn,
-  body.design-cyber .photo-btn{
+  body.design-cyber .photo-btn,
+  body.design-cyber .pwa-btn{
     background:rgba(15,23,42,.7);
     border:1px solid rgba(34,211,238,.35);
     color:#67e8f9;
@@ -1699,16 +1708,22 @@
     border:1px solid color-mix(in srgb, var(--primary) 28%, transparent);
     background:
       linear-gradient(145deg,
-        color-mix(in srgb, var(--surface) 92%, white),
-        color-mix(in srgb, var(--accent-soft) 55%, white));
+        color-mix(in srgb, var(--surface) 96%, white),
+        color-mix(in srgb, var(--accent-soft) 70%, white));
     box-shadow:
-      0 18px 48px color-mix(in srgb, var(--ink) 22%, transparent),
-      0 0 0 1px color-mix(in srgb, white 50%, transparent) inset;
+      0 20px 52px color-mix(in srgb, var(--ink) 28%, transparent),
+      0 0 0 1px color-mix(in srgb, white 55%, transparent) inset;
     backdrop-filter:blur(16px);
     -webkit-backdrop-filter:blur(16px);
     animation: pwaSlideUp .45s cubic-bezier(.22,1,.36,1) both;
   }
-  .pwa-install.is-visible{display:flex;}
+  .pwa-install.is-visible,
+  .pwa-install.is-visible[hidden]{
+    display:flex !important;
+  }
+  .pwa-install[hidden]:not(.is-visible){
+    display:none !important;
+  }
   .pwa-install-icon-wrap{
     flex:0 0 auto;
     width:88px;
@@ -1869,7 +1884,7 @@
       gap:5px;
       margin-inline-start:auto;
     }
-    .theme-btn, .design-btn, .copy-code-btn, .photo-btn{
+    .theme-btn, .design-btn, .copy-code-btn, .photo-btn, .pwa-btn{
       flex:0 0 auto;
       width:34px;
       height:34px;
@@ -1878,8 +1893,8 @@
       padding:0;
       border-radius:50%;
     }
-    .theme-swatch, .design-icon, .copy-icon, .photo-icon{width:16px; height:16px;}
-    .theme-swatch svg, .design-icon svg, .copy-icon svg, .photo-icon svg{width:16px; height:16px;}
+    .theme-swatch, .design-icon, .copy-icon, .photo-icon, .pwa-icon{width:16px; height:16px;}
+    .theme-swatch svg, .design-icon svg, .copy-icon svg, .photo-icon svg, .pwa-icon svg{width:16px; height:16px;}
     .top-actions .ghost-btn{display:none;}
     .top-actions .primary-btn{display:none;}
     .hero{
@@ -2054,6 +2069,16 @@
             </svg>
           </span>
           <span class="btn-text" id="photoLabel">تغيير الصورة</span>
+        </button>
+        <button class="pwa-btn" id="pwaHeaderInstallBtn" type="button" title="تثبيت نَسْق كتطبيق" aria-label="تثبيت نَسْق كتطبيق">
+          <span class="pwa-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v12"/>
+              <path d="M7 10l5 5 5-5"/>
+              <path d="M5 19h14"/>
+            </svg>
+          </span>
+          <span class="btn-text">تثبيت التطبيق</span>
         </button>
         <button class="design-btn" id="designToggleBtn" type="button" title="Material Design" aria-label="تبديل أسلوب التصميم">
           <span class="design-icon" aria-hidden="true">
@@ -2425,7 +2450,7 @@ const CONFIG = {
   slotDurationMins: 60,
   storageKey: 'nasq_consult_bookings_v1',
   /* رقم واتساب لاستقبال الحجوزات (أرقام فقط مع مفتاح الدولة، مثال: 9655xxxxxxx). فارغ = يفتح واتساب ليختار المستخدم جهة الاتصال */
-  whatsAppBusinessDigits: ''
+  whatsAppBusinessDigits: '96599717016'
 };
 
 const dayNamesAr = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
@@ -3695,8 +3720,9 @@ document.getElementById('scrollMetaBtn')?.addEventListener('click', (e) => {
 });
 
 /* ===== PWA: تثبيت التطبيق ===== */
-const PWA_DISMISS_KEY = 'nasqPwaInstallDismissV1';
+const PWA_DISMISS_KEY = 'nasqPwaInstallDismissV2';
 let deferredPwaPrompt = null;
+let pwaBannerForced = false;
 
 function isStandalonePwa(){
   return window.matchMedia('(display-mode: standalone)').matches
@@ -3712,19 +3738,20 @@ function isIosSafari(){
 }
 
 function wasPwaDismissed(){
+  if(pwaBannerForced) return false;
   try{
     const raw = localStorage.getItem(PWA_DISMISS_KEY);
     if(!raw) return false;
     const t = parseInt(raw, 10);
     if(Number.isNaN(t)) return false;
-    // أخفِ لمدة 7 أيام بعد الإغلاق
-    return (Date.now() - t) < 7 * 24 * 60 * 60 * 1000;
+    // أخفِ لمدة يوم واحد فقط بعد «لاحقاً»
+    return (Date.now() - t) < 24 * 60 * 60 * 1000;
   }catch(e){
     return false;
   }
 }
 
-function dismissPwaBanner(daysOnly){
+function dismissPwaBanner(){
   try{ localStorage.setItem(PWA_DISMISS_KEY, String(Date.now())); }catch(e){}
   hidePwaBanner();
 }
@@ -3733,89 +3760,132 @@ function hidePwaBanner(){
   const el = document.getElementById('pwaInstallBanner');
   if(!el) return;
   el.classList.remove('is-visible');
+  el.setAttribute('hidden', '');
   el.hidden = true;
 }
 
-function showPwaBanner({ iosHint = false } = {}){
-  if(isStandalonePwa() || wasPwaDismissed()) return;
+function showPwaBanner({ iosHint = false, force = false } = {}){
+  if(isStandalonePwa()) return;
+  if(!force && wasPwaDismissed()) return;
   const el = document.getElementById('pwaInstallBanner');
   if(!el) return;
   const hint = document.getElementById('pwaIosHint');
   const installBtn = document.getElementById('pwaInstallBtn');
+  const useIos = iosHint || isIosSafari();
   if(hint){
-    if(iosHint) hint.classList.remove('hidden');
+    if(useIos) hint.classList.remove('hidden');
     else hint.classList.add('hidden');
   }
   if(installBtn){
-    // على iOS لا يوجد beforeinstallprompt — نُظهر التعليمات
-    installBtn.textContent = iosHint ? 'كيف أثبّت؟' : 'تثبيت الآن';
+    installBtn.textContent = useIos && !deferredPwaPrompt ? 'كيف أثبّت؟' : 'تثبيت الآن';
   }
+  el.removeAttribute('hidden');
   el.hidden = false;
   el.classList.add('is-visible');
+  // تأكيد ظهور البطاقة على الأجهزة البطيئة
+  requestAnimationFrame(() => {
+    el.classList.add('is-visible');
+    el.hidden = false;
+  });
+}
+
+function registerPwaServiceWorker(){
+  if(!('serviceWorker' in navigator)) return Promise.resolve(null);
+  // تسجيل مبكّر — شرط أساسي لحدث التثبيت في Chrome
+  return navigator.serviceWorker.register('./sw.js', { scope: './' })
+    .then((reg) => {
+      try{ reg.update(); }catch(e){}
+      return reg;
+    })
+    .catch(() => null);
+}
+
+async function triggerPwaInstallFlow(){
+  if(isStandalonePwa()){
+    alert('التطبيق مثبّت بالفعل. افتحه من الشاشة الرئيسية.');
+    return;
+  }
+  if(deferredPwaPrompt){
+    try{
+      deferredPwaPrompt.prompt();
+      const choice = await deferredPwaPrompt.userChoice;
+      deferredPwaPrompt = null;
+      if(choice && choice.outcome === 'accepted'){
+        hidePwaBanner();
+        try{ localStorage.setItem(PWA_DISMISS_KEY, String(Date.now())); }catch(e){}
+      }
+    }catch(e){
+      showPwaBanner({ force: true });
+    }
+    return;
+  }
+  if(isIosSafari()){
+    showPwaBanner({ iosHint: true, force: true });
+    const hint = document.getElementById('pwaIosHint');
+    if(hint){
+      hint.classList.remove('hidden');
+      hint.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+    return;
+  }
+  showPwaBanner({ force: true });
+  alert('من قائمة المتصفح (⋮ أو ⋯) اختر: «تثبيت التطبيق» أو «Install app» أو «إضافة إلى الشاشة الرئيسية».');
 }
 
 function initPwaInstall(){
-  if(isStandalonePwa()) return;
+  // إظهار فوري إذا طُلب عبر الرابط
+  try{
+    const q = new URLSearchParams(location.search);
+    if(q.get('install') === '1' || q.get('pwa') === '1'){
+      pwaBannerForced = true;
+      try{ localStorage.removeItem(PWA_DISMISS_KEY); }catch(e){}
+    }
+  }catch(e){}
+
+  const headerBtn = document.getElementById('pwaHeaderInstallBtn');
+  if(isStandalonePwa()){
+    if(headerBtn) headerBtn.style.display = 'none';
+    hidePwaBanner();
+    return;
+  }
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPwaPrompt = e;
-    // أظهِر الرسالة بعد لحظة قصيرة حتى لا تزعج فوراً
-    setTimeout(() => showPwaBanner({ iosHint: false }), 1600);
+    setTimeout(() => showPwaBanner({ iosHint: false }), 900);
   });
 
   window.addEventListener('appinstalled', () => {
     deferredPwaPrompt = null;
     try{ localStorage.setItem(PWA_DISMISS_KEY, String(Date.now())); }catch(e){}
     hidePwaBanner();
+    if(headerBtn) headerBtn.style.display = 'none';
   });
 
-  // iOS / متصفحات بدون beforeinstallprompt
+  // أظهر الرسالة دائماً بعد جاهزية الصفحة (ما لم تكن مخفية مؤقتاً أو مثبّتة)
+  const reveal = () => {
+    if(isStandalonePwa() || wasPwaDismissed()) return;
+    showPwaBanner({ iosHint: isIosSafari() });
+  };
+  setTimeout(reveal, 1200);
+  // احتياطي إن تأخر SW / الشبكة
   setTimeout(() => {
-    if(deferredPwaPrompt || isStandalonePwa() || wasPwaDismissed()) return;
-    if(isIosSafari()){
-      showPwaBanner({ iosHint: true });
-    }else{
-      // أظهِر بانر عام بعد زيارة قصيرة — قد يدعم التثبيت من القائمة
-      showPwaBanner({ iosHint: false });
+    if(!isStandalonePwa() && !wasPwaDismissed()){
+      showPwaBanner({ iosHint: isIosSafari() });
     }
-  }, 4200);
+  }, 3500);
 
-  const installBtn = document.getElementById('pwaInstallBtn');
-  const laterBtn = document.getElementById('pwaInstallLater');
-  const closeBtn = document.getElementById('pwaInstallDismiss');
-
-  installBtn?.addEventListener('click', async () => {
-    if(deferredPwaPrompt){
-      deferredPwaPrompt.prompt();
-      try{
-        const choice = await deferredPwaPrompt.userChoice;
-        deferredPwaPrompt = null;
-        if(choice && choice.outcome === 'accepted'){
-          hidePwaBanner();
-        }else{
-          dismissPwaBanner();
-        }
-      }catch(e){
-        dismissPwaBanner();
-      }
-      return;
-    }
-    // بدون حدث التثبيت: أكّد تلميح iOS أو الإرشادات
-    if(isIosSafari()){
-      const hint = document.getElementById('pwaIosHint');
-      if(hint){
-        hint.classList.remove('hidden');
-        hint.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      }
-      return;
-    }
-    alert('من قائمة المتصفح اختر: تثبيت التطبيق / Install app / إضافة إلى الشاشة الرئيسية.');
+  document.getElementById('pwaInstallBtn')?.addEventListener('click', () => triggerPwaInstallFlow());
+  document.getElementById('pwaInstallLater')?.addEventListener('click', () => dismissPwaBanner());
+  document.getElementById('pwaInstallDismiss')?.addEventListener('click', () => dismissPwaBanner());
+  headerBtn?.addEventListener('click', () => {
+    pwaBannerForced = true;
+    triggerPwaInstallFlow();
   });
-
-  laterBtn?.addEventListener('click', () => dismissPwaBanner());
-  closeBtn?.addEventListener('click', () => dismissPwaBanner());
 }
+
+// تسجيل SW مبكراً قبل بقية الإقلاع
+registerPwaServiceWorker();
 
 initTheme();
 renderClockNumbers();
@@ -3824,11 +3894,6 @@ goBookingStep(1, { scroll: false });
 updateSummary();
 if(typeof initDateTrainInteractions === 'function') initDateTrainInteractions();
 initPwaInstall();
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
-  });
-}
 </script>
 </body>
 </html>
